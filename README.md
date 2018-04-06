@@ -45,3 +45,20 @@ The api and webclient folders each have their own SLIM frameworks.
 3. Navigate to C:\Windows\System32\drivers\etc\hosts and add '127.0.0.1 home.dev' to the bottom.
 4. start Apache through the XAMPP Control Panel then in a browser search home.dev (the MagpieHunt homepage should pop up)
 
+
+# Deployment Notes
+
+1. Needs apache2 and php 5.0+ or something
+
+2. Modify the apache configuration files appropriately, add the following to either apache2.conf or httpd.conf:
+    * Might be: /etc/apache2/apache2.conf
+ ```
+<Directory /var/www/html/magpie/magpie-php/public_html/>
+        AllowOverride All
+        Require all granted
+</Directory>
+```
+
+3. Enable some apache2 module thingy:
+    * sudo a2enmod rewrite && sudo service apache2 restart
+

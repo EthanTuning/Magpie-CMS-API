@@ -7,6 +7,8 @@
 -- Server version: 5.6.37
 -- PHP Version: 5.6.31
 
+/* Updated with some stuff to make a user */
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
@@ -17,10 +19,23 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `Magpie-DB`
+-- Database: `MagpieDB`
 --
 
+Create database if not exists MagpieDB;
+
+USE MagpieDB;
+
 -- --------------------------------------------------------
+
+--
+-- Table structure for table `administrators`
+--
+
+CREATE TABLE IF NOT EXISTS `administrators` (
+	`uid` varchar(255) PRIMARY KEY
+) ENGINE=InnoDB;
+
 
 --
 -- Table structure for table `award`
@@ -222,3 +237,17 @@ ALTER TABLE `hunt`
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+
+/* Creates the user for the API, 'magpieapi', so the API can work out-of-the-box with the
+   config file.
+   Note: This file is a security vulnerability, since it includes the password for the api user.
+   However, the MySQL database should not be accessible via the network anyways. */
+
+CREATE USER IF NOT EXISTS 'magpieapi'@'localhost' IDENTIFIED WITH mysql_native_password AS '#xs3Zh3(U^eZ5^UZ';
+
+/* This line is for reference: GRANT SELECT, INSERT, UPDATE, DELETE, FILE ON `MagpieDB`.* TO 'magpieapi'@'localhost';   */
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON `MagpieDB`.* TO 'magpieapi'@'localhost';
+
+
