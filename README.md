@@ -53,7 +53,7 @@ The api and webclient folders each have their own SLIM frameworks.
 2. Modify the apache configuration files appropriately, add the following to either apache2.conf or httpd.conf:
     * Might be: /etc/apache2/apache2.conf
  ```
-<Directory /var/www/html/magpie/magpie-php/public_html/>
+<Directory FULL_PATH_TO_MAGPIE_DIRECTORY_GOES_HERE>
         AllowOverride All
         Require all granted
 </Directory>
