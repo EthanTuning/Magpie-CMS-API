@@ -22,8 +22,7 @@ SET time_zone = "+00:00";
 -- Database: `MagpieDB`
 --
 
-Create database if not exists MagpieDB;
-
+CREATE DATABASE IF NOT EXISTS MagpieDB;
 USE MagpieDB;
 
 -- --------------------------------------------------------
@@ -103,6 +102,22 @@ INSERT INTO `creator` (`uid`, `email`, `is_valid`) VALUES
 
 -- --------------------------------------------------------
 
+/*
+-- Table structure for table `hunt_status`
+-- This is a reference table for the status of a hunt to avoid using ENUM
+*/
+
+CREATE TABLE IF NOT EXISTS `hunt_status` (
+	`approval_status` VARCHAR(32) PRIMARY KEY
+) ENGINE=InnoDB;
+
+-- Populate with appropriate statuses (KEY set manually to ensure consistency)
+
+INSERT INTO `hunt_status` (`approval_status`) VALUES
+	('non-approved'),
+	('submitted'),
+	('approved');
+
 --
 -- Table structure for table `hunt`
 --
@@ -110,6 +125,7 @@ INSERT INTO `creator` (`uid`, `email`, `is_valid`) VALUES
 CREATE TABLE IF NOT EXISTS `hunt` (
   `hunt_id` int(11) NOT NULL,
   `abbreviation` varchar(255) DEFAULT NULL,
+  `approval_status` VARCHAR(32) DEFAULT 'non-approved',
   `audience` varchar(255) DEFAULT NULL,
   `available` bit(1) DEFAULT NULL,
   `date_end` date DEFAULT NULL,
@@ -120,7 +136,10 @@ CREATE TABLE IF NOT EXISTS `hunt` (
   `super_badge` varchar(255) DEFAULT NULL,
   `creator_id` varchar(255) DEFAULT NULL,
   `location_id` int(11) DEFAULT NULL,
-  `award_id` int(11) DEFAULT NULL
+  `award_id` int(11) DEFAULT NULL,
+  
+  FOREIGN KEY (`approval_status`) REFERENCES `hunt_status` (`approval_status`)
+  
 ) ENGINE=InnoDB AUTO_INCREMENT=667 DEFAULT CHARSET=latin1;
 
 --
