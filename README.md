@@ -62,3 +62,6 @@ The api and webclient folders each have their own SLIM frameworks.
 3. Enable some apache2 module thingy:
     * sudo a2enmod rewrite && sudo service apache2 restart
 
+4. API Configuration
+    * In the 'creds/' folder, add your Firebase Admin SDK json credential
+    * Modify the 'authentication.php' file to reflect this credential
