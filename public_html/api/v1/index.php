@@ -11,6 +11,11 @@ require './vendor/autoload.php';
 
 $app = new \Slim\App;
 
+
+
+
+
+
 $app->get('/test', function (Request $request, Response $response, array $args) {
     
     //GET
