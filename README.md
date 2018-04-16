@@ -12,6 +12,12 @@ The folders are:
 
 The api and webclient folders each have their own SLIM frameworks.
 
+
+# API Note
+
+* The API requires an Authentication header of type Bearer in every API request.  The token is grabbed from the user's Firebase login.
+
+
 # Development Setup
 
 ## Ubuntu LAMP
@@ -44,7 +50,6 @@ The api and webclient folders each have their own SLIM frameworks.
     
 3. Navigate to C:\Windows\System32\drivers\etc\hosts and add '127.0.0.1 home.dev' to the bottom.
 4. start Apache through the XAMPP Control Panel then in a browser search home.dev (the MagpieHunt homepage should pop up)
-
 
 # Deployment Notes
 

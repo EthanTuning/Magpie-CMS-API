@@ -30,7 +30,7 @@ class AuthenticationMiddleware
     {
 		$firebase = $this->initialize();
 		
-		//$this->authenticate($firebase);
+		$this->authenticate($firebase, $request);
 		
         $response->getBody()->write('BEFORE');
         $response = $next($request, $response);
@@ -61,11 +61,33 @@ class AuthenticationMiddleware
     
     
     /* Step 2 */
-    private function authenticate($firebase)
+    private function authenticate($firebase, $request)
 	{
 		/* Get the idTokenString */
+		$data = $request->getHeader('Authorization');
 		
-		$idTokenString = 'abcdef.abcdef.abcdef';
+		if ( ! isset($data[0]) )
+		{
+		   $data[0] = null;
+		}
+
+		//error_log("Authorization Header: ".$data[0]);
+		$pieces = explode(" ", $data[0]);
+		
+		if ( ! isset($pieces[1]) )
+		{
+		   $pieces[1] = null;
+		}
+		
+		$idTokenString = $pieces[1];
+		//error_log("idTokenString: ".$idTokenString);
+		
+		//foreach ($data as $item)
+		{
+			//echo $idTokenString;
+		}
+		//die;
+		//$idTokenString = 'abcdef.abcdef.abcdef';
 
 		/* Verify it */
 		try 
@@ -77,7 +99,7 @@ class AuthenticationMiddleware
 			echo $e->getMessage();
 			die;
 		}
-
+		
 		$uid = $verifiedIdToken->getClaim('sub');
 		$user = $firebase->getAuth()->getUser($uid);
 	}

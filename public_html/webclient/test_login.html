@@ -1,0 +1,107 @@
+<html>
+	<head>
+		<Title>
+			Test Google Login page
+		</Title>
+		
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		
+		<script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-app.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-auth.js"></script>
+
+		<link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css" />
+		
+		<script>
+		  // Initialize Firebase
+		  var config = {
+			apiKey: "AIzaSyA7FjQrDYSP5Ew5J2BCWtEPAHD5rKYV6T8",
+			authDomain: "magpie-cms-api.firebaseapp.com",
+			databaseURL: "https://magpie-cms-api.firebaseio.com",
+			projectId: "magpie-cms-api",
+			storageBucket: "magpie-cms-api.appspot.com",
+			messagingSenderId: "859543052586"
+		  };
+		  
+		  firebase.initializeApp(config);
+
+			
+			function signinX()
+			{			
+				console.log("CLICKED SIGNIN");
+				
+				var provider = new firebase.auth.GoogleAuthProvider();
+
+				firebase.auth().signInWithRedirect(provider);
+				
+				firebase.auth().getRedirectResult().then(function(result) {
+				  if (result.credential) {
+					// This gives you a Google Access Token. You can use it to access the Google API.
+					var token = result.credential.accessToken;
+					// ...
+				  }
+				  // The signed-in user info.
+				  var user = result.user;
+				}).catch(function(error) {
+				  // Handle Errors here.
+				  var errorCode = error.code;
+				  var errorMessage = error.message;
+				  // The email of the user's account used.
+				  var email = error.email;
+				  // The firebase.auth.AuthCredential type that was used.
+				  var credential = error.credential;
+				  // ...
+				});
+				
+			}	
+	
+			
+			function signoutX()
+			{
+				firebase.auth().signOut().then(function() {
+				  console.log("Signout successful");
+				}).catch(function(error) {
+				  console.log(error);
+				});
+			}
+	
+			
+			function getID()
+			{
+				firebase.auth().currentUser.getIdToken(/* forceRefresh */ false).then(function(idToken) {
+					  $('#results').text(idToken);
+					}).catch(function(error) {
+					  console.log(error);
+					});
+			}
+	
+		</script>
+		
+	</head>
+
+	<body>
+	
+		
+	
+	
+	<button id='btnSignin' onclick="signinX()">Sign In</button>
+	
+	<br>
+	
+	<button id='btnSignout' onclick="signoutX()">Sign Out</button>
+	<br>
+	
+	<button id='btnGetID' onclick="getID()">SHOW ID</button>
+	
+	<div id='divResults'>
+	
+	<p id='results'></p>
+	</div>
+	
+	
+	</body>
+
+
+
+
+</html>
