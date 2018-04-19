@@ -53,10 +53,10 @@ The api and webclient folders each have their own SLIM frameworks.
 
 # Deployment Notes
 
-1. Needs apache2 and php 5.0+ or something
+1. Follow the Ubuntu LAMP deployment steps first.
 
 2. Modify the apache configuration files appropriately, add the following to either apache2.conf or httpd.conf:
-    * Might be: /etc/apache2/apache2.conf
+    * On Ubuntu: /etc/apache2/apache2.conf
  ```
 <Directory FULL_PATH_TO_MAGPIE_DIRECTORY_GOES_HERE>
         AllowOverride All
@@ -64,9 +64,12 @@ The api and webclient folders each have their own SLIM frameworks.
 </Directory>
 ```
 
-3. Enable some apache2 module thingy:
+3. Enable apache2 module thingy:
     * sudo a2enmod rewrite && sudo service apache2 restart
 
 4. API Configuration
     * In the 'creds/' folder, add your Firebase Admin SDK json credential
     * Modify the 'authentication.php' file to reflect this credential
+
+5. Run the .sql script in the database folder.
+
