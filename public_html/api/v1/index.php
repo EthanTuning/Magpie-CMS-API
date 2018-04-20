@@ -24,6 +24,11 @@ $app = new \Slim\App(['settings' => $config]);
 $app->add( new AuthenticationMiddleware() );
 
 
+
+
+
+
+/* Route used for testing */
 $app->get('/test', function (Request $request, Response $response, array $args) {
     
     //GET
@@ -35,10 +40,24 @@ $app->get('/test', function (Request $request, Response $response, array $args) 
     
     $getParam = $allGetVars['name'];
     
-    $response->getBody()->write("Hello, $getParam");
+    if ($getParam == null)
+    {
+		$response->getBody()->write(" Hello noname. ");
+	}
+    else
+    {
+		$response->getBody()->write(" Hello, $getParam ");
+	}
 
     return $response;
 });
+
+
+require_once 'endpoints/hunts.php';
+//require_once 'path_to_your_dir/admin_routes.php';
+//require_once 'path_to_your_dir/some_other_routes.php';
+
+
 
 $app->run();
 

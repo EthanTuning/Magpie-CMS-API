@@ -43,7 +43,7 @@ class AuthenticationMiddleware
     /* Step 1 */
     private function initialize()
     {
-		// Firebase Credentials go here
+		// ************Firebase Credentials go here ******************
 		$serviceAccount = ServiceAccount::fromJsonFile(__DIR__.'/creds/Magpie CMS API-8d356af4830f.json');
 
 		$firebase = (new Factory)
