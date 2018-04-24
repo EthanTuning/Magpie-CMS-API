@@ -14,9 +14,11 @@
 	$config['displayErrorDetails'] = true;
 	$config['addContentLengthHeader'] = false;
 
+	/* Database configuration stuff (for PDO) */
+	
 	$config['db']['host']   = 'localhost';
 	$config['db']['user']   = 'magpieapi';
-	$config['db']['pass']   = '#xs3Zh3(U^eZ5^UZ';
+	$config['db']['pass']   = 'eMO3B8cxFSo6usst';
 	$config['db']['dbname'] = 'MagpieDB';
 	
 ?>

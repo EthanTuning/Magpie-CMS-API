@@ -7,13 +7,12 @@ use Kreait\Firebase\ServiceAccount;
  * 
  * 1) Initialize Firebase Admin SDK w/credentials
  * 2) Verify ID token (passed from client) using Firebase Admin SDK
- * 3) Continue processing, or drop out and return an error
+ * 3) Add the user id (uid) extracted from the token to the $request object
+ * 
  */
 
 class AuthenticationMiddleware
 {
-	/* Load in the Firebase stuff */
-	
     /**
      * Example middleware invokable class
      *
@@ -28,19 +27,35 @@ class AuthenticationMiddleware
     /* This is called from Slim */
     public function __invoke($request, $response, $next)
     {
-		$firebase = $this->initialize();
+		$firebase = $this->initialize();					//create the firebase object
+		$uid = $this->authenticate($firebase, $request);	//authenticate the request with firebase
 		
-		$this->authenticate($firebase, $request);
+				
+		/* Step 3 
+		 * 
+		 * Send the extracted uid to the $request object so the Mapper 
+		 * classes can do security checks on the data requested.
+		 * 
+		 * */
 		
-        $response->getBody()->write('BEFORE');
+		$request = $request->withAttribute('uid', $uid);
+		
+        $response->getBody()->write('BEFORE... ');
         $response = $next($request, $response);
-        $response->getBody()->write('AFTER');
+        $response->getBody()->write(' ...AFTER');
 
         return $response;
     }
     
     
-    /* Step 1 */
+    /* Step 1 
+     * 
+     * Create the Firebase object that connects back home with google.
+     * 
+     * Requires the Firebase credentials json file from the Firebase Console
+     * to be placed in ./creds/
+     * 
+     * */
     private function initialize()
     {
 		// ************Firebase Credentials go here ******************
@@ -60,7 +75,13 @@ class AuthenticationMiddleware
 	}
     
     
-    /* Step 2 */
+    /* Step 2 
+     * 
+     * This decodes the token that was in the request header.
+     * 
+     * If something is wrong with the token, an error is thrown.
+     * 
+     * */
     private function authenticate($firebase, $request)
 	{
 		/* Get the idTokenString */
@@ -93,15 +114,19 @@ class AuthenticationMiddleware
 		try 
 		{
 			$verifiedIdToken = $firebase->getAuth()->verifyIdToken($idTokenString);
+			//echo "VERIFIED TOKEN";
 		}
 		catch (InvalidToken $e)
 		{
+			//echo "TOKEN PROBLEM";
 			echo $e->getMessage();
 			die;
 		}
 		
 		$uid = $verifiedIdToken->getClaim('sub');
-		$user = $firebase->getAuth()->getUser($uid);
+		//$user = $firebase->getAuth()->getUser($uid);
+		
+		return $uid;
 	}
     
     

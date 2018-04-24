@@ -1,6 +1,6 @@
 <?php
 
-public class Badge
+class Badge
 {
 	
 

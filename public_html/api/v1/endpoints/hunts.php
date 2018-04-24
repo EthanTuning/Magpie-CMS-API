@@ -6,7 +6,10 @@
 $app->get('/hunts', function ($request, $response, $args) {
     // Show book identified by $args['id']
     
-    $response->getBody()->write(" HUNTS GET ROUTE ");
+    $uid = $request->getAttribute('uid');
+	$mapper = new HuntMapper($this->db, $uid);
+    
+    $response->getBody()->write($mapper->get("foo"));
     return $response;
 });
 

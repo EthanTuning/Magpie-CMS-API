@@ -263,7 +263,7 @@ ALTER TABLE `hunt`
    Note: This file is a security vulnerability, since it includes the password for the api user.
    However, the MySQL database should not be accessible via the network anyways. */
 
-CREATE USER IF NOT EXISTS 'magpieapi'@'localhost' IDENTIFIED WITH mysql_native_password AS '#xs3Zh3(U^eZ5^UZ';
+CREATE USER IF NOT EXISTS 'magpieapi'@'localhost' IDENTIFIED WITH mysql_native_password AS 'eMO3B8cxFSo6usst';
 
 /* This line is for reference: GRANT SELECT, INSERT, UPDATE, DELETE, FILE ON `MagpieDB`.* TO 'magpieapi'@'localhost';   */
 
