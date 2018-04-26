@@ -7,7 +7,7 @@ use Firebase\Auth\Token\Exception\InvalidToken;
 
 
 require './classes/creds/creds.php';		// Configuration stuff
-require './classes/authentication.php';		// User Authentication code
+require './classes/AuthenticationMiddleware.php';		// User Authentication code
 require './classes/HuntMapper.php';			// Endpoint <-> Database Interfacer Class
 require './classes/BadgeMapper.php';		// ^ same
 
