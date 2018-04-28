@@ -8,6 +8,10 @@ use Firebase\Auth\Token\Exception\InvalidToken;
 
 require './classes/creds/creds.php';		// Configuration stuff
 require './classes/AuthenticationMiddleware.php';		// User Authentication code
+
+require './classes/Hunt.php';
+//require './classes/Badge.php';
+
 require './classes/HuntMapper.php';			// Endpoint <-> Database Interfacer Class
 require './classes/BadgeMapper.php';		// ^ same
 
@@ -47,16 +51,11 @@ $app->get('/test', function (Request $request, Response $response, array $args) 
 	   //GET parameters list
 	}*/
     
-    $getParam = $allGetVars['name'];
+    //$getParam = $allGetVars['name'];
     
-    if ($getParam == null)
-    {
-		$response->getBody()->write(" Hello noname. ");
-	}
-    else
-    {
-		$response->getBody()->write(" Hello, $getParam ");
-	}
+    $hunt = new Hunt(array('name'=>"BobTheHunter", 'hunt_id'=>1));
+
+	$response->getBody()->write(json_encode($hunt->jsonSerialize()));
 
     return $response;
 });
