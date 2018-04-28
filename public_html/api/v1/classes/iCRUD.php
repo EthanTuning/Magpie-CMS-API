@@ -13,7 +13,7 @@
  */
 
 
-public interface iCRUD
+interface iCRUD
 {
 	/* Returns a string of the name of the corresponding table in the database. */
 	public function getTableName();	

@@ -9,11 +9,13 @@ use Firebase\Auth\Token\Exception\InvalidToken;
 require './classes/creds/creds.php';		// Configuration stuff
 require './classes/AuthenticationMiddleware.php';		// User Authentication code
 
+require './classes/iCRUD.php';		//interface for using the Mapper
+
 require './classes/Hunt.php';
 //require './classes/Badge.php';
 
-require './classes/HuntMapper.php';			// Endpoint <-> Database Interfacer Class
-require './classes/BadgeMapper.php';		// ^ same
+require './classes/Mapper.php';			// Endpoint <-> Database Interfacer Class
+//require './classes/BadgeMapper.php';		// ^ same
 
 require './vendor/autoload.php';			// Composer stuff //
 
@@ -54,8 +56,12 @@ $app->get('/test', function (Request $request, Response $response, array $args) 
     //$getParam = $allGetVars['name'];
     
     $hunt = new Hunt(array('name'=>"BobTheHunter", 'hunt_id'=>1));
+	$uid = $request->getAttribute('uid');
+	$mapper = new Mapper($this->db, $uid);
 
-	$response->getBody()->write(json_encode($hunt->jsonSerialize()));
+	$mapper->addHunt($hunt);
+
+	//$response->getBody()->write(json_encode($hunt->jsonSerialize()));
 
     return $response;
 });

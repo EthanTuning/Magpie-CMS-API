@@ -11,8 +11,7 @@ $app->get('/hunts', function ($request, $response, $args) {
     
     /* Create the Mappers used */
     $uid = $request->getAttribute('uid');
-	$huntMapper = new HuntMapper($this->db, $uid);
-	$badgeMapper = new BadgeMapper($this->db, $uid);
+	$huntMapper = new Mapper($this->db, $uid);
     
     /* Get parameters from request */
     $params = $request->getQueryParams();

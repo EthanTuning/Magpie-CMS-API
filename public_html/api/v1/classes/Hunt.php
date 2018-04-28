@@ -10,7 +10,7 @@
  */
 
 
-class Hunt implements JsonSerializable 
+class Hunt implements JsonSerializable, iCRUD 
 {	
 	/* This is the columns from the hunts table.  */
 	private static $COLUMNS = array(
@@ -57,6 +57,39 @@ class Hunt implements JsonSerializable
 			'badgestuff' => "badge object"
 		);*/
 	}
+	
+	
+	/******************
+	 * iCRUD interface stuff
+	 * *****************/
+	public function getTableName()	//return a string
+	{
+		return 'hunts';
+	}
+	
+	/* Returns an associative array of the fields to populate table row */
+	public function getFields()
+	{
+		return $this->fields;
+	}
+	
+	/* Returns the (name, value) pair of the key used to ID the table row (Primary key in database)
+	 * as a single-element associative array.*/
+	public function getPrimaryKey()
+	{
+		
+	}
+	
+	/* Returns the UID as a string for the owner of the instance of the class */
+	public function getUID()
+	{
+		return $this->fields['uid'];
+	}
+	
+	/******************
+	 * END iCRUD interface stuff
+	 * *****************/
+	
 	
 	
 	/* Approval Status */

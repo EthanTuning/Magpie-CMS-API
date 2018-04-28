@@ -13,7 +13,7 @@
  */
  
 
-class HuntMapper
+class Mapper
 {
 	private $db;		// PDO object (already instantiated and stuff)
 	private $uid;		// user id extracted from Firebase token
