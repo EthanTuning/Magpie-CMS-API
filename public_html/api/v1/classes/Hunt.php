@@ -34,7 +34,8 @@ class Hunt implements JsonSerializable, IHuntElement
 		);
 	
 	private $fields;	// Associative array to hold all the values for a Hunt
-	private $badges;	// array to hold the badges
+	private $badges;	// array to hold badges
+	private $awards;	// array to hold awards
 	private $images;	// array to hold image URIs in the future
 	
 	
@@ -127,7 +128,12 @@ class Hunt implements JsonSerializable, IHuntElement
 	/* Convert to an associative array for json_encode() to work with */
 	function jsonSerialize()
 	{
-		//$this->fields['badges'] = $this->badges;
+		//move the 3 references of arrays into the body
+		
+		$this->fields['badges'] = $this->badges;
+		$this->fields['awards'] = $this->awards;
+		$this->fields['images'] = $this->images;
+		
 		return $this->fields;
 		
 		//return get_object_vars($this);

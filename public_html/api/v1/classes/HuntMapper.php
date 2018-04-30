@@ -22,8 +22,8 @@ class HuntMapper extends Mapper
 		{
 			throw new Exception('HuntMapper->get(): $huntid is null!');
 		}
-		
-		if ($this->isOwnedByCurrentUser($huntid))
+		//if hunt is approved, or if it's owned by current user, retrieve it from dbase
+		if ($this->isOwnedByCurrentUser($huntid) || $this->isApproved($huntid) )
 		{
 			// insert PDO code
 			$stmt = $this->db->prepare('SELECT * FROM hunts WHERE hunt_id=?');
@@ -35,7 +35,7 @@ class HuntMapper extends Mapper
 		else
 		{
 			//set 403 - forbidden
-			return "403 FORBIDDEN";
+			throw new IllegalAccessException('Cannot get specified Hunt');
 		}
 
 	}
@@ -64,20 +64,112 @@ class HuntMapper extends Mapper
 	/* Add - Add a Hunt with the passed parameters */
 	public function add(Hunt $hunt)
 	{
+		if ($hunt == null)
+		{
+			throw new Exception('HuntMapper->add(): $hunt is null!');
+		}
 		
+		$data = $hunt->getFields();
 		
+		// delete things from array that are unwanted before adding to database
+		unset($data['hunt_id'], $data['approval_status']);
 		
+		//loop through and delete empty values in the array
+		foreach ($data as $key => $value)
+		{
+			if (!isset($data[$key]))
+			{
+				unset($data[$key]);
+			}
+		}
 		
+		// build query...
+		$sql  = "INSERT INTO hunts";
+
+		// implode keys of $array...
+		$sql .= " (`".implode("`, `", array_keys($data))."`)";
+
+		// implode placeholders of $array...
+		$sql .= " VALUES (:".implode(", :",  array_keys($data)).") ";
 		
-		echo "ADDED HUNT";
-		// return a boolean?
+		$stmt= $this->db->prepare($sql);
+		$stmt->execute($data);
+		
+		// check for success
+		$result = $stmt->rowCount();
+		
+		if ($result < 1)
+		{
+			throw new Exception("HuntMapper - add() fail. ");
+		}
 	}
 	
 	
 	/* Update - Update a Hunt with the following parameters */
 	public function update(Hunt $hunt)
 	{
+		if ($hunt == null)
+		{
+			throw new Exception('HuntMapper->update(): $hunt is null!');
+		}
 		
+		$data = $hunt->getFields();
+		
+		if (!isset($data['hunt_id']))
+		{
+			throw new Exception("HuntMapper: huntid not set");
+		}
+		
+		$huntid = $data['hunt_id'];		//save this for later
+		
+		/* Check approval status and ownership */
+		
+		
+		
+		/* Database ops */
+		
+		// delete things from array that are unwanted before adding to database
+		unset($data['hunt_id'], $data['approval_status']);
+		
+		//loop through and delete empty values in the array
+		foreach ($data as $key => $value)
+		{
+			if (!isset($data[$key]))
+			{
+				unset($data[$key]);
+			}
+		}
+		
+		
+		// build query...
+		$sql  = "UPDATE hunts SET ";
+
+		foreach($data as $key => $value)
+		{
+			$sql = $sql.$key."=:".$key.", ";
+		}
+		
+		$sql = rtrim($sql, ', ');		// remove trailing comma
+		
+		$sql = $sql." WHERE hunt_id=:hunt_id";
+		
+		
+		//$sql = 'UPDATE hunts SET abbreviation=:abbreviation, name=:name WHERE hunt_id=:hunt_id';
+		//echo $sql;
+		//return;
+		
+		$data['hunt_id'] = $huntid;
+		
+		$stmt= $this->db->prepare($sql);
+		$stmt->execute($data);
+		
+		// check for success
+		$result = $stmt->rowCount();
+		
+		if ($result < 1)
+		{
+			throw new Exception("HuntMapper - update() fail. ");
+		}
 	}
 	
 	

@@ -35,9 +35,9 @@ class Mapper
 	{
 		//grab the record from the database
 		
-		$status = getApprovalStatus();
+		$status = $this->getApprovalStatus($huntid);
 		
-		return ($approvalStatus == 'approved');
+		return ($status == 'approved');
 	}
 	
 	
@@ -46,7 +46,7 @@ class Mapper
 	{
 		//grab the record from the database
 		
-		$status = getApprovalStatus();
+		$status = getApprovalStatus($huntid);
 		
 		return ($status == 'non-approved');
 	}
@@ -55,7 +55,7 @@ class Mapper
 	/* NO DUPLICATION OF SQL! */
 	private function getApprovalStatus($huntid)
 	{
-		$stmt = $db->prepare('SELECT approval_status FROM hunts WHERE hunt_id=?');
+		$stmt = $this->db->prepare('SELECT approval_status FROM hunts WHERE hunt_id=?');
 		$stmt->execute([$huntid]); 
 		$approvalStatus = $stmt->fetchColumn();
 		
@@ -66,7 +66,11 @@ class Mapper
 	/* Is the specified hunt owned by the current owner? */
 	public function isOwnedByCurrentUser($huntid)
 	{
-		return true;
+		$stmt = $this->db->prepare('SELECT uid FROM hunts WHERE hunt_id=?');
+		$stmt->execute([$huntid]); 
+		$uidFromTable = $stmt->fetchColumn();
+		
+		return ($this->uid == $uidFromTable) ;
 	}
 
 

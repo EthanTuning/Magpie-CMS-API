@@ -10,6 +10,7 @@ require './classes/creds/creds.php';					// Configuration stuff
 require './classes/AuthenticationMiddleware.php';		// User Authentication code
 
 /* Interfaces and Basic classes */
+require './classes/CustomExceptions.php';
 require './classes/iCRUD.php';			//not-used interface
 require './classes/IHuntElement.php';	//interface for using the Mapper
 require './classes/Hunt.php';
@@ -66,9 +67,17 @@ $app->get('/test', function (Request $request, Response $response, array $args) 
     $hunt = new Hunt(array('name'=>"BobTheHunter", 'hunt_id'=>1));
 	$uid = $request->getAttribute('uid');
 	$huntMapper = new HuntMapper($this->db, $uid);
-	$resultingHunt = $huntMapper->get(666);
+	try
+	{
+		$resultingHunt = $huntMapper->get(666);
+		$response->getBody()->write(json_encode($resultingHunt->jsonSerialize()));
+	}
+	catch (IllegalAccessException $e)
+	{
+		$response = $response->withStatus(403);
+	}
 
-	$response->getBody()->write(json_encode($resultingHunt->jsonSerialize()));
+	
 
     return $response;
 });
