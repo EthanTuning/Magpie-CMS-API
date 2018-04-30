@@ -1,6 +1,6 @@
 <?php
 
-/* This interfaces with the database.  Its a go-between for the enpoints
+/* This interfaces with the database.  Its a go-between for the endpoints
  * to get stuff from the database.
  * 
  * This class is responsible for doing Approval and Security checks.
@@ -13,31 +13,31 @@
  */
  
 
-class Mapper
+class HuntMapper extends Mapper
 {
-	private $db;		// PDO object (already instantiated and stuff)
-	private $uid;		// user id extracted from Firebase token
-	
-	
-	/* Constructor */
-	function __construct($db, $uid)
-	{
-		$this->db = $db;
-		$this->uid = $uid;
-	}
-	
-	
 	/* Get - Takes a string (Hunt ID), returns that hunt */
-	public function get($id)
+	public function get($huntid)
 	{
-		if ($id == null)
+		if ($huntid == null)
 		{
-			throw new Exception('HuntMapper->get(): $id is null!');
+			throw new Exception('HuntMapper->get(): $huntid is null!');
 		}
 		
-		
-		/* Return results */
-		return "ID".$id;
+		if ($this->isOwnedByCurrentUser($huntid))
+		{
+			// insert PDO code
+			$stmt = $this->db->prepare('SELECT * FROM hunts WHERE hunt_id=?');
+			$stmt->execute([$huntid]); 
+			$result = $stmt->fetch();
+			$newHunt = new Hunt($result);
+			return $newHunt;
+		}
+		else
+		{
+			//set 403 - forbidden
+			return "403 FORBIDDEN";
+		}
+
 	}
 
 	
@@ -62,14 +62,20 @@ class Mapper
 
 	
 	/* Add - Add a Hunt with the passed parameters */
-	public function add($array)
+	public function add(Hunt $hunt)
 	{
+		
+		
+		
+		
+		
+		echo "ADDED HUNT";
 		// return a boolean?
 	}
 	
 	
 	/* Update - Update a Hunt with the following parameters */
-	public function update($array)
+	public function update(Hunt $hunt)
 	{
 		
 	}

@@ -3,18 +3,14 @@
 /* This interfaces with the database.  Its a go-between for the enpoints
  * to get stuff from the database.
  * 
- * This class ONLY returns objects belonging to the uid provided.
- * Approval status isn't taken into account when retrieving objects.
- * 
- * Update/Add won't work on approved Hunts
  * 
  */
  
 
 class Mapper
 {
-	private $db;		// PDO object (already instantiated and stuff)
-	private $uid;		// user id extracted from Firebase token
+	protected $db;		// PDO object (already instantiated and stuff)
+	protected $uid;		// user id extracted from Firebase token
 	
 	
 	/* Constructor */
@@ -29,130 +25,49 @@ class Mapper
 		$this->uid = $uid;
 	}
 	
-	/******************************************************
-	 * Standard CRUD stuff - gotta use iCRUD interface in object
-	 * ****************************************************/
-	 
-	/* Create */
-	public function create(iCRUD $object)
+	
+	/******** Approval and Ownership checks *************/
+	
+	/* Is Approved check - returns True if the hunt is approved.
+	 * 
+	 * A return value of false doesn't mean it's "not-approved", it could be "submitted" as well. */
+	public function isApproved($huntid)
 	{
-		echo "CREATE IN THE MAPPER".$object->getTableName();
+		//grab the record from the database
+		
+		$status = getApprovalStatus();
+		
+		return ($approvalStatus == 'approved');
 	}
 	
 	
-	/******************************************************
-	 * 					HUNT Functions
-	 * ****************************************************/
-	
-	/* Get a list of Hunts owned by the curent user */
-	public function getOwned()
+	/* Is Non-approved check - returns True if the hunt is 'non-approved'. */
+	public function isNonApproved($huntid)
 	{
-		/* Return results */
-		return "list goes here";
+		//grab the record from the database
+		
+		$status = getApprovalStatus();
+		
+		return ($status == 'non-approved');
 	}
 	
 	
-	/* Get - Takes a string (Hunt ID), returns that hunt */
-	public function getHunt($id)
+	/* NO DUPLICATION OF SQL! */
+	private function getApprovalStatus($huntid)
 	{
-		if ($id == null)
-		{
-			throw new Exception('Mapper->get(): $id is null!');
-		}
+		$stmt = $db->prepare('SELECT approval_status FROM hunts WHERE hunt_id=?');
+		$stmt->execute([$huntid]); 
+		$approvalStatus = $stmt->fetchColumn();
 		
-		
-		
-		/* Return results */
-		return "ID".$id;
-	}
-
-	
-	/* Add */
-	public function addHunt(Hunt $hunt)
-	{
-		if ($hunt == null)
-		{
-			throw new Exception('Mapper->addHunt(): $params is null!');
-		}
-		
-		echo "HUNT RECEIVED";
-		
-	}
-
-
-	/* Update */
-	public function updateHunt(Hunt $hunt)
-	{
-		
-		
-	}
-
-	
-	/* Delete - Delete the hunt with the specified ID */
-	public function deleteHunt($id)
-	{
-		
-	}
-
-
-
-
-
-	/******************************************************
-	 * 					Badge Functions
-	 * ****************************************************/
-
-	
-	/* Get a list of Badges belonging to the hunt */
-	public function getBadgesFromHunt($huntid)
-	{
-		/* Return results */
-		return "list goes here";
+		return $approvalStatus;
 	}
 	
 	
-	/* Get - Takes a string (Badge ID), returns that badge */
-	public function getBadge($id)
+	/* Is the specified hunt owned by the current owner? */
+	public function isOwnedByCurrentUser($huntid)
 	{
-		if ($id == null)
-		{
-			throw new Exception('Mapper->getBadge(): $id is null!');
-		}
-		
-		
-		
-		/* Return results */
-		return "ID".$id;
+		return true;
 	}
-
-	
-	/* Add */
-	public function addBadge(Badge $hunt)
-	{
-		if ($hunt == null)
-		{
-			throw new Exception('Mapper->addHunt(): $params is null!');
-		}
-		
-		echo "HUNT RECEIVED";
-	}
-
-
-	/* Update */
-	public function updateBadge(Badge $hunt)
-	{
-		
-		
-	}
-
-	
-	/* Delete - Delete the hunt with the specified ID */
-	public function deleteBadge($id)
-	{
-		
-	}
-
-
 
 
 	/******************************************************

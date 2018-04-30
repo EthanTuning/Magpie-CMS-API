@@ -10,7 +10,7 @@
  */
 
 
-class Hunt implements JsonSerializable, iCRUD 
+class Hunt implements JsonSerializable, IHuntElement
 {	
 	/* This is the columns from the hunts table.  */
 	private static $COLUMNS = array(
@@ -90,34 +90,21 @@ class Hunt implements JsonSerializable, iCRUD
 	 * END iCRUD interface stuff
 	 * *****************/
 	
-	
-	
-	/* Approval Status */
-	public function isApproved()
+	public function sanitizeForAdd()
 	{
-		if ( isset($this->fields['approval_status']) && 
-				$this->fields['approval_status'] == 'approved' )
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}	
+		//bad idea i think, puts too much trust on the class.
 	}
-
 	
-	public function isOwnedBy($otheruid)
+	
+	public function sanitizeForUpdate()
 	{
-		if ( isset($this->fields['uid']) && 
-				fields['uid'] == $otheruid )
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}	
+		
+	}
+	
+	
+	public function getHuntID()
+	{
+		return $this->fields['hunt_id'];
 	}
 	
 	

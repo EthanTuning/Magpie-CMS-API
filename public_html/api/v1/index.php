@@ -6,19 +6,27 @@ use \Psr\Http\Message\ResponseInterface as Response;
 use Firebase\Auth\Token\Exception\InvalidToken;
 
 
-require './classes/creds/creds.php';		// Configuration stuff
+require './classes/creds/creds.php';					// Configuration stuff
 require './classes/AuthenticationMiddleware.php';		// User Authentication code
 
-require './classes/iCRUD.php';		//interface for using the Mapper
-
+/* Interfaces and Basic classes */
+require './classes/iCRUD.php';			//not-used interface
+require './classes/IHuntElement.php';	//interface for using the Mapper
 require './classes/Hunt.php';
 //require './classes/Badge.php';
 
-require './classes/Mapper.php';			// Endpoint <-> Database Interfacer Class
-//require './classes/BadgeMapper.php';		// ^ same
+/* Mapper classes (Endpoint <-> Database Interfacers) */
+require './classes/Mapper.php';				// Parent Class
+require './classes/HuntMapper.php';
+require './classes/BadgeMapper.php';
+//require './classes/AwardMapper.php';
 
-require './vendor/autoload.php';			// Composer stuff //
+/* Composer Stuff */
+require './vendor/autoload.php';
 
+/*************************************
+ *				SLIM
+ *************************************/
 
 /* Load the stuff from 'creds/creds.php' into Slim */
 $app = new \Slim\App(['settings' => $config]);
@@ -57,15 +65,18 @@ $app->get('/test', function (Request $request, Response $response, array $args) 
     
     $hunt = new Hunt(array('name'=>"BobTheHunter", 'hunt_id'=>1));
 	$uid = $request->getAttribute('uid');
-	$mapper = new Mapper($this->db, $uid);
+	$huntMapper = new HuntMapper($this->db, $uid);
+	$resultingHunt = $huntMapper->get(666);
 
-	$mapper->addHunt($hunt);
-
-	//$response->getBody()->write(json_encode($hunt->jsonSerialize()));
+	$response->getBody()->write(json_encode($resultingHunt->jsonSerialize()));
 
     return $response;
 });
 
+
+/****************************************
+ * 				URI Endpoints
+ * ***********************************/
 
 require_once './endpoints/hunts.php';
 //require_once './endpoints/badges.php';
