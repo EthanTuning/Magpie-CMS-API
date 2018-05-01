@@ -3,6 +3,8 @@
 /* This interfaces with the database.  Its a go-between for the enpoints
  * to get stuff from the database.
  * 
+ * It first checks the state of the object in the database.
+ * Then it delegates the method to the State object.
  * 
  */
  
@@ -12,6 +14,8 @@ class Mapper
 	protected $db;		// PDO object (already instantiated and stuff)
 	protected $uid;		// user id extracted from Firebase token
 	
+	private $state;	// the state of the object the Mapper is operating on.
+							// this will change on setState()
 	
 	/* Constructor */
 	function __construct($db, $uid)
@@ -26,46 +30,90 @@ class Mapper
 	}
 	
 	
+	/***********************************
+	 * 		Public Access Functions
+	 * *********************************/
+	
+	// Get - Returns an IMapperable object
+	public function get(IMapperable $obj)
+	{
+		$this->setState($obj);
+		return $this->state->get($obj);
+	}		
+	
+	
+	public function update(IMapperable $obj)
+	{
+		$this->setState($obj);
+		return $this->state->update($obj);
+	}	
+	
+	
+	public function delete(IMapperable $obj)
+	{
+		$this->setState($obj);
+		return $this->state->delete($obj);
+	}	
+	
+	
+	public function add(IMapperable $obj)
+	{
+		$this->setState($obj);
+		return $this->state->add($obj);
+	}
+	
+
+	
 	/******** Approval and Ownership checks *************/
 	
-	/* Is Approved check - returns True if the hunt is approved.
-	 * 
-	 * A return value of false doesn't mean it's "not-approved", it could be "submitted" as well. */
-	public function isApproved($huntid)
+	private function setState(IMapperable $obj)
 	{
-		//grab the record from the database
+		$status = $this->getApprovalStatus($obj);
 		
-		$status = $this->getApprovalStatus($huntid);
+		switch ($status)
+		{
+			case 'approved':
+				$this->state = new StateApproved($this->db, $this->uid);
+				break;
+			case 'submitted':
+				$this->state = new StateSubmitted($this->db, $this->uid);
+				break;
+			case 'non-approved':
+				$this->state = new StateNonApproved($this->db, $this->uid);
+				break;
+		}
 		
-		return ($status == 'approved');
+		if ($this->state == null)
+		{
+			throw new Exception("STATE NOT SET");
+		}
+		
 	}
-	
-	
-	/* Is Non-approved check - returns True if the hunt is 'non-approved'. */
-	public function isNonApproved($huntid)
-	{
-		//grab the record from the database
 		
-		$status = getApprovalStatus($huntid);
-		
-		return ($status == 'non-approved');
-	}
-	
 	
 	/* NO DUPLICATION OF SQL! */
-	private function getApprovalStatus($huntid)
+	private function getApprovalStatus($obj)
 	{
+		$huntid = $obj->getParentId();
+		
 		$stmt = $this->db->prepare('SELECT approval_status FROM hunts WHERE hunt_id=?');
 		$stmt->execute([$huntid]); 
 		$approvalStatus = $stmt->fetchColumn();
+		
+		if ($approvalStatus == null)
+		{
+			throw new ResourceNotFoundException();
+		}
 		
 		return $approvalStatus;
 	}
 	
 	
 	/* Is the specified hunt owned by the current owner? */
-	public function isOwnedByCurrentUser($huntid)
+	public function isOwnedByCurrentUser(IMapperable $obj)
 	{
+		$huntid = $obj->getParentId();
+		
 		$stmt = $this->db->prepare('SELECT uid FROM hunts WHERE hunt_id=?');
 		$stmt->execute([$huntid]); 
 		$uidFromTable = $stmt->fetchColumn();
@@ -90,6 +138,9 @@ class Mapper
 	}
 
 
+	
+	
+	
 }
 
 ?>

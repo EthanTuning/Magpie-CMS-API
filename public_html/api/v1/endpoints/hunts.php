@@ -10,20 +10,29 @@ $app->get('/hunts/{huntid}', function ($request, $response, $args)
 {
     /* Create the Mappers used */
     $uid = $request->getAttribute('uid');
-	$huntMapper = new HuntMapper($this->db, $uid);
+	$mapper = new Mapper($this->db, $uid);
     
     /* Grab hunt id */
     $huntid = $args['huntid'];
     
+    // make Hunt
+    
+    $temp = new Hunt(array('hunt_id' => $huntid));
+    
+    
 	try
 	{
 		/* Retreive the Hunt from the mapper */
-		$hunt = $huntMapper->get($huntid);
-		$response->getBody()->write(json_encode($resultingHunt->jsonSerialize()));
+		$hunt = $mapper->get($temp);
+		$response->getBody()->write(json_encode($hunt->jsonSerialize()));		//add jsonSerialze() to interface?
 	}
 	catch (IllegalAccessException $e)
 	{
 		$response = $response->withStatus(403);
+	}
+	catch (ResourceNotFoundException $e)
+	{
+		$response = $response->withStatus(404);
 	}
 	
 	return $response;
@@ -85,11 +94,11 @@ $app->post('/hunts', function ($request, $response, $args) {
     
     /* Create the Mappers used */
     $uid = $request->getAttribute('uid');
-	$huntMapper = new HuntMapper($this->db, $uid);
+	$mapper = new Mapper($this->db, $uid);
 	
 	$hunt = new Hunt(array('name'=>"BobTheHunter", 'hunt_id'=>1, 'abbreviation' => 'BOB'));
 	
-	$huntMapper->add($hunt);
+	$mapper->add($hunt);
 	
 	
     $response->getBody()->write(" HUNTS POST ROUTE ");

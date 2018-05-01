@@ -10,8 +10,11 @@
  */
 
 
-class Hunt implements JsonSerializable, IHuntElement
+class Hunt implements JsonSerializable, IMapperable
 {	
+	private static $TABLENAME = 'hunts';		//change to const?  const vs static?
+	private static $PRIMARY_KEY = 'hunt_id';	//just the column name of the primary key
+	
 	/* This is the columns from the hunts table.  */
 	private static $COLUMNS = array(
 			'hunt_id',
@@ -40,6 +43,7 @@ class Hunt implements JsonSerializable, IHuntElement
 	
 	
 	/* Constructor - Takes an associative array of parameters to build a Hunt */
+	//TODO: change to take a ($key, $fieldArray) in CTOR ?
 	function __construct($array)
 	{	
 		foreach (self::$COLUMNS as $key)
@@ -61,11 +65,17 @@ class Hunt implements JsonSerializable, IHuntElement
 	
 	
 	/******************
-	 * iCRUD interface stuff
+	 * interface stuff
 	 * *****************/
-	public function getTableName()	//return a string
+	public function getParentId()
 	{
-		return 'hunts';
+		return $this->fields['hunt_id'];
+	}
+	 
+	 
+	public function getTable()	//return a string
+	{
+		return $this->TABLENAME;
 	}
 	
 	/* Returns an associative array of the fields to populate table row */
@@ -78,7 +88,7 @@ class Hunt implements JsonSerializable, IHuntElement
 	 * as a single-element associative array.*/
 	public function getPrimaryKey()
 	{
-		
+		return $this->fields[$this->PRIMARY_KEY];
 	}
 	
 	/* Returns the UID as a string for the owner of the instance of the class */
@@ -87,13 +97,11 @@ class Hunt implements JsonSerializable, IHuntElement
 		return $this->fields['uid'];
 	}
 	
-	/******************
-	 * END iCRUD interface stuff
-	 * *****************/
 	
-	public function sanitizeForAdd()
+	/* SUPER IMPORTANT */
+	public function sanitize()
 	{
-		//bad idea i think, puts too much trust on the class.
+		unset($this->fields['hunt_id'], $this->fields['approval_status']);
 	}
 	
 	
@@ -102,18 +110,12 @@ class Hunt implements JsonSerializable, IHuntElement
 		
 	}
 	
-	
-	public function getHuntID()
-	{
-		return $this->fields['hunt_id'];
-	}
-	
-	
+	/*
 	public function addBadge(Badge $newbadge)
 	{
 			$this->badges[] = $newbadge;
 	}
-	
+	*/
 	
 	/* Populate - Populates the values in Hunt 
 	function populate($inputValues)

@@ -11,19 +11,17 @@ require './classes/AuthenticationMiddleware.php';		// User Authentication code
 
 /* Interfaces and Basic classes */
 require './classes/CustomExceptions.php';
-require './classes/iCRUD.php';			//not-used interface
-require './classes/IHuntElement.php';	//interface for using the Mapper
+require './classes/Interfaces.php';
 require './classes/Hunt.php';
 //require './classes/Badge.php';
 
 /* Mapper classes (Endpoint <-> Database Interfacers) */
-require './classes/Mapper.php';				// Parent Class
-require './classes/HuntMapper.php';
-require './classes/BadgeMapper.php';
-//require './classes/AwardMapper.php';
+require './classes/State.php';				// 
+require './classes/Mapper.php';				// Mapper holds a State
 
 /* Composer Stuff */
 require './vendor/autoload.php';
+
 
 /*************************************
  *				SLIM
