@@ -85,8 +85,9 @@ $app->get('/test', function (Request $request, Response $response, array $args) 
  * 				URI Endpoints
  * ***********************************/
 
-require_once './endpoints/hunts.php';
 //require_once './endpoints/badges.php';
+require_once './endpoints/hunts.php';
+
 //require_once 'path_to_your_dir/admin_routes.php';
 //require_once 'path_to_your_dir/some_other_routes.php';
 

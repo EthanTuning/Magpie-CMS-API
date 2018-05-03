@@ -1,6 +1,6 @@
 <?php
 
-/* This interfaces with the database.  Its a go-between for the enpoints
+/* This interfaces with the database.  Its a go-between for the endpoints
  * to get stuff from the database.
  * 
  * It first checks the state of the object in the database.
@@ -14,7 +14,7 @@ class Mapper
 	protected $db;		// PDO object (already instantiated and stuff)
 	protected $uid;		// user id extracted from Firebase token
 	
-	private $state;	// the state of the object the Mapper is operating on.
+	private $state;		// the state of the object the Mapper is operating on.
 							// this will change on setState()
 	
 	/* Constructor */
@@ -68,36 +68,48 @@ class Mapper
 	
 	private function setState(IMapperable $obj)
 	{
-		$status = $this->getApprovalStatus($obj);
-		
-		switch ($status)
+		try
 		{
-			case 'approved':
-				$this->state = new StateApproved($this->db, $this->uid);
-				break;
-			case 'submitted':
-				$this->state = new StateSubmitted($this->db, $this->uid);
-				break;
-			case 'non-approved':
-				$this->state = new StateNonApproved($this->db, $this->uid);
-				break;
+			$status = $this->getApprovalStatus($obj);
+			
+			switch ($status)
+			{
+				case 'approved':
+					$this->state = new StateApproved($this->db, $this->uid);
+					break;
+				case 'submitted':
+					$this->state = new StateSubmitted($this->db, $this->uid);
+					break;
+				case 'non-approved':
+					$this->state = new StateNonApproved($this->db, $this->uid);
+					break;
+			}
+		}
+		catch (ResourceNotFoundException $e)
+		{
+			// At this point, there is no approval_status because the object doesn't exist in the database
+			// thus the object is stateless
+			if ($obj->isParent())
+			{
+				$this->state = new Stateless($this->db, $this->uid);
+			}
+			
 		}
 		
-		if ($this->state == null)
-		{
-			throw new Exception("STATE NOT SET");
-		}
-		
+		if ($this->state == null) { throw new Exception('State not set');}
 	}
 		
 	
 	/* NO DUPLICATION OF SQL! */
+	// TODO: make this work with other parent tables, possibly add a value to the getParentKey() to include a 'table' value
 	private function getApprovalStatus($obj)
 	{
-		$huntid = $obj->getParentId();
+		$parentid = $obj->getParentKey();
+		$name = $parentid['name'];
+		$value = $parentid['value'];
 		
-		$stmt = $this->db->prepare('SELECT approval_status FROM hunts WHERE hunt_id=?');
-		$stmt->execute([$huntid]); 
+		$stmt = $this->db->prepare('SELECT approval_status FROM hunts WHERE '.$name.'=?');		//then shove table value in here
+		$stmt->execute([$value]); 
 		$approvalStatus = $stmt->fetchColumn();
 		
 		if ($approvalStatus == null)
@@ -107,38 +119,6 @@ class Mapper
 		
 		return $approvalStatus;
 	}
-	
-	
-	/* Is the specified hunt owned by the current owner? */
-	public function isOwnedByCurrentUser(IMapperable $obj)
-	{
-		$huntid = $obj->getParentId();
-		
-		$stmt = $this->db->prepare('SELECT uid FROM hunts WHERE hunt_id=?');
-		$stmt->execute([$huntid]); 
-		$uidFromTable = $stmt->fetchColumn();
-		
-		return ($this->uid == $uidFromTable) ;
-	}
-
-
-	/******************************************************
-	 * 					Helper Functions
-	 * ****************************************************/
-
-	private function uidcheck()
-	{
-		//might not be needed, just hardcode "WHERE uid='uid'" into the SQL query
-	}
-	
-	
-	private function idClear()
-	{
-		
-	}
-
-
-	
 	
 	
 }

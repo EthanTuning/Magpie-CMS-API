@@ -7,9 +7,12 @@
 
 interface IMapperable
 {
-	public function getParentId();		//returns a string of the Class's hunt_id (since Hunt is the Parent class */
+	public function isParent();			// returns true if it's a Parent class (in this case, a Hunt);
 	
-	public function getPrimaryKey();	//returns a (key, value) pair (assoc array) of the Class's primary key in database (eg, 'hunt_id' => '3929292')
+	public function getParentKey();		//same as getPrimaryKey but for it's parent (usually this would be a foreign key) */
+	
+	public function getPrimaryKey();	//returns an associative array of the Class's primary key in database
+										// Format: ['name'=>'badge_id', 'value'=>'323223'] or ['name'=>'hunt_id', 'value'=>'6463']
 	
 	public function getTable();			//returns string of tablename that the class is mapped to
 	

@@ -12,8 +12,8 @@
 
 class Hunt implements JsonSerializable, IMapperable
 {	
-	private static $TABLENAME = 'hunts';		//change to const?  const vs static?
-	private static $PRIMARY_KEY = 'hunt_id';	//just the column name of the primary key
+	private static $TABLENAME = 'hunts';		// change to const?  const vs static?
+	private static $PRIMARY_KEY = 'hunt_id';	// just the column name of the primary key
 	
 	/* This is the columns from the hunts table.  */
 	private static $COLUMNS = array(
@@ -67,29 +67,39 @@ class Hunt implements JsonSerializable, IMapperable
 	/******************
 	 * interface stuff
 	 * *****************/
-	public function getParentId()
+	 
+	 
+	/* Get Parent Key - Returns an assoc array containing information on this object's parent */
+	public function getParentKey()
 	{
-		return $this->fields['hunt_id'];
+		$name = self::$PRIMARY_KEY;						// hunt is it's own parent
+		$value = $this->fields[$name];
+		
+		return array('name'=>$name, 'value'=>$value);
 	}
 	 
-	 
-	public function getTable()	//return a string
+	/* Get Table name - return a string */
+	public function getTable()
 	{
-		return $this->TABLENAME;
+		return self::$TABLENAME;
 	}
 	
-	/* Returns an associative array of the fields to populate table row */
+	
+	/* Get Fields - Returns an associative array of the fields to populate table row */
 	public function getFields()
 	{
 		return $this->fields;
 	}
 	
-	/* Returns the (name, value) pair of the key used to ID the table row (Primary key in database)
-	 * as a single-element associative array.*/
+	
+	/* Get Primary Key
+	 * Returns the (name, value) array of the key used to ID the table row (Primary key in database)
+	 * as an associative array.*/
 	public function getPrimaryKey()
 	{
-		return $this->fields[$this->PRIMARY_KEY];
+		return $this->getParentKey();			// a hunt is it's own parent
 	}
+	
 	
 	/* Returns the UID as a string for the owner of the instance of the class */
 	public function getUID()
@@ -105,10 +115,12 @@ class Hunt implements JsonSerializable, IMapperable
 	}
 	
 	
-	public function sanitizeForUpdate()
+	/* Is this a Parent */
+	public function isParent()
 	{
-		
+		return true;		//its a Hunt, master of objects
 	}
+	
 	
 	/*
 	public function addBadge(Badge $newbadge)
@@ -126,6 +138,7 @@ class Hunt implements JsonSerializable, IMapperable
        }
     }*/
 
+	
 
 	/* Convert to an associative array for json_encode() to work with */
 	function jsonSerialize()

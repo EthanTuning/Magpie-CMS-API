@@ -6,7 +6,7 @@
  *				GET
  ***********************************/
 
-$app->get('/hunts/{hunt_id}', function ($request, $response, $args)
+$app->get('/badges/{badge_id}', function ($request, $response, $args)
 {
     /* Create the Mappers used */
     $uid = $request->getAttribute('uid');
@@ -17,7 +17,7 @@ $app->get('/hunts/{hunt_id}', function ($request, $response, $args)
     
     // make Hunt
     
-    $temp = new Hunt(array('hunt_id' => $huntid));
+    $temp = new Badge(array('hunt_id' => $huntid));
     
     
 	try

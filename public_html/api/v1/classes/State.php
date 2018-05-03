@@ -33,12 +33,12 @@ abstract class State
 	}
 	
 	
-	/***********************************
-	 * 		Public Access Functions
+	/*****************************************************************
+	 * 			Public Access Functions
 	 * 
-	 * 	These should be defined in a subclass.
+	 * 	These functions should be defined in a subclass, by default they throw Exceptions.
 	 * 
-	 * *********************************/
+	 * ***************************************************************/
 	
 	
 	// Get - Returns an IMapperable object
@@ -71,7 +71,7 @@ abstract class State
 	 * 				CRUD OPERATIONS
 	 * ****************************************************/
 
-	/* dbSelect - Takes a IMapperable, returns that object */
+	/* Get - Takes a IMapperable, returns that object */
 	protected function dbSelect(IMapperable $object)
 	{
 		if ($object == null)
@@ -79,15 +79,37 @@ abstract class State
 			throw new Exception('Mapper->get(): $object is null!');
 		}
 		
-		$huntid = $object->getParentId();
+		$primarykey = $object->getPrimaryKey();
+		
+		$primarykeyName = $primarykey['name'];
+		$idnumber = $primarykey['object'];
+		$table = $object->getTable();
+		
+		$sql = 'SELECT * FROM '.$table.' WHERE '.$primarykeyName.'=?';
 		
 		// PDO code
-		$stmt = $this->db->prepare('SELECT * FROM hunts WHERE hunt_id=?');
-		$stmt->execute([$huntid]); 
+		$stmt = $this->db->prepare($sql);
+		$stmt->execute([$idnumber]); 
 		$result = $stmt->fetch();
-		$newHunt = new Hunt($result);
+		$newIMapperable;		// the new object to return
 		
-		return $newHunt;
+		// this is a little messy, but since Hunts and Badges don't inherit ....
+		switch ($table)
+		{
+			case 'hunts':
+				$newIMapperable = new Hunt($result);
+				break;/*
+			case 'badges':
+				$newIMapperable = new Badge($result);
+				break;*/
+		}
+		
+		if ($newIMapperable == null)
+		{
+			throw new Exception("Couldn't get from database.");
+		}
+		
+		return $newIMapperable;
 	}
 
 	
@@ -145,38 +167,42 @@ abstract class State
 		
 		if ($result < 1)
 		{
-			throw new Exception("HuntMapper - add() fail. ");
+			throw new Exception("Mapper - add() fail. ");
 		}
 		
 		return true;
 	}
 	
 	
-	/* Update - Update a Hunt with the following parameters */
-	protected function dbUpdate(Hunt $hunt)
+	/* Update - Update a IMapperable with the following parameters */
+	protected function dbUpdate(IMapperable $object)
 	{
-		if ($hunt == null)
+		if ($object == null)
 		{
-			throw new Exception('HuntMapper->update(): $hunt is null!');
+			throw new Exception('$object is null!');
 		}
 		
-		$data = $hunt->getFields();
+		// Get data fields to enter
+		$object->sanitize();
+		$data = $object->getFields();
+
+		// Get Primary Key
+		$primarykey = $object->getPrimaryKey();
 		
-		if (!isset($data['hunt_id']))
+		$primarykeyName = $primarykey['name'];
+		$idnumber = $primarykey['value'];
+		
+		// Get tablename
+		$table = $object->getTable();
+		
+		
+		if (!isset($primarykey))
 		{
-			throw new Exception("HuntMapper: huntid not set");
+			throw new Exception("Mapper: primary key not set");
 		}
-		
-		$huntid = $data['hunt_id'];		//save this for later
-		
-		/* Check approval status and ownership */
-		
-		
-		
-		/* Database ops */
 		
 		// delete things from array that are unwanted before adding to database
-		unset($data['hunt_id'], $data['approval_status']);
+		//unset($data['hunt_id'], $data['approval_status']);
 		
 		//loop through and delete empty values in the array
 		foreach ($data as $key => $value)
@@ -187,9 +213,11 @@ abstract class State
 			}
 		}
 		
+		// add the primarykeyName back into the $data set, it's used by the PDO in the query
+		$data[$primarykeyName] = $idnumber;
 		
 		// build query...
-		$sql  = "UPDATE hunts SET ";
+		$sql  = 'UPDATE '.$tablename.' SET ';
 
 		foreach($data as $key => $value)
 		{
@@ -198,14 +226,15 @@ abstract class State
 		
 		$sql = rtrim($sql, ', ');		// remove trailing comma
 		
-		$sql = $sql." WHERE hunt_id=:hunt_id";
+		$sql = $sql.' WHERE '.$primarykeyName.'=:'$primarykeyName; 		//ex, hunt_id=:hunt_id;
 		
 		
 		//$sql = 'UPDATE hunts SET abbreviation=:abbreviation, name=:name WHERE hunt_id=:hunt_id';
 		//echo $sql;
 		//return;
 		
-		$data['hunt_id'] = $huntid;
+		// add parent ID and value to the data to be entered in the database
+		// - actually this should be a part of the fields[] array, so it should be in $data
 		
 		$stmt= $this->db->prepare($sql);
 		$stmt->execute($data);
@@ -215,16 +244,62 @@ abstract class State
 		
 		if ($result < 1)
 		{
-			throw new Exception("HuntMapper - update() fail. ");
+			throw new Exception("Mapper - update() fail. ");
 		}
 	}
 	
 	
-	/* Delete - Delete the hunt with the specified ID */
-	protected function dbDelete($id)
+	/* Delete - Delete the object with the specified ID */
+	protected function dbDelete(IMapperable $object)
 	{
+		if ($object == null)
+		{
+			throw new Exception('$object is null!');
+		}
 		
+		$primarykey = $object->getPrimaryKey();
+		
+		$primarykeyName = $primarykey['name'];
+		$idnumber = $primarykey['value'];
+		$table = $object->getTable();
+		
+		$sql = 'DELETE FROM '.$table.' WHERE '.$primarykeyName.'=?';
+		
+		// PDO code
+		$stmt = $this->db->prepare($sql);
+		$stmt->execute([$idnumber]); 
+		
+		// check for success
+		$result = $stmt->rowCount();
+		
+		if ($result < 1)
+		{
+			throw new Exception("Delete fail.");
+		}
+		
+		return true;
 	}
+	
+	
+	/******************************************************
+	 * 					Helper Functions
+	 * ****************************************************/
+	
+	/* Is the specified hunt owned by the current owner? */
+	public function isOwnedByCurrentUser(IMapperable $obj)
+	{
+		$parentkey = $obj->getParentKey();
+		$name = $parentkey['name'];
+		$value = $parentkey['value'];
+		
+		$stmt = $this->db->prepare('SELECT uid FROM hunts WHERE '.$name.'=?');
+		$stmt->execute([$value]); 
+		$uidFromTable = $stmt->fetchColumn();
+		
+		return ($this->uid == $uidFromTable) ;
+	}
+	
+	
 	
 }
 
@@ -239,7 +314,11 @@ class StateApproved extends State
 	
 	public function delete(IMapperable $obj)
 	{
-		return $this->dbDelete($obj);
+		// if the object is a Parent object, can delete (delete should cascade on database)
+		if ($obj->isParent())
+		{
+			return $this->dbDelete($obj);
+		}
 	}
 }
 
@@ -249,7 +328,7 @@ class StateSubmitted extends State
 {
 	public function get(IMapperable $obj)
 	{
-		if (/* if owned by current user */ true)
+		if ($this->isOwnedByCurrentUser())
 		{
 			return $this->dbSelect($obj);
 		}
@@ -267,7 +346,7 @@ class StateNonApproved extends State
 {
 	public function get(IMapperable $obj)
 	{
-		if (/* if owned by current user */ true)
+		if ($this->isOwnedByCurrentUser())
 		{
 			return $this->dbSelect($obj);
 		}
@@ -286,19 +365,30 @@ class StateNonApproved extends State
 	
 	public function add(IMapperable $obj)
 	{
-		return $this->dbUpdate($obj);
+		return $this->dbInsert($obj);
 	}
 	
 	
 	public function delete(IMapperable $obj)
 	{
-		return $this->dbUpdate($obj);
+		return $this->dbDelete($obj);
 	}
 	
 	
 }
 
 
+/*** Stateless ***/
+/* This is the state that a top-level IMapperable object lives in before being put in
+ * the database.  (Hunt)
+ */
+class Stateless extends State
+{
+	public function add(IMapperable $obj)
+	{
+		return $this->dbInsert($obj);
+	}
+}
 
 
 
