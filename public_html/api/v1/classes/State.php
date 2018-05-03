@@ -170,6 +170,8 @@ abstract class State
 			throw new Exception("Mapper - add() fail. ");
 		}
 		
+		//TODO: return the ID of the resource added
+		
 		return true;
 	}
 	
@@ -182,10 +184,6 @@ abstract class State
 			throw new Exception('$object is null!');
 		}
 		
-		// Get data fields to enter
-		$object->sanitize();
-		$data = $object->getFields();
-
 		// Get Primary Key
 		$primarykey = $object->getPrimaryKey();
 		
@@ -193,9 +191,12 @@ abstract class State
 		$idnumber = $primarykey['value'];
 		
 		// Get tablename
-		$table = $object->getTable();
+		$tablename = $object->getTable();
 		
-		
+		// Get data fields to enter
+		$object->sanitize();
+		$data = $object->getFields();
+
 		if (!isset($primarykey))
 		{
 			throw new Exception("Mapper: primary key not set");
@@ -226,11 +227,11 @@ abstract class State
 		
 		$sql = rtrim($sql, ', ');		// remove trailing comma
 		
-		$sql = $sql.' WHERE '.$primarykeyName.'=:'$primarykeyName; 		//ex, hunt_id=:hunt_id;
+		$sql = $sql.' WHERE '.$primarykeyName.'=:'.$primarykeyName; 		//ex, hunt_id=:hunt_id;
 		
 		
 		//$sql = 'UPDATE hunts SET abbreviation=:abbreviation, name=:name WHERE hunt_id=:hunt_id';
-		//echo $sql;
+		//echo "\n".$sql;
 		//return;
 		
 		// add parent ID and value to the data to be entered in the database
@@ -244,8 +245,10 @@ abstract class State
 		
 		if ($result < 1)
 		{
-			throw new Exception("Mapper - update() fail. ");
+			return "Nothing updated.";
 		}
+		
+		return true;
 	}
 	
 	
@@ -296,10 +299,8 @@ abstract class State
 		$stmt->execute([$value]); 
 		$uidFromTable = $stmt->fetchColumn();
 		
-		return ($this->uid == $uidFromTable) ;
+		return ($this->uid === $uidFromTable) ;
 	}
-	
-	
 	
 }
 
@@ -315,9 +316,13 @@ class StateApproved extends State
 	public function delete(IMapperable $obj)
 	{
 		// if the object is a Parent object, can delete (delete should cascade on database)
-		if ($obj->isParent())
+		if ($this->isOwnedByCurrentUser() && $obj->isParent())
 		{
 			return $this->dbDelete($obj);
+		}
+		else
+		{
+			throw new IllegalAccessException();
 		}
 	}
 }
@@ -346,7 +351,7 @@ class StateNonApproved extends State
 {
 	public function get(IMapperable $obj)
 	{
-		if ($this->isOwnedByCurrentUser())
+		if ($this->isOwnedByCurrentUser($obj))
 		{
 			return $this->dbSelect($obj);
 		}
@@ -359,7 +364,14 @@ class StateNonApproved extends State
 	
 	public function update(IMapperable $obj)
 	{
-		return $this->dbUpdate($obj);
+		if ($this->isOwnedByCurrentUser($obj))
+		{
+			return $this->dbUpdate($obj);
+		}
+		else
+		{
+			throw new IllegalAccessException();
+		}
 	}
 	
 	
@@ -371,7 +383,14 @@ class StateNonApproved extends State
 	
 	public function delete(IMapperable $obj)
 	{
-		return $this->dbDelete($obj);
+		if ($this->isOwnedByCurrentUser($obj))
+		{
+			return $this->dbDelete($obj);
+		}
+		else
+		{
+			throw new IllegalAccessException();
+		}
 	}
 	
 	

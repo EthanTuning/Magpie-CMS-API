@@ -28,21 +28,23 @@ class AuthenticationMiddleware
     public function __invoke($request, $response, $next)
     {
 		$firebase = $this->initialize();					//create the firebase object
-		$uid = $this->authenticate($firebase, $request);	//authenticate the request with firebase
+		$verifiedIdToken = $this->authenticate($firebase, $request);	//authenticate the request with firebase
 		
-				
+		$uid = $verifiedIdToken->getClaim('sub');
 		/* Step 3 
 		 * 
-		 * Send the extracted uid to the $request object so the Mapper 
+		 * Send the extracted uid and email to the $request object so the Mapper 
 		 * classes can do security checks on the data requested.
 		 * 
 		 * */
 		
 		$request = $request->withAttribute('uid', $uid);
 		
-        $response->getBody()->write('BEFORE... ');
-        $response = $next($request, $response);
-        $response->getBody()->write(' ...AFTER');
+		// Get email from token, shove it in request
+		$email = $verifiedIdToken->getClaim('email');
+		$request = $request->withAttribute('email', $email);
+		
+        $response = $next($request, $response);		//next layer
 
         return $response;
     }
@@ -109,6 +111,7 @@ class AuthenticationMiddleware
 		}
 		//die;
 		//$idTokenString = 'abcdef.abcdef.abcdef';
+		$verifiedIdToken;
 
 		/* Verify it */
 		try 
@@ -123,10 +126,10 @@ class AuthenticationMiddleware
 			die;
 		}
 		
-		$uid = $verifiedIdToken->getClaim('sub');
+		
 		//$user = $firebase->getAuth()->getUser($uid);
 		
-		return $uid;
+		return $verifiedIdToken;
 	}
     
     

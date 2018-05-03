@@ -49,7 +49,10 @@ $app->post('/hunts', function ($request, $response, $args) {
     $uid = $request->getAttribute('uid');
 	$mapper = new Mapper($this->db, $uid);
 	
-	$hunt = new Hunt($request->getParsedBody());
+	$parameters = $request->getParsedBody();
+    $parameters['uid'] = $uid;
+    
+    $hunt = new Hunt($parameters);
 	
 	try
 	{
@@ -77,8 +80,9 @@ $app->put('/hunts/{hunt_id}', function ($request, $response, $args)
     
     /* Grab hunt id from URL, shove it in assoc array w/rest of request */
     $huntid = $args['hunt_id'];
-    $parameters = $request->getParsedBody()
+    $parameters = $request->getParsedBody();
     $parameters['hunt_id'] = $huntid;
+    $parameters['uid'] = $uid;
     
     $hunt = new Hunt($parameters);
 	
@@ -125,10 +129,9 @@ $app->delete('/hunts/{hunt_id}', function ($request, $response, $args) {
     
     /* Grab hunt id */
     $huntid = $args['hunt_id'];
+    $parameters = array('hunt_id' => $huntid, 'uid' => $uid);
     
-    // make Hunt
-    
-    $temp = new Hunt(array('hunt_id' => $huntid));
+    $temp = new Hunt($parameters);
     
 	try
 	{

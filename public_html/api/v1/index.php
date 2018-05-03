@@ -8,6 +8,7 @@ use Firebase\Auth\Token\Exception\InvalidToken;
 
 require './classes/creds/creds.php';					// Configuration stuff
 require './classes/AuthenticationMiddleware.php';		// User Authentication code
+require './classes/UserManager.php';					// Checks users against 'creators' table
 
 /* Interfaces and Basic classes */
 require './classes/CustomExceptions.php';
@@ -30,14 +31,8 @@ require './vendor/autoload.php';
 /* Load the stuff from 'creds/creds.php' into Slim */
 $app = new \Slim\App(['settings' => $config]);
 
-
-/* Add the Authentication Layer */
-$app->add( new AuthenticationMiddleware() );
-
-
 /* Get the Slim container array */
 $container = $app->getContainer();
-
 
 /* Add the PDO container */
 $container['db'] = function ($c) {
@@ -48,6 +43,12 @@ $container['db'] = function ($c) {
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
     return $pdo;
 };
+
+/* Add the additional Middleware Layers (! The last ond loaded runs first !) */
+
+$app->add( new UserManager($container) );			// Checks if the current user is entered in the creators table
+$app->add( new AuthenticationMiddleware() );		// Authentication with google and tokens and stuff
+
 
 
 /* Route used for testing */
