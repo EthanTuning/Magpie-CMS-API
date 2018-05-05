@@ -16,15 +16,14 @@ $app->get('/hunts/{hunt_id}', function ($request, $response, $args)
     $huntid = $args['hunt_id'];
     
     // make Hunt
-    
-    $temp = new Hunt(array('hunt_id' => $huntid));
-    
+    $hunt = new Hunt(null);
+    $hunt->setPrimaryKeyValue($huntid);
     
 	try
 	{
 		/* Retreive the Hunt from the mapper */
-		$hunt = $mapper->get($temp);
-		$response->getBody()->write(json_encode($hunt->jsonSerialize()));		//add jsonSerialze() to interface?
+		$result = $mapper->get($hunt);
+		$response->getBody()->write(json_encode($result));		//add jsonSerialze() to interface?
 	}
 	catch (IllegalAccessException $e)
 	{

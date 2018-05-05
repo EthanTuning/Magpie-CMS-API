@@ -4,8 +4,9 @@
  * to get stuff from the database.
  * 
  * It first checks the state of the object in the database.
- * Then it delegates the method to the State object.
+ * Then it delegates the method called (get, add, whatever) to the State object.
  * 
+ * It takes an IMapperable object and returns an array.
  */
  
 
@@ -37,28 +38,28 @@ class Mapper
 	// Get - Returns an IMapperable object
 	public function get(IMapperable $obj)
 	{
-		$this->setState($obj);
+		$this->state = $this->setState($obj);
 		return $this->state->get($obj);
 	}		
 	
 	
 	public function update(IMapperable $obj)
 	{
-		$this->setState($obj);
+		$this->state = $this->setState($obj);
 		return $this->state->update($obj);
 	}	
 	
 	
 	public function delete(IMapperable $obj)
 	{
-		$this->setState($obj);
+		$this->state = $this->setState($obj);
 		return $this->state->delete($obj);
 	}	
 	
 	
 	public function add(IMapperable $obj)
 	{
-		$this->setState($obj);
+		$this->state = $this->setState($obj);
 		return $this->state->add($obj);
 	}
 	
@@ -66,6 +67,7 @@ class Mapper
 	
 	/******** Approval and Ownership checks *************/
 	
+	// Returns a new State object based on the passed in object
 	private function setState(IMapperable $obj)
 	{
 		try
@@ -75,28 +77,26 @@ class Mapper
 			switch ($status)
 			{
 				case 'approved':
-					$this->state = new StateApproved($this->db, $this->uid);
+					return new StateApproved($this->db, $this->uid);
 					break;
 				case 'submitted':
-					$this->state = new StateSubmitted($this->db, $this->uid);
+					return new StateSubmitted($this->db, $this->uid);
 					break;
 				case 'non-approved':
-					$this->state = new StateNonApproved($this->db, $this->uid);
+					return new StateNonApproved($this->db, $this->uid);
 					break;
+				default:
+					throw new ResourceNotFoundException();
 			}
 		}
 		catch (ResourceNotFoundException $e)
 		{
 			// At this point, there is no approval_status because the object doesn't exist in the database
 			// thus the object is stateless
-			if ($obj->isParent())
-			{
-				$this->state = new Stateless($this->db, $this->uid);
-			}
 			
+			return new Stateless($this->db, $this->uid);
 		}
 		
-		if ($this->state == null) { throw new Exception('State not set');}
 	}
 		
 	
@@ -112,12 +112,13 @@ class Mapper
 		$stmt->execute([$value]); 
 		$approvalStatus = $stmt->fetchColumn();
 		
-		if ($approvalStatus == null)
+		if ( isset($approvalStatus) )
 		{
-			throw new ResourceNotFoundException();
+			return $approvalStatus;
+			
 		}
 		
-		return $approvalStatus;
+		throw new ResourceNotFoundException();
 	}
 	
 	

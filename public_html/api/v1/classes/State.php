@@ -303,7 +303,12 @@ abstract class State
 		$stmt->execute([$value]); 
 		$uidFromTable = $stmt->fetchColumn();
 		
-		return ($this->uid === $uidFromTable) ;
+		if ( isset($uidFromTable) )
+		{
+			return ($this->uid == $uidFromTable) ;
+		}
+		
+		throw new ResourceNotFoundException();
 	}
 	
 }
@@ -407,9 +412,25 @@ class StateNonApproved extends State
  */
 class Stateless extends State
 {
+	// If the object is stateless, it doesn't exist in the database.
+	public function get(IMapperable $obj)
+	{
+		throw new ResourceNotFoundException();
+	}
+	
+	
 	public function add(IMapperable $obj)
 	{
-		return $this->dbInsert($obj);
+		// Adding Parent objects when they don't exist in the database is fine.
+		if ($obj->isParent())
+		{
+			return $this->dbInsert($obj);
+		}
+		// Throw an Exception if someone tries to add a Child into the database without a parent.
+		else
+		{
+			throw new IllegalAccessException();
+		}
 	}
 }
 
