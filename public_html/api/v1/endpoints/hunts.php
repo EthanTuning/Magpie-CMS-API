@@ -50,7 +50,6 @@ $app->post('/hunts', function ($request, $response, $args) {
 	$mapper = new Mapper($this->db, $uid);
 	
 	$parameters = $request->getParsedBody();
-    $parameters['uid'] = $uid;
     
     $hunt = new Hunt($parameters);
 	
@@ -79,12 +78,10 @@ $app->put('/hunts/{hunt_id}', function ($request, $response, $args)
 	$mapper = new Mapper($this->db, $uid);
     
     /* Grab hunt id from URL, shove it in assoc array w/rest of request */
-    $huntid = $args['hunt_id'];
     $parameters = $request->getParsedBody();
-    $parameters['hunt_id'] = $huntid;
-    $parameters['uid'] = $uid;
     
     $hunt = new Hunt($parameters);
+	$hunt->setPrimaryKeyValue($args['hunt_id']);		// set the Hunt ID from the URL
 	
 	try
 	{
@@ -127,17 +124,15 @@ $app->delete('/hunts/{hunt_id}', function ($request, $response, $args) {
     $uid = $request->getAttribute('uid');
 	$mapper = new Mapper($this->db, $uid);
     
-    /* Grab hunt id */
-    $huntid = $args['hunt_id'];
-    $parameters = array('hunt_id' => $huntid, 'uid' => $uid);
-    
-    $temp = new Hunt($parameters);
+    /* Make blank Hunt */
+    $hunt = new Hunt(null);
+    $hunt->setPrimaryKeyValue($args['hunt_id']);		// set the Hunt ID from the URL
     
 	try
 	{
 		/* Use the Mapper to delete the hunt with that hunt_id */
-		$hunt = $mapper->delete($temp);
-		$response->getBody()->write(json_encode($hunt->jsonSerialize()));		//add jsonSerialze() to interface?
+		$temp = $mapper->delete($hunt);
+		$response->getBody()->write(json_encode($temp));		//add jsonSerialze() to interface?
 	}
 	catch (IllegalAccessException $e)
 	{

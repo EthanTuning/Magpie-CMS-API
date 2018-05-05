@@ -30,7 +30,7 @@ class AuthenticationMiddleware
 		$firebase = $this->initialize();					//create the firebase object
 		$verifiedIdToken = $this->authenticate($firebase, $request);	//authenticate the request with firebase
 		
-		$uid = $verifiedIdToken->getClaim('sub');
+		$uid = $verifiedIdToken->getClaim('sub');			// get the UID from the token
 		/* Step 3 
 		 * 
 		 * Send the extracted uid and email to the $request object so the Mapper 
@@ -38,11 +38,11 @@ class AuthenticationMiddleware
 		 * 
 		 * */
 		
-		$request = $request->withAttribute('uid', $uid);
+		$request = $request->withAttribute('uid', $uid);		// put the UID in the $request
 		
 		// Get email from token, shove it in request
-		$email = $verifiedIdToken->getClaim('email');
-		$request = $request->withAttribute('email', $email);
+		$email = $verifiedIdToken->getClaim('email');			// get the email from the token
+		$request = $request->withAttribute('email', $email);	// set the email in the $request
 		
         $response = $next($request, $response);		//next layer
 

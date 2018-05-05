@@ -13,14 +13,12 @@ interface IMapperable
 	
 	public function getPrimaryKey();	//returns an associative array of the Class's primary key in database
 										// Format: ['name'=>'badge_id', 'value'=>'323223'] or ['name'=>'hunt_id', 'value'=>'6463']
+										
+	public function setPrimaryKeyValue($newValue);	// set the 'value' portion of the PrimaryKey
 	
 	public function getTable();			//returns string of tablename that the class is mapped to
 	
 	public function getFields();		//returns an associative array of fields (minus primary key), corresponding to table columns
-	
-	public function sanitize();			// cleans the class's fields() array for insertion and updating
-										// remove primary key, remove 'approval_status', etc
-
 }
 
 

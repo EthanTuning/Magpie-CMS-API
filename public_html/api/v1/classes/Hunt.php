@@ -12,16 +12,16 @@
 
 class Hunt implements JsonSerializable, IMapperable
 {	
-	private static $TABLENAME = 'hunts';		// change to const?  const vs static?
-	private static $PRIMARY_KEY = 'hunt_id';	// just the column name of the primary key
-	
-	/* This is the columns from the hunts table.  */
+	/* The name of the table that the class maps to */
+	// TODO: change to const?  const vs static?
+	private static $TABLENAME = 'hunts';		
+
+	/* This is a list of columns from the hunts table.
+	 * These values should be user-editable.
+	 * Each one of these should not present a security concern if manually set by a user.  */
 	private static $COLUMNS = array(
-			'hunt_id',
 			'abbreviation', 
-			'approval_status',
 			'audience' ,
-			'available',
 			'date_end',
 			'date_start',
 			'name',
@@ -29,23 +29,26 @@ class Hunt implements JsonSerializable, IMapperable
 			'summary',
 			'sponsor',
 			'super_badge',
-			'uid',
 			'city',
 			'state',
 			'zipcode',
 			'award_id'
 		);
 	
-	private $fields;	// Associative array to hold all the values for a Hunt
-	private $badges;	// array to hold badges
-	private $awards;	// array to hold awards
-	private $images;	// array to hold image URIs in the future
+	
+	private	$primaryKey;		// (2-element associative array holding the name and value of the primary key)
+	private $uid;				// owner of object
+	private $fields;			// Associative array to hold all the user-entered values for a Hunt
 	
 	
 	/* Constructor - Takes an associative array of parameters to build a Hunt */
 	//TODO: change to take a ($key, $fieldArray) in CTOR ?
 	function __construct($array)
 	{	
+		// set the primary key
+		$this->primaryKey = array('name' => 'hunt_id', 'value' => null);
+		
+		// for each entry in the $COLUMNS, grab that item from the passed in array
 		foreach (self::$COLUMNS as $key)
 		{
 			if (isset($array[$key]))
@@ -58,9 +61,6 @@ class Hunt implements JsonSerializable, IMapperable
 			}
 		}
 		
-		/*$this->badges = array(
-			'badgestuff' => "badge object"
-		);*/
 	}
 	
 	
@@ -72,10 +72,7 @@ class Hunt implements JsonSerializable, IMapperable
 	/* Get Parent Key - Returns an assoc array containing information on this object's parent */
 	public function getParentKey()
 	{
-		$name = self::$PRIMARY_KEY;						// hunt is it's own parent
-		$value = $this->fields[$name];
-		
-		return array('name'=>$name, 'value'=>$value);
+		return $this->getPrimaryKey();		// a hunt is it's own parent
 	}
 	 
 	/* Get Table name - return a string */
@@ -97,16 +94,28 @@ class Hunt implements JsonSerializable, IMapperable
 	 * as an associative array.*/
 	public function getPrimaryKey()
 	{
-		return $this->getParentKey();			// a hunt is it's own parent
+		return $this->primaryKey;
 	}
 	
+	
+	/* Set the primary key value */
+	public function setPrimaryKeyValue($newValue)
+	{
+		$this->primaryKey['value'] = $newValue;
+	}
+	
+	/* Set the UID */
+	public function setUID($newUID)
+	{
+		$this->uid = $newUID;
+	}
 	
 	/* Returns the UID as a string for the owner of the instance of the class */
 	public function getUID()
 	{
-		return $this->fields['uid'];
+		return $this->uid;
 	}
-	
+
 	
 	/* SUPER IMPORTANT */
 	public function sanitize()
@@ -120,34 +129,16 @@ class Hunt implements JsonSerializable, IMapperable
 	{
 		return true;		//its a Hunt, master of objects
 	}
-	
-	
-	/*
-	public function addBadge(Badge $newbadge)
-	{
-			$this->badges[] = $newbadge;
-	}
-	*/
-	
-	/* Populate - Populates the values in Hunt 
-	function populate($inputValues)
-	{
-       foreach ($this->fields as $key => $value)
-       {
-           print "$key => $value\n";
-       }
-    }*/
 
-	
 
 	/* Convert to an associative array for json_encode() to work with */
 	function jsonSerialize()
 	{
-		//move the 3 references of arrays into the body
+		/*move the 3 references of arrays into the body
 		
 		$this->fields['badges'] = $this->badges;
 		$this->fields['awards'] = $this->awards;
-		$this->fields['images'] = $this->images;
+		$this->fields['images'] = $this->images;*/
 		
 		return $this->fields;
 		

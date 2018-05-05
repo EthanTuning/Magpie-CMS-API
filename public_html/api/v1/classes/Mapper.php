@@ -12,7 +12,7 @@
 class Mapper
 {
 	protected $db;		// PDO object (already instantiated and stuff)
-	protected $uid;		// user id extracted from Firebase token
+	protected $uid;		// user id extracted from Firebase token (represents current user)
 	
 	private $state;		// the state of the object the Mapper is operating on.
 							// this will change on setState()

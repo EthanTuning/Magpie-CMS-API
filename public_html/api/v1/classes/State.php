@@ -18,7 +18,7 @@
 abstract class State
 {
 	protected $db;		// PDO object (already instantiated and stuff)
-	protected $uid;		// user id extracted from Firebase token
+	protected $uid;		// user id extracted from Firebase token (represents current user)
 	
 	/* Constructor */
 	function __construct($db, $uid)
@@ -30,6 +30,12 @@ abstract class State
 		
 		$this->db = $db;
 		$this->uid = $uid;
+	}
+	
+	
+	private function getCurrentUID()
+	{
+		return $this->uid;
 	}
 	
 	
@@ -82,7 +88,7 @@ abstract class State
 		$primarykey = $object->getPrimaryKey();
 		
 		$primarykeyName = $primarykey['name'];
-		$idnumber = $primarykey['object'];
+		$idnumber = $primarykey['value'];
 		$table = $object->getTable();
 		
 		$sql = 'SELECT * FROM '.$table.' WHERE '.$primarykeyName.'=?';
@@ -91,7 +97,7 @@ abstract class State
 		$stmt = $this->db->prepare($sql);
 		$stmt->execute([$idnumber]); 
 		$result = $stmt->fetch();
-		$newIMapperable;		// the new object to return
+		/*$newIMapperable;		// the new object to return
 		
 		// this is a little messy, but since Hunts and Badges don't inherit ....
 		switch ($table)
@@ -101,15 +107,15 @@ abstract class State
 				break;/*
 			case 'badges':
 				$newIMapperable = new Badge($result);
-				break;*/
-		}
+				break;
+		}*/
 		
-		if ($newIMapperable == null)
+		if ($result == null)
 		{
 			throw new Exception("Couldn't get from database.");
 		}
 		
-		return $newIMapperable;
+		return $result;
 	}
 
 	
@@ -134,12 +140,7 @@ abstract class State
 			throw new Exception('HuntMapper->add(): $hunt is null!');
 		}
 		
-		$object->sanitize();
-		
 		$data = $object->getFields();
-		
-		// delete things from array that are unwanted before adding to database
-		//unset($data['hunt_id'], $data['approval_status']);
 		
 		//loop through and delete empty values in the array
 		foreach ($data as $key => $value)
@@ -149,6 +150,9 @@ abstract class State
 				unset($data[$key]);
 			}
 		}
+		
+		//add the UID into the data set
+		$data['uid'] = $this->getCurrentUID();
 		
 		// build query...
 		$sql  = "INSERT INTO ".$object->getTable();
@@ -194,7 +198,6 @@ abstract class State
 		$tablename = $object->getTable();
 		
 		// Get data fields to enter
-		$object->sanitize();
 		$data = $object->getFields();
 
 		if (!isset($primarykey))
@@ -289,6 +292,7 @@ abstract class State
 	 * ****************************************************/
 	
 	/* Is the specified hunt owned by the current owner? */
+	// TODO: Make this work with other parent classes, by using variable for tablename
 	public function isOwnedByCurrentUser(IMapperable $obj)
 	{
 		$parentkey = $obj->getParentKey();
