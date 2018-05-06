@@ -3,15 +3,12 @@
 /* Contains the endpoint functions for Hunts. */
 
 
-
-
 $app->post('/hunts', HuntController::class . ':add');
 $app->get('/hunts/{hunt_id}', HuntController::class . ':getSingleHunt');
+$app->get('/hunts', HuntController::class . ':search');
 $app->put('/hunts/{hunt_id}', HuntController::class . ':update');
 $app->delete('/hunts/{hunt_id}', HuntController::class . ':delete');
 $app->patch('/hunts/{hunt_id}', HuntController::class . ':submit');
-
-
 
 
 
@@ -27,7 +24,7 @@ class HuntController
 
 	
 	/************************************
-	 *				GET
+	 *				GET (Single Hunt identified by ID)
 	 ***********************************/
 	
 	public function getSingleHunt($request, $response, $args)
@@ -61,6 +58,41 @@ class HuntController
 		return $response;
 	}
 	
+	/************************************
+	 *				GET (Search With Parameters)
+	 ***********************************/
+
+	public function search($request, $response, $args)
+	{
+		/* Create the Mappers used */
+		$uid = $request->getAttribute('uid');
+		$mapper = new Mapper($this->container->db, $uid);
+		
+		/* Grab the query parameters */
+		$params = $request->getQueryParams();
+		
+		// make Hunt
+		$hunt = new Hunt($params);
+		
+		try
+		{
+			/* Retreive the Hunt from the mapper */
+			$result = $mapper->search($hunt);
+			$response->getBody()->write(json_encode($result));		//add jsonSerialze() to interface?
+		}
+		catch (IllegalAccessException $e)
+		{
+			$response = $response->withStatus(403);
+		}
+		catch (ResourceNotFoundException $e)
+		{
+			$response = $response->withStatus(404);
+		}
+		
+		return $response;
+	}
+
+
 
 /************************************
  *				POST (Add)

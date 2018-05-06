@@ -15,7 +15,7 @@ class ResourceNotFoundException extends Exception
 }
 
 
-class MiscException extends Exception
+class UnsupportedOperationException extends Exception
 {
 
 }

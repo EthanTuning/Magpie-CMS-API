@@ -1,8 +1,6 @@
 <?php
 
-/* Contains the endpoint functions for Hunts. */
-
-
+/* Contains the endpoint functions for Badges. */
 
 
 $app->post('/hunts/{hunt_id}/badges', BadgeController::class . ':add');

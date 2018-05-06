@@ -64,6 +64,12 @@ class Mapper
 	}
 	
 
+	public function search(IMapperable $obj)
+	{
+		$this->state = $this->setState($obj);
+		return $this->state->search($obj);
+	}
+
 	
 	/******** Approval and Ownership checks *************/
 	
@@ -102,7 +108,7 @@ class Mapper
 	
 	/* NO DUPLICATION OF SQL! */
 	// TODO: make this work with other parent tables, possibly add a value to the getParentKey() to include a 'table' value
-	private function getApprovalStatus($obj)
+	private function getApprovalStatus(IMapperable $obj)
 	{
 		$parentid = $obj->getParentKey();
 		$name = $parentid['name'];

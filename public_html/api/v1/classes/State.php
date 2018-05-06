@@ -50,25 +50,31 @@ abstract class State
 	// Get - Returns an IMapperable object
 	public function get(IMapperable $obj)
 	{
-		throw new IllegalAccessException();
+		throw new UnsupportedOperationException();
 	}		
+	
+	
+	public function search(IMapperable $obj)
+	{
+		throw new UnsupportedOperationException();
+	}
 	
 	
 	public function update(IMapperable $obj)
 	{
-		throw new IllegalAccessException();
+		throw new UnsupportedOperationException();
 	}	
 	
 	
 	public function delete(IMapperable $obj)
 	{
-		throw new IllegalAccessException();
+		throw new UnsupportedOperationException();
 	}	
 	
 	
 	public function add(IMapperable $obj)
 	{
-		throw new IllegalAccessException();
+		throw new UnsupportedOperationException();
 	}
 	
 	
@@ -77,7 +83,10 @@ abstract class State
 	 * 				CRUD OPERATIONS
 	 * ****************************************************/
 
-	/* Get - Takes a IMapperable, returns that object */
+	/* Get - Get one object.
+	 * 
+	 * Takes a IMapperable, returns that object
+	 * */
 	protected function dbSelect(IMapperable $object)
 	{
 		if ($object == null)
@@ -107,20 +116,81 @@ abstract class State
 	}
 
 	
-	/* Search - Takes an array of parameters, returns an array (values of that Hunt from the dbase) */
-	protected function dbQuery($params)
+	/* Query - Search for multiple objects.
+	 * 
+	 * Takes an IMapperable, instantiated with the parameters that you're looking for,
+	 * and returns an array of matching rows from the database.
+	 * 
+	 * There is some security built into the sql query statement.
+	 * It will only return rows where the approval status is 'approved' or the 'uid' matches the current owner.
+	 *  */
+	protected function dbQuery(IMapperable $object)
 	{
-		if ($params == null)
+		if ($object == null)
 		{
-			throw new Exception('HuntMapper->search(): $params is null!');
+			throw new Exception('Mapper->dbQuery(): $objecct is null!');
+		}
+		
+		$primarykey = $object->getPrimaryKey();
+		
+		$primarykeyName = $primarykey['name'];
+		$idnumber = $primarykey['value'];
+		$table = $object->getTable();
+		
+		$data = $object->getFields();
+		
+		
+		//loop through and delete empty values in the array
+		foreach ($data as $key => $value)
+		{
+			if (!isset($data[$key]))
+			{
+				unset($data[$key]);
+			}
 		}
 		
 		
-		return false;
+		if (!$object->isParent())
+		{
+			// for children, add the parent's key in (to identify them)
+			$parentKey = $object->getParentKey();
+			$data[$parentKey['name']] = $parentKey['value'];
+		}
+		
+		// build query...
+		$sql  = 'SELECT * FROM '.$object->getTable().' WHERE ';
+
+		foreach($data as $key => $value)
+		{
+			$sql = $sql.'`'.$key.'`=:'.$key.' AND ';
+		}
+		
+		//$sql = rtrim($sql, ' AND ');		// remove trailing AND
+		
+		$sql = $sql.' (`approval_status` = "approved" OR `uid`=:uid)'; 		//
+		
+		$data['uid'] = $this->uid;
+		
+		//echo $sql; die;
+		
+		// PDO code
+		$stmt = $this->db->prepare($sql);
+		$stmt->execute($data); 
+		$result = $stmt->fetchAll();
+		
+		// If no results returned
+		if ($result == null)
+		{
+			$result = array();	//return an empty array, for now
+		}
+		
+		return $result;
 	}
 	
 	
-	/* Add - Add a Hunt with the passed parameters */
+	/* Add - Insert a single object into database
+	 * 
+	 * Add an IMapperable with the passed parameters */
 	protected function dbInsert(IMapperable $object)
 	{
 		if ($object == null)
@@ -171,7 +241,9 @@ abstract class State
 	}
 	
 	
-	/* Update - Update a IMapperable with the following parameters */
+	/* Update
+	 * 
+	 * Update a IMapperable with the following parameters */
 	protected function dbUpdate(IMapperable $object)
 	{
 		if ($object == null)
@@ -246,7 +318,9 @@ abstract class State
 	}
 	
 	
-	/* Delete - Delete the object with the specified ID */
+	/* Delete - Delete a single object from database
+	 * 
+	 * Delete the object with the specified ID */
 	protected function dbDelete(IMapperable $object)
 	{
 		if ($object == null)
@@ -303,6 +377,11 @@ abstract class State
 	}
 	
 }
+
+
+/******************************************************
+ * 					Concrete States
+ * ****************************************************/
 
 
 /*** Approved ***/
@@ -407,6 +486,8 @@ class StateNonApproved extends State
 /*** Stateless ***/
 /* This is the state that a top-level IMapperable object lives in before being put in
  * the database.  (Hunt)
+ * 
+ * It also applies to anything when using the query() function.
  */
 class Stateless extends State
 {
@@ -414,6 +495,13 @@ class Stateless extends State
 	public function get(IMapperable $obj)
 	{
 		throw new ResourceNotFoundException();
+	}
+	
+	
+	// Takes a object with the fields set to whatever you're searching for
+	public function search(IMapperable $obj)
+	{		
+		return $this->dbQuery($obj);
 	}
 	
 	
