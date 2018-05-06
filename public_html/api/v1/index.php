@@ -2,6 +2,8 @@
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
+//use \Interop\Container\ContainerInterface as ContainerInterface;	//https://stackoverflow.com/questions/37906363/slim-controller-issue-must-be-an-instance-of-containerinterface-instance-of-s
+
 
 use Firebase\Auth\Token\Exception\InvalidToken;
 
@@ -14,7 +16,7 @@ require './classes/UserManager.php';					// Checks users against 'creators' tabl
 require './classes/CustomExceptions.php';
 require './classes/Interfaces.php';
 require './classes/Hunt.php';
-//require './classes/Badge.php';
+require './classes/Badge.php';
 
 /* Mapper classes (Endpoint <-> Database Interfacers) */
 require './classes/State.php';				// 
@@ -88,6 +90,7 @@ $app->get('/test', function (Request $request, Response $response, array $args) 
 
 require_once './endpoints/badges.php';
 require_once './endpoints/hunts.php';
+
 
 //require_once 'path_to_your_dir/admin_routes.php';
 //require_once 'path_to_your_dir/some_other_routes.php';

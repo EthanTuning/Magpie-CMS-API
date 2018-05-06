@@ -97,18 +97,6 @@ abstract class State
 		$stmt = $this->db->prepare($sql);
 		$stmt->execute([$idnumber]); 
 		$result = $stmt->fetch();
-		/*$newIMapperable;		// the new object to return
-		
-		// this is a little messy, but since Hunts and Badges don't inherit ....
-		switch ($table)
-		{
-			case 'hunts':
-				$newIMapperable = new Hunt($result);
-				break;/*
-			case 'badges':
-				$newIMapperable = new Badge($result);
-				break;
-		}*/
 		
 		if ($result == null)
 		{
@@ -166,17 +154,10 @@ abstract class State
 		$stmt= $this->db->prepare($sql);
 		$stmt->execute($data);
 		
-		// check for success
-		$result = $stmt->rowCount();
+		// return something like {'hunt_id', '299292'};
+		$result = array($object->getPrimaryKey()['name'] => $this->db->lastInsertId() );
 		
-		if ($result < 1)
-		{
-			throw new Exception("Mapper - add() fail. ");
-		}
-		
-		//TODO: return the ID of the resource added
-		
-		return true;
+		return $result;
 	}
 	
 	
