@@ -139,8 +139,18 @@ abstract class State
 			}
 		}
 		
-		//add the UID into the data set
-		$data['uid'] = $this->getCurrentUID();
+		
+		if ($object->isParent())
+		{
+			//add stuff specific to parents
+			$data['uid'] = $this->getCurrentUID();
+		}
+		else
+		{
+			// for children, add the parent's key in (to identify them)
+			$parentKey = $object->getParentKey();
+			$data[$parentKey['name']] = $parentKey['value'];
+		}
 		
 		// build query...
 		$sql  = "INSERT INTO ".$object->getTable();
@@ -367,7 +377,14 @@ class StateNonApproved extends State
 	
 	public function add(IMapperable $obj)
 	{
-		return $this->dbInsert($obj);
+		if ($obj->isParent() || $this->isOwnedByCurrentUser($obj) )
+		{
+			return $this->dbInsert($obj);
+		}
+		else
+		{
+			throw new IllegalAccessException();
+		}
 	}
 	
 	

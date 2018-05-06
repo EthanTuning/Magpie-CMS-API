@@ -29,10 +29,6 @@ class BadgeController
 	
 	public function getSingleBadge($request, $response, $args)
 	{
-		echo "BADGE ROUTE WORKS!";
-		die;
-		// TODO: RESUME HERE
-		
 		/* Create the Mappers used */
 		$uid = $request->getAttribute('uid');
 		$mapper = new Mapper($this->container->db, $uid);
@@ -40,14 +36,15 @@ class BadgeController
 		/* Grab hunt id */
 		$huntid = $args['hunt_id'];
 		
-		// make Hunt
-		$hunt = new Hunt(null);
-		$hunt->setPrimaryKeyValue($huntid);
+		// make Badge
+		$badge = new Badge(null);
+		$badge->setPrimaryKeyValue($args['badge_id']);
+		$badge->setParentKeyValue($args['hunt_id']);
 		
 		try
 		{
-			/* Retreive the Hunt from the mapper */
-			$result = $mapper->get($hunt);
+			/* Retreive the Badge from the mapper */
+			$result = $mapper->get($badge);
 			$response->getBody()->write(json_encode($result));		//add jsonSerialze() to interface?
 		}
 		catch (IllegalAccessException $e)
@@ -75,11 +72,12 @@ class BadgeController
 		
 		$parameters = $request->getParsedBody();
 		
-		$hunt = new Hunt($parameters);
+		$badge = new Badge($parameters);
+		$badge->setParentKeyValue($args['hunt_id']);
 		
 		try
 		{
-			$result = $mapper->add($hunt);
+			$result = $mapper->add($badge);
 			$response->getBody()->write(json_encode($result));
 		}
 		catch (IllegalAccessException $e)
@@ -104,12 +102,13 @@ class BadgeController
 		/* Grab hunt id from URL, shove it in assoc array w/rest of request */
 		$parameters = $request->getParsedBody();
 		
-		$hunt = new Hunt($parameters);
-		$hunt->setPrimaryKeyValue($args['hunt_id']);		// set the Hunt ID from the URL
+		$badge = new Badge($parameters);
+		$badge->setPrimaryKeyValue($args['badge_id']);
+		$badge->setParentKeyValue($args['hunt_id']);
 		
 		try
 		{
-			$result = $mapper->update($hunt);
+			$result = $mapper->update($badge);
 			$response->getBody()->write(json_encode($result));
 		}
 		catch (IllegalAccessException $e)
@@ -126,18 +125,6 @@ class BadgeController
 
 
 	/************************************
-	 *				PATCH (Submit)
-	 ***********************************/
-
-	// yea this isn't how patch is supposed to be used, oh well
-
-	public function submit($request, $response, $args)
-	{    
-		$response->getBody()->write(" HUNTS PATCH ROUTE (used for submitting, not implemented yet)");
-		return $response;
-	}
-
-	/************************************
 	 *				DELETE
 	 ***********************************/
 
@@ -147,14 +134,15 @@ class BadgeController
 		$uid = $request->getAttribute('uid');
 		$mapper = new Mapper($this->container->db, $uid);
 		
-		/* Make blank Hunt */
-		$hunt = new Hunt(null);
-		$hunt->setPrimaryKeyValue($args['hunt_id']);		// set the Hunt ID from the URL
+		/* Make blank Badge */
+		$badge = new Badge(null);
+		$badge->setPrimaryKeyValue($args['badge_id']);
+		$badge->setParentKeyValue($args['hunt_id']);
 		
 		try
 		{
 			/* Use the Mapper to delete the hunt with that hunt_id */
-			$temp = $mapper->delete($hunt);
+			$temp = $mapper->delete($badge);
 			$response->getBody()->write(json_encode($temp));		//add jsonSerialze() to interface?
 		}
 		catch (IllegalAccessException $e)
