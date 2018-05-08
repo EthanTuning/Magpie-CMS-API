@@ -54,11 +54,21 @@ abstract class State
 	}		
 	
 	
+	// Takes a object with the fields set to whatever you're searching for
 	public function search(IMapperable $obj)
-	{
+	{		
 		throw new UnsupportedOperationException();
 	}
 	
+	
+	// No matter the state, the owner can get his children
+	public function getAllChildren(IMapperable $obj)
+	{
+		if ($this->isOwnedByCurrentUser($obj))
+		{
+			return $this->dbGetAllChildren($obj);
+		}
+	}
 	
 	public function update(IMapperable $obj)
 	{
@@ -116,7 +126,7 @@ abstract class State
 	}
 
 	
-	/* Query - Search for multiple objects.
+	/* Query - Search for multiple PARENT objects. (Doesn't work on kids)
 	 * 
 	 * Takes an IMapperable, instantiated with the parameters that you're looking for,
 	 * and returns an array of matching rows from the database.
@@ -128,7 +138,7 @@ abstract class State
 	{
 		if ($object == null)
 		{
-			throw new Exception('Mapper->dbQuery(): $objecct is null!');
+			throw new Exception('Mapper->dbQuery(): $object is null!');
 		}
 		
 		$primarykey = $object->getPrimaryKey();
@@ -149,14 +159,6 @@ abstract class State
 			}
 		}
 		
-		
-		if (!$object->isParent())
-		{
-			// for children, add the parent's key in (to identify them)
-			$parentKey = $object->getParentKey();
-			$data[$parentKey['name']] = $parentKey['value'];
-		}
-		
 		// build query...
 		$sql  = 'SELECT * FROM '.$object->getTable().' WHERE ';
 
@@ -167,11 +169,9 @@ abstract class State
 		
 		//$sql = rtrim($sql, ' AND ');		// remove trailing AND
 		
-		$sql = $sql.' (`approval_status` = "approved" OR `uid`=:uid)'; 		//
+		$sql = $sql.' (`approval_status` = "approved" OR `uid`=:uid)'; 		//most of the Mapper has no security, but this does.
 		
 		$data['uid'] = $this->uid;
-		
-		//echo $sql; die;
 		
 		// PDO code
 		$stmt = $this->db->prepare($sql);
@@ -185,6 +185,39 @@ abstract class State
 		}
 		
 		return $result;
+	}
+	
+	
+	/* GET ALL CHILDREN OBJECTS
+	 * 
+	 * Takes a child object with a parentkey, returns all child objects with that parent.*/
+	protected function dbGetAllChildren(IMapperable $object)
+	{
+		if ($object == null)
+		{
+			throw new Exception('Mapper->dbGetAllChildren: $object is null!');
+		}
+		
+		$parentKey = $object->getParentKey();
+		
+		$parentKeyName = $parentKey['name'];
+		$parentKeyValue = $parentKey['value'];
+		$table = $object->getTable();
+		
+		$sql = 'SELECT * FROM '.$table.' WHERE '.$parentKeyName.'=?';
+		
+		// PDO code
+		$stmt = $this->db->prepare($sql);
+		$stmt->execute([$parentKeyValue]); 
+		$result = $stmt->fetchAll();
+		
+		if ($result == null)
+		{
+			$result = array();
+		}
+		
+		return $result;
+		
 	}
 	
 	
@@ -392,6 +425,13 @@ class StateApproved extends State
 		return $this->dbSelect($obj);
 	}
 	
+	
+	public function getAllChildren(IMapperable $obj)
+	{
+		return $this->dbGetAllChildren($obj);
+	}
+	
+	
 	public function delete(IMapperable $obj)
 	{
 		// if the object is a Parent object, can delete (delete should cascade on database)
@@ -428,6 +468,18 @@ class StateSubmitted extends State
 /*** NonApproved ***/
 class StateNonApproved extends State
 {
+	
+	public function search(IMapperable $obj)
+	{
+		if ($this->isOwnedByCurrentUser($obj))
+		{
+			return $this->dbQuery($obj);
+		}
+		
+		throw new IllegalAccessException();
+	}
+	
+	
 	public function get(IMapperable $obj)
 	{
 		if ($this->isOwnedByCurrentUser($obj))
@@ -495,13 +547,6 @@ class Stateless extends State
 	public function get(IMapperable $obj)
 	{
 		throw new ResourceNotFoundException();
-	}
-	
-	
-	// Takes a object with the fields set to whatever you're searching for
-	public function search(IMapperable $obj)
-	{		
-		return $this->dbQuery($obj);
 	}
 	
 	

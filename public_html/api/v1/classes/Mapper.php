@@ -69,6 +69,14 @@ class Mapper
 		$this->state = $this->setState($obj);
 		return $this->state->search($obj);
 	}
+	
+	
+	public function getAllChildren(IMapperable $obj)
+	{
+		$this->state = $this->setState($obj);
+		return $this->state->getAllChildren($obj);
+	}
+	
 
 	
 	/******** Approval and Ownership checks *************/

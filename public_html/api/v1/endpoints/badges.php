@@ -5,6 +5,7 @@
 
 $app->post('/hunts/{hunt_id}/badges', BadgeController::class . ':add');
 $app->get('/hunts/{hunt_id}/badges/{badge_id}', BadgeController::class . ':getSingleBadge');
+$app->get('/hunts/{hunt_id}/badges', BadgeController::class . ':getAllBadges');
 $app->put('/hunts/{hunt_id}/badges/{badge_id}', BadgeController::class . ':update');
 $app->delete('/hunts/{hunt_id}/badges/{badge_id}', BadgeController::class . ':delete');
 
@@ -43,6 +44,39 @@ class BadgeController
 		{
 			/* Retreive the Badge from the mapper */
 			$result = $mapper->get($badge);
+			$response->getBody()->write(json_encode($result));		//add jsonSerialze() to interface?
+		}
+		catch (IllegalAccessException $e)
+		{
+			$response = $response->withStatus(403);
+		}
+		catch (ResourceNotFoundException $e)
+		{
+			$response = $response->withStatus(404);
+		}
+		
+		return $response;
+	}
+	
+	
+	/* Get all Badges associated with that hunt */
+	public function getAllBadges($request, $response, $args)
+	{
+		/* Create the Mappers used */
+		$uid = $request->getAttribute('uid');
+		$mapper = new Mapper($this->container->db, $uid);
+		
+		/* Grab hunt id */
+		$huntid = $args['hunt_id'];
+		
+		// make Badge
+		$badge = new Badge(null);
+		$badge->setParentKeyValue($args['hunt_id']);
+		
+		try
+		{
+			/* Retreive the Badge from the mapper */
+			$result = $mapper->getAllChildren($badge);
 			$response->getBody()->write(json_encode($result));		//add jsonSerialze() to interface?
 		}
 		catch (IllegalAccessException $e)
