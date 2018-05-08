@@ -7,10 +7,8 @@ The folders are:
 * database - This has the .sql code to import the database locally so the API can work.
 * documentation - Will hold the SRS, etc
 * public_html
-    * api - This holds everything needed to run the API, minus the database initialization.
+    * api - This holds everything needed to run the API, minus the database initialization.  Slim framework is included in here.
     * webclient - This contains everything needed to serve the Magpie webclient pages.
-
-The api and webclient folders each have their own SLIM frameworks.
 
 
 # API Note
