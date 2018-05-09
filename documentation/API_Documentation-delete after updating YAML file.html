@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>MAGPIE API Portal Documentation</title>
+		
+		<link rel="stylesheet" type="text/css" href="./basic_style.css">
+		
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="./name_script.js"></script>
+	</head>
+	
+	<!---
+	As such, good documentation should be clear and concise, but also visual, providing the following:
+
+		1) A clear explanation of what the method/resource does
+		2) Call-outs that share important information with developers, including warnings and errors
+		3) A sample call with the correlating media type body
+		4) A list of parameters used on this resource/method, as well as their types, special formatting, rules and whether or not they are required
+		5) A sample response, including media type body
+		6) Code examples for multiple languages including all necessary code
+			(e.g. Curl with PHP, as well as examples for Java, .Net, Ruby, etc.)
+			SDK examples (if SDKs are provided) showing how to access the resource/method utilizing the SDK for their language
+		7) Interactive experiences to try/test API calls (API Console, API Notebook)
+		8) Frequently asked questions/scenarios with code examples
+		9) Links to additional resources (other examples, blogs, etc.)
+		10) A comments section where users can share/discuss code
+		11) Other support resources (forums, contact forms, etc.)
+
+	--->
+	
+	<body>
+		<div class="bodyWrapper">
+			
+		<div id="header">
+			<h1>MAGPIE API Documentation</h1>
+			
+			<h3>Introduction</h3>
+			<p>This page is a developer guide for the Magpie web Application Programming Interface (API).
+			The API attempts to be as RESTful as possible, but some	exceptions were made in order to benefit the client application(s).
+			For example, performing a GET request to obtain a single Hunt will return all the child objects belonging to that Hunt as well as the Hunt itself.</p>
+			
+		</div>
+
+		<div id="divHTTP">
+			<h3>Requests</h3>
+			
+			<p> All requests to the API use the URL format: <em>URL GOES HERE</em></p>
+			<p> The following table is an overview of the different enpoints:</p>
+			<table>
+				<tr>
+					<th>Hunts:</th>
+					<td>URL/hunts{/hunt_id}</td>
+				</tr>
+				<tr>
+					<th>Badges:</th>
+					<td>URL/hunts/hunt_id/badges{/badge_id}</td>
+				</tr>
+				<tr>
+					<th>Administrator Functions (In Progress):</th>
+					<td>URL/admin</td>
+				</tr>
+				<tr>
+					<th>Images (Not implemented yet):</th>
+					<td>URL/images</td>
+				</tr>
+			</table>
+		
+		<h3>Responses</h3>
+		<p> All requests return a JSON array and a status code.</p>
+
+			<table>
+				<th>Status Code</th>
+				<th>Meaning</th>
+				<tr>
+					<td>200</td>
+					<td>Operation Completed Successfully</td>
+				</tr>
+				<tr>
+					<td>401</td>
+					<td>You are not authorized to perform that action</td>
+				</tr>
+				<tr>
+					<td>404</td>
+					<td>Resource not found</td>
+				</tr>
+				<tr>
+					<td>405</td>
+					<td>The operation requested is not supported</td>
+				</tr>
+			</table>
+		
+		</div>
+		
+		
+		
+		
+		
+		
+		<div id="divHunts">
+			<h1>Hunts</h1>
+			<p>A Hunt is a collection of Badges, Awards, Images, and other sub-resources.  A hunt is considered a parent resource.</p>
+			
+			
+			<h3></h3>
+			<p>GET requests are sent in the following format:</p>
+			<code>http://www.rkwitz.com/name_api/v1/&lt;tablename&gt;&lt;options&gt;</code>
+				
+			<p>Options can be chained together in any order, but using <em>id</em> overrides any other option.</p>
+			<p>Valid fields:
+				<ul>
+					<li>id - retreive the item with this ID</li>
+					<li>type - retreive items with this type</li>
+					<li>size - retreive this many number of items (default is 10, max is 100)</li>
+				</ul>
+			</p>
+			
+			
+			<div class="lvl3">			
+			<h3>Format of results:</h3>
+				<p>All results are sent back as an array of objects in JSON.</p>
+				
+				<p>Results from the <em>fnames.php</em> endpoint:</p>
+				<p><pre>
+[ {	"id": integer,
+	"name": String,
+	"type": String,
+	"gender": Character,
+	"source": String} ]
+				</pre></p>
+				
+				
+				<p>Results from the <em>lnames.php</em> and <em>locations.php</em> endpoints:</p>
+				<p><pre>
+[ {	"id": integer,
+	"name": String,
+	"type": String,
+	"source": String} ]
+				</pre></p>
+				</div>
+				
+			<div class="lvl3">
+				<h3>Examples</h3>
+			<p>Retreive 3 random names:</p>
+							
+				<p>GET request for <code>http://www.rkwitz.com/name_api/v1/fnames.php?size=3</code></p>
+				<pre>
+[{"id":500,"name":"Munglegarra","type":"aborigine","gender":"N","source":"admin"},
+ {"id":578,"name":"Peewalla","type":"aborigine","gender":"N","source":"admin"},
+ {"id":675,"name":"Wangandie","type":"aborigine","gender":"N","source":"admin"}]
+				</pre>
+		
+			<p>Retreive 2 random names of type "test":</p>
+							
+				<p>GET request for <code>http://www.rkwitz.com/name_api/v1/fnames.php?size=2&amp;type=test</code></p>
+				<pre>
+[{"id":800,"name":"FirstName","type":"test","gender":"N","source":"admin"},
+ {"id":797,"name":"FirstName","type":"test","gender":"N","source":"admin"}]
+				</pre>
+			</div>
+		</div>
+
+
+
+		<div id="divPOST" class="lvl2">
+			<h2>POST (add)</h2>
+			
+			<p>Valid fields of type <em>x-www-form-urlencoded</em> (both required):
+				<ul>
+					<li>name - name to add to database</li>
+					<li>type - type of name/location</li>
+				</ul>
+			</p>
+			
+			<p>Adding an entry to the first names table using AJAX:</p>
+				<pre><code>	
+var settings = {
+  "async": true,
+  "url": "http://www.rkwitz.com/name_api/v1/fnames.php",
+  "method": "POST",
+  "headers": {
+    "content-type": "application/x-www-form-urlencoded",
+    "cache-control": "no-cache",
+  },
+  "data": {
+    "name": "FIRSTNAME",
+    "type": "TYPE"
+  }
+}
+
+$.ajax(settings).done(function (response) {
+  console.log(response);
+});
+</code></pre>
+
+		</div>
+		
+		
+		<div id="divPUT" class="lvl2">
+			<h2>PUT (update)</h2>
+			
+			<p>Valid fields (all required):
+				<ul>
+					<li>id - ID of the record to update</li>
+					<li>name - change the name to this</li>
+					<li>type - change the type to this</li>
+				</ul>
+			</p>
+			<p>Updating an entry to the first names table using AJAX:</p>
+			
+			<pre><code>	
+var settings = {
+  "async": true,
+  "url": "http://www.rkwitz.com/name_api/v1/fnames.php",
+  "method": "PUT",
+  "headers": {
+    "content-type": "application/x-www-form-urlencoded",
+    "cache-control": "no-cache",
+  },
+  "data": {
+    "name": "NEW_NAME",
+    "type": "NEW_TYPE",
+    "id": "ID"
+  }
+}
+
+$.ajax(settings).done(function (response) {
+  console.log(response);
+});
+			</code></pre>
+		</div>
+
+
+		<div id="divDELETE" class="lvl2">
+			<h2>DELETE</h2>
+				<p>Note: Deletions can only be performed on entries that were entered by a user (source will show <em>user</em>)</p>
+				<p>Valid fields:
+					<ul>
+						<li>id - ID of the record to delete</li>
+					</ul>
+				</p>
+				
+				<p>Deleting an entry to the first names table using AJAX:</p>
+				<pre><code>	
+var settings = {
+  "async": true,
+  "crossDomain": true,
+  "url": "http://www.rkwitz.com/name_api/v1/fnames.php",
+  "method": "DELETE",
+  "headers": {
+    "content-type": "application/x-www-form-urlencoded",
+    "cache-control": "no-cache",
+  },
+  "data": {
+    "id": "ID_GOES_HERE"
+  }
+}
+
+$.ajax(settings).done(function (response) {
+  console.log(response);
+});
+			</code></pre>
+		</div>
+			
+			
+		<div id="divOPTIONS" class="lvl2">	
+			<h2>OPTIONS</h2>
+			<p>Returns a string containing the list of options:</p>
+			<code>Allow: GET, POST, PUT, DELETE, OPTIONS</code>
+		</div>	
+			
+			
+	</div>
+
+
+	<div id="footer">
+		<p>Powered by php, mysql, etc.</p>
+	</div>
+	
+	</div>
+	</body>
+</html>
