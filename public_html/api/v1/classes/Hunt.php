@@ -32,8 +32,7 @@ class Hunt implements JsonSerializable, IMapperable
 			'super_badge',
 			'city',
 			'state',
-			'zipcode',
-			'award_id'
+			'zipcode'
 		);
 	
 	

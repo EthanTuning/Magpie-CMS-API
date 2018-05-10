@@ -6,11 +6,31 @@
     <link type="text/css" rel="stylesheet" href="style.css" />
 
   </head>
+  
+  <!---
+	As such, good documentation should be clear and concise, but also visual, providing the following:
+
+		1) A clear explanation of what the method/resource does
+		2) Call-outs that share important information with developers, including warnings and errors
+		3) A sample call with the correlating media type body
+		4) A list of parameters used on this resource/method, as well as their types, special formatting, rules and whether or not they are required
+		5) A sample response, including media type body
+		6) Code examples for multiple languages including all necessary code
+			(e.g. Curl with PHP, as well as examples for Java, .Net, Ruby, etc.)
+			SDK examples (if SDKs are provided) showing how to access the resource/method utilizing the SDK for their language
+		7) Interactive experiences to try/test API calls (API Console, API Notebook)
+		8) Frequently asked questions/scenarios with code examples
+		9) Links to additional resources (other examples, blogs, etc.)
+		10) A comments section where users can share/discuss code
+		11) Other support resources (forums, contact forms, etc.)
+
+	--->
+  
   <body>
 <h1>Magpie API Documentation</h1>
     <div class="app-desc">This page is a developer guide for the Magpie web Application Programming Interface (API). The API attempts to be as RESTful as possible, but some  exceptions were made in order to benefit the client application(s). For example, performing a GET request to obtain a single Hunt will return all the child objects belonging to that Hunt as well as the Hunt itself.</div>
     <hr />
-    <div class="app-desc">More information: <a href="https://helloreverb.com">https://helloreverb.com</a></div>
+    <div class="app-desc">More information: <a href="https://helloreverb.com">https://github.com/rkwitz/magpie-php</a></div>
     <div class="app-desc">Contact Info: <a href="insert@admin.email">insert@admin.email</a></div>
     <div class="app-desc">Version: 1.0.0</div>
     <div class="app-desc">BasePath:/v1</div>
@@ -26,6 +46,7 @@
     <ul>
       <li>Authorization: Bearer "Token String"</li>
     </ul>
+    <p> Resources will only be returned to the caller if they own the resource, or the resource is 'Approved.'</p>
     
 <h2>API Resources (Click for that Resource's Documentation)</h2>
 	<ul>
@@ -37,6 +58,32 @@
     <li><h4><a href="admin.html">Admin</a></h4> - Used to perform administrative tasks on the database (Approve Hunts, etc).</li>
 	<li><h4><a href="images.html">Images</a></h4> - Upload images to this endpoint for inclusion in other resources.</li>
   </ul>
+  
+  <br>
+  
+  <h2>Responses</h2>
+	<p> All requests return a status code.</p>
+
+		<table>
+			<th>Status Code</th>
+			<th>Meaning</th>
+			<tr>
+				<td>200</td>
+				<td>Operation Completed Successfully</td>
+			</tr>
+			<tr>
+				<td>401</td>
+				<td>You are not authorized to perform that action</td>
+			</tr>
+			<tr>
+				<td>404</td>
+				<td>Resource not found</td>
+			</tr>
+			<tr>
+				<td>405</td>
+				<td>The operation requested is not supported</td>
+			</tr>
+		</table>
   
 	<br><br><br>
   

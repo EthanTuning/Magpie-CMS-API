@@ -77,6 +77,10 @@
 	pre.delete {
 	  background-color: #a41e22;
 	}
+	
+	pre.patch {
+		background-color: purple;
+	}
 
 	.huge	{
 		color: #fff;

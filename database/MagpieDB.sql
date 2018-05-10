@@ -36,20 +36,8 @@ CREATE TABLE IF NOT EXISTS `administrators` (
 ) ENGINE=InnoDB;
 
 
---
--- Table structure for table `award`
---
 
-CREATE TABLE IF NOT EXISTS `awards` (
-  `award_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `address` varchar(255) DEFAULT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `lat` DOUBLE DEFAULT 0.0,
-  `lon` DOUBLE DEFAULT 0.0,
-  `name` varchar(255) DEFAULT NULL,
-  `redeem_code` varchar(255) DEFAULT NULL,
-  `award_value` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 
 -- --------------------------------------------------------
 
@@ -128,7 +116,6 @@ CREATE TABLE IF NOT EXISTS `hunts` (
   `abbreviation` varchar(255) DEFAULT NULL,
   `approval_status` VARCHAR(32) DEFAULT 'non-approved',
   `audience` varchar(255) DEFAULT NULL,
-  `available` bit(1) DEFAULT NULL,
   `date_end` date DEFAULT NULL,
   `date_start` date DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -140,21 +127,40 @@ CREATE TABLE IF NOT EXISTS `hunts` (
   `city` varchar(255) DEFAULT NULL,
   `state` varchar(2) DEFAULT NULL,
   `zipcode` varchar(10) DEFAULT NULL,
-  `award_id` int(11) DEFAULT NULL,
   
   FOREIGN KEY (`approval_status`) REFERENCES `hunt_status` (`approval_status`),
   FOREIGN KEY (`uid`) REFERENCES `creators` (`uid`)
   
-) ENGINE=InnoDB AUTO_INCREMENT=667 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+--
+-- Table structure for table `award`
+--
+
+CREATE TABLE IF NOT EXISTS `awards` (
+  `award_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `address` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `lat` DOUBLE DEFAULT 0.0,
+  `lon` DOUBLE DEFAULT 0.0,
+  `name` varchar(255) DEFAULT NULL,
+  `redeem_code` varchar(255) DEFAULT NULL,
+  `award_value` varchar(255) DEFAULT NULL,
+  `hunt_id` int	DEFAULT NULL,
+
+   FOREIGN KEY (`hunt_id`) REFERENCES `hunts` (`hunt_id`)
+
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `hunt`
 --
 
-INSERT INTO `hunts` (`hunt_id`, `abbreviation`, `audience`, `available`, `date_end`, `date_start`, `name`, `ordered`, `summary`, `super_badge`, `uid`, `award_id`) VALUES
-(123, 'rando_hunt', 'players', b'1', '2018-06-04', '2018-07-04', 'Random hunt', b'1', 'A random hunt that I made on the fly', 'A cool badge that has gold.', 'pacmanw2', NULL),
-(456, 'other_hunt', 'people who play', b'1', '2018-02-01', '2018-02-02', 'Some Hunt', b'1', 'Another hunt I made up', 'Another badge I made up', 'someUser', NULL),
-(666, 'six_hunt', 'Those who are running through the six with their woes', NULL, '2006-06-06', '2006-07-06', 'Six Hunt', b'1', 'A hunt through the six', 'A Six Badge', 'six_god', NULL);
+INSERT INTO `hunts` (`hunt_id`, `abbreviation`, `audience`, `date_end`, `date_start`, `name`, `ordered`, `summary`, `super_badge`, `uid`) VALUES
+(123, 'rando_hunt', 'players', '2018-06-04', '2018-07-04', 'Random hunt', b'1', 'A random hunt that I made on the fly', 'A cool badge that has gold.', 'pacmanw2'),
+(456, 'other_hunt', 'people who play', '2018-02-01', '2018-02-02', 'Some Hunt', b'1', 'Another hunt I made up', 'Another badge I made up', 'someUser'),
+(666, 'six_hunt', 'Those who are running through the six with their woes', '2006-06-06', '2006-07-06', 'Six Hunt', b'1', 'A hunt through the six', 'A Six Badge', 'SYMuIyLoFkek6h0Vx8xy36T5aqK2');
 
 -- --------------------------------------------------------
 
@@ -168,8 +174,7 @@ ALTER TABLE `badges`
 -- Indexes for table `hunt`
 --
 ALTER TABLE `hunts`
-  ADD KEY `FKfwvuo3fy0wagttifb1gjedxhk` (`uid`),
-  ADD KEY `FKoxl574w8ed3xt7dvu26usmn4r` (`award_id`);
+  ADD KEY `FKfwvuo3fy0wagttifb1gjedxhk` (`uid`);
 
 -- Constraints for table `badges`
 --
@@ -180,8 +185,7 @@ ALTER TABLE `badges`
 -- Constraints for table `hunt`
 --
 ALTER TABLE `hunts`
-  ADD CONSTRAINT `FKfwvuo3fy0wagttifb1gjedxhk` FOREIGN KEY (`uid`) REFERENCES `creators` (`uid`),
-  ADD CONSTRAINT `FKoxl574w8ed3xt7dvu26usmn4r` FOREIGN KEY (`award_id`) REFERENCES `awards` (`award_id`);
+  ADD CONSTRAINT `FKfwvuo3fy0wagttifb1gjedxhk` FOREIGN KEY (`uid`) REFERENCES `creators` (`uid`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
