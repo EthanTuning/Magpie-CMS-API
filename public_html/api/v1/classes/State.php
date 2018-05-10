@@ -68,6 +68,10 @@ abstract class State
 		{
 			return $this->dbGetAllChildren($obj);
 		}
+		else
+		{
+			throw new IllegalAccessException();
+		}
 	}
 	
 	public function update(IMapperable $obj)
@@ -547,6 +551,20 @@ class Stateless extends State
 	public function get(IMapperable $obj)
 	{
 		throw new ResourceNotFoundException();
+	}
+	
+	
+	// Takes a object with the fields set to whatever you're searching for
+	public function search(IMapperable $obj)
+	{	
+		if ($obj->isParent())
+		{
+			return $this->dbQuery($obj);
+		}
+		else
+		{
+			throw new UnsupportedOperationException();
+		}
 	}
 	
 	

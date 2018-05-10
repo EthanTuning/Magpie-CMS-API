@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Magpie API Documentation</title>
+    
+    <link type="text/css" rel="stylesheet" href="style.css" />
+
+  </head>
+  <body>
+<h1>Magpie API Documentation</h1>
+    <div class="app-desc">This page is a developer guide for the Magpie web Application Programming Interface (API). The API attempts to be as RESTful as possible, but some  exceptions were made in order to benefit the client application(s). For example, performing a GET request to obtain a single Hunt will return all the child objects belonging to that Hunt as well as the Hunt itself.</div>
+    <hr />
+    <div class="app-desc">More information: <a href="https://helloreverb.com">https://helloreverb.com</a></div>
+    <div class="app-desc">Contact Info: <a href="insert@admin.email">insert@admin.email</a></div>
+    <div class="app-desc">Version: 1.0.0</div>
+    <div class="app-desc">BasePath:/v1</div>
+  
+
+	<h2>Overview</h2>
+	<p>The API is a portal for users to send and receive data to Magpie.  The API does not distinguish between client types, web and mobile clients are given the same responses.
+	Hunts are the primary resource.  They contain their own datafields, as well as act as containers for the sub-resources (Badges and Awards).
+	Sub-resources are added to a Hunt piecewise.  However, Hunts are retreived in a complete form.</p>
+
+<h2>Access</h2>
+	<p>All requests to the API must contain an Authorization Header with a Bearer token.  The token is aquired from a Google login flow.</p>
+    <ul>
+      <li>Authorization: Bearer "Token String"</li>
+    </ul>
+    
+<h2>API Resources (Click for that Resource's Documentation)</h2>
+	<ul>
+  <li><h4><a href="hunt.html">Hunt</a></h4> - Primary Resource.  Contains sub-resources.</li>
+  <ul>
+	  <li><h4><a href="badge.html">Badge</a></h4></li>
+	  <li><h4><a href="award.html">Award</a></h4></li>
+  </ul>
+    <li><h4><a href="admin.html">Admin</a></h4> - Used to perform administrative tasks on the database (Approve Hunts, etc).</li>
+	<li><h4><a href="images.html">Images</a></h4> - Upload images to this endpoint for inclusion in other resources.</li>
+  </ul>
+  
+	<br><br><br>
+  
+  
+  </body>
+</html>
