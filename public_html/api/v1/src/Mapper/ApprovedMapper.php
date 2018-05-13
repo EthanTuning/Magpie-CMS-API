@@ -8,7 +8,7 @@
  * Also it just works on Hunts.  Returned a single hunt, specified by ID,
  * should return all the badges as well.
  */
- 
+namespace MagpieAPI\Mapper;
 
 class ApprovedMapper
 {

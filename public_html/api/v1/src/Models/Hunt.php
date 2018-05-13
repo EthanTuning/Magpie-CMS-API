@@ -9,9 +9,12 @@
  * The names here have to match what is in the database.
  * 
  */
+namespace MagpieAPI\Models;
+
+use MagpieAPI\Mapper\IMapperable;
 
 
-class Hunt implements JsonSerializable, IMapperable
+class Hunt implements \JsonSerializable, IMapperable
 {	
 	/* The name of the table that the class maps to */
 	// TODO: change to const?  const vs static?

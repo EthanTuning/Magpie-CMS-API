@@ -1,8 +1,5 @@
 <?php
 
-use Kreait\Firebase\Factory;
-use Kreait\Firebase\ServiceAccount;
-
 /* This holds the logic for authenticating a user.
  * 
  * 1) Initialize Firebase Admin SDK w/credentials
@@ -10,6 +7,11 @@ use Kreait\Firebase\ServiceAccount;
  * 3) Add the user id (uid) extracted from the token to the $request object
  * 
  */
+
+namespace MagpieAPI;
+
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\ServiceAccount;
 
 class AuthenticationMiddleware
 {
@@ -61,7 +63,7 @@ class AuthenticationMiddleware
     private function initialize()
     {
 		// ************Firebase Credentials go here ******************
-		$serviceAccount = ServiceAccount::fromJsonFile(__DIR__.'/creds/Magpie CMS API-8d356af4830f.json');
+		$serviceAccount = ServiceAccount::fromJsonFile(__DIR__.'/Creds/Magpie CMS API-8d356af4830f.json');
 
 		$firebase = (new Factory)
 			->withServiceAccount($serviceAccount)

@@ -1,32 +1,35 @@
 <?php
 
-/* Contains the endpoint functions for Badges. */
+/* Contains the endpoint functions for Hunts. */
+
+namespace MagpieAPI\Controllers;
+
+use MagpieAPI\Mapper\Mapper;
+
+use MagpieAPI\Models\Hunt;
+use MagpieAPI\Models\Badge;
+
+use MagpieAPI\Exceptions\IllegalAccessException;
+use MagpieAPI\Exceptions\ResourceNotFoundException;
+use MagpieAPI\Exceptions\UnsupportedOperationException;
 
 
-$app->post('/hunts/{hunt_id}/badges', BadgeController::class . ':add');
-$app->get('/hunts/{hunt_id}/badges/{badge_id}', BadgeController::class . ':getSingleBadge');
-$app->get('/hunts/{hunt_id}/badges', BadgeController::class . ':getAllBadges');
-$app->put('/hunts/{hunt_id}/badges/{badge_id}', BadgeController::class . ':update');
-$app->delete('/hunts/{hunt_id}/badges/{badge_id}', BadgeController::class . ':delete');
-
-
-
-class BadgeController
+class HuntController
 {
 	protected $container;
 
 	// constructor receives container instance
-	public function __construct(Interop\Container\ContainerInterface $container)
+	public function __construct(/*Interop\Container\ContainerInterface*/ $container)
 	{
 		$this->container = $container;
 	}
 
 	
 	/************************************
-	 *				GET
+	 *				GET (Single Hunt identified by ID)
 	 ***********************************/
 	
-	public function getSingleBadge($request, $response, $args)
+	public function getSingleHunt($request, $response, $args)
 	{
 		/* Create the Mappers used */
 		$uid = $request->getAttribute('uid');
@@ -35,15 +38,14 @@ class BadgeController
 		/* Grab hunt id */
 		$huntid = $args['hunt_id'];
 		
-		// make Badge
-		$badge = new Badge(null);
-		$badge->setPrimaryKeyValue($args['badge_id']);
-		$badge->setParentKeyValue($args['hunt_id']);
+		// make Hunt
+		$hunt = new Hunt(null);
+		$hunt->setPrimaryKeyValue($huntid);
 		
 		try
 		{
-			/* Retreive the Badge from the mapper */
-			$result = $mapper->get($badge);
+			/* Retreive the Hunt from the mapper */
+			$result = $mapper->get($hunt);
 			$response->getBody()->write(json_encode($result));		//add jsonSerialze() to interface?
 		}
 		catch (IllegalAccessException $e)
@@ -58,25 +60,26 @@ class BadgeController
 		return $response;
 	}
 	
-	
-	/* Get all Badges associated with that hunt */
-	public function getAllBadges($request, $response, $args)
+	/************************************
+	 *				GET (Search With Parameters)
+	 ***********************************/
+
+	public function search($request, $response, $args)
 	{
 		/* Create the Mappers used */
 		$uid = $request->getAttribute('uid');
 		$mapper = new Mapper($this->container->db, $uid);
 		
-		/* Grab hunt id */
-		$huntid = $args['hunt_id'];
+		/* Grab the query parameters */
+		$params = $request->getQueryParams();
 		
-		// make Badge
-		$badge = new Badge(null);
-		$badge->setParentKeyValue($args['hunt_id']);
+		// make Hunt
+		$hunt = new Hunt($params);
 		
 		try
 		{
-			/* Retreive the Badge from the mapper */
-			$result = $mapper->getAllChildren($badge);
+			/* Retreive the Hunt from the mapper */
+			$result = $mapper->search($hunt);
 			$response->getBody()->write(json_encode($result));		//add jsonSerialze() to interface?
 		}
 		catch (IllegalAccessException $e)
@@ -90,7 +93,8 @@ class BadgeController
 		
 		return $response;
 	}
-	
+
+
 
 /************************************
  *				POST (Add)
@@ -104,12 +108,11 @@ class BadgeController
 		
 		$parameters = $request->getParsedBody();
 		
-		$badge = new Badge($parameters);
-		$badge->setParentKeyValue($args['hunt_id']);
+		$hunt = new Hunt($parameters);
 		
 		try
 		{
-			$result = $mapper->add($badge);
+			$result = $mapper->add($hunt);
 			$response->getBody()->write(json_encode($result));
 		}
 		catch (IllegalAccessException $e)
@@ -134,13 +137,12 @@ class BadgeController
 		/* Grab hunt id from URL, shove it in assoc array w/rest of request */
 		$parameters = $request->getParsedBody();
 		
-		$badge = new Badge($parameters);
-		$badge->setPrimaryKeyValue($args['badge_id']);
-		$badge->setParentKeyValue($args['hunt_id']);
+		$hunt = new Hunt($parameters);
+		$hunt->setPrimaryKeyValue($args['hunt_id']);		// set the Hunt ID from the URL
 		
 		try
 		{
-			$result = $mapper->update($badge);
+			$result = $mapper->update($hunt);
 			$response->getBody()->write(json_encode($result));
 		}
 		catch (IllegalAccessException $e)
@@ -157,6 +159,18 @@ class BadgeController
 
 
 	/************************************
+	 *				PATCH (Submit)
+	 ***********************************/
+
+	// yea this isn't how patch is supposed to be used, oh well
+
+	public function submit($request, $response, $args)
+	{    
+		$response->getBody()->write(" HUNTS PATCH ROUTE (used for submitting, not implemented yet)");
+		return $response;
+	}
+
+	/************************************
 	 *				DELETE
 	 ***********************************/
 
@@ -166,15 +180,14 @@ class BadgeController
 		$uid = $request->getAttribute('uid');
 		$mapper = new Mapper($this->container->db, $uid);
 		
-		/* Make blank Badge */
-		$badge = new Badge(null);
-		$badge->setPrimaryKeyValue($args['badge_id']);
-		$badge->setParentKeyValue($args['hunt_id']);
+		/* Make blank Hunt */
+		$hunt = new Hunt(null);
+		$hunt->setPrimaryKeyValue($args['hunt_id']);		// set the Hunt ID from the URL
 		
 		try
 		{
 			/* Use the Mapper to delete the hunt with that hunt_id */
-			$temp = $mapper->delete($badge);
+			$temp = $mapper->delete($hunt);
 			$response->getBody()->write(json_encode($temp));		//add jsonSerialze() to interface?
 		}
 		catch (IllegalAccessException $e)

@@ -2,7 +2,8 @@
 
 /* This class builds a Hunt.
  */
- 
+
+namespace MagpieAPI\Models;
 
 class HuntFactory
 {

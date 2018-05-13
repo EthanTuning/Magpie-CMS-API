@@ -4,6 +4,8 @@
  * Badges, Awards, etc.  Also Hunts implement this too, but they are their own parent.
  */
 
+namespace MagpieAPI\Mapper;
+
 
 interface IMapperable
 {

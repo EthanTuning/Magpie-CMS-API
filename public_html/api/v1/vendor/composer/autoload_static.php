@@ -36,6 +36,7 @@ class ComposerStaticInit1f0e22df68451c8bbce0ad92e21a44da
         'M' => 
         array (
             'Monolog\\' => 8,
+            'MagpieAPI\\' => 10,
         ),
         'L' => 
         array (
@@ -109,6 +110,10 @@ class ComposerStaticInit1f0e22df68451c8bbce0ad92e21a44da
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
+        ),
+        'MagpieAPI\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src',
         ),
         'League\\Flysystem\\' => 
         array (

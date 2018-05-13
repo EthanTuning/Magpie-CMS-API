@@ -9,7 +9,7 @@
 
 
 //TODO: Maybe make a User class and interface it with the Mapper?
-
+namespace MagpieAPI;
 
 class UserManager
 {

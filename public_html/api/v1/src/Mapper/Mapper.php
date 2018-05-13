@@ -8,7 +8,12 @@
  * 
  * It takes an IMapperable object and returns an array.
  */
- 
+
+namespace MagpieAPI\Mapper;
+
+use MagpieAPI\Exceptions\IllegalAccessException;
+use MagpieAPI\Exceptions\ResourceNotFoundException;
+use MagpieAPI\Exceptions\UnsupportedOperationException;
 
 class Mapper
 {

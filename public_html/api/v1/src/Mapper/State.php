@@ -14,9 +14,15 @@
  * 
  */
 
+namespace MagpieAPI\Mapper;
+
+use MagpieAPI\Exceptions\IllegalAccessException;
+use MagpieAPI\Exceptions\ResourceNotFoundException;
+use MagpieAPI\Exceptions\UnsupportedOperationException;
 
 abstract class State
 {
+	
 	protected $db;		// PDO object (already instantiated and stuff)
 	protected $uid;		// user id extracted from Firebase token (represents current user)
 	
@@ -393,17 +399,38 @@ abstract class State
 	 * 					Helper Functions
 	 * ****************************************************/
 	
-	/* Is the specified hunt owned by the current owner? */
+	/* Is the specified hunt owned by the current owner? 
+	 * 	- Parent: Check the hunt id with the owner 
+	 *  - Child:  Get the hunt ID, then check the hunt id with owner 
+	 * */
 	// TODO: Make this work with other parent classes, by using variable for tablename
 	public function isOwnedByCurrentUser(IMapperable $obj)
 	{
-		$parentkey = $obj->getParentKey();
-		$name = $parentkey['name'];
-		$value = $parentkey['value'];
-		
-		$stmt = $this->db->prepare('SELECT uid FROM hunts WHERE '.$name.'=?');
-		$stmt->execute([$value]); 
-		$uidFromTable = $stmt->fetchColumn();
+		// Parent
+		if ($obj->isParent())
+		{
+			$parentkey = $obj->getParentKey();
+			$name = $parentkey['name'];
+			$value = $parentkey['value'];
+			
+			$stmt = $this->db->prepare('SELECT uid FROM hunts WHERE '.$name.'=?');
+			$stmt->execute([$value]); 
+			$uidFromTable = $stmt->fetchColumn();
+		}
+		// Children
+		else
+		{
+			$parentkey = $obj->getParentKey();
+			$parentName = $parentkey['name'];
+			
+			$primaryName = $obj->getPrimaryKey()['name'];
+			$primaryValue = $obj->getPrimaryKey()['value'];
+			$table = $obj->getTable();
+			
+			$stmt = $this->db->prepare('SELECT uid FROM hunts INNER JOIN '.$table.' ON hunts.hunt_id = '.$table.'.hunt_id WHERE '.$primaryName.'=?');
+			$stmt->execute([$primaryValue]); 
+			$uidFromTable = $stmt->fetchColumn();
+		}
 		
 		if ( isset($uidFromTable) )
 		{
@@ -414,176 +441,6 @@ abstract class State
 	}
 	
 }
-
-
-/******************************************************
- * 					Concrete States
- * ****************************************************/
-
-
-/*** Approved ***/
-class StateApproved extends State
-{
-	public function get(IMapperable $obj)
-	{
-		return $this->dbSelect($obj);
-	}
-	
-	
-	public function getAllChildren(IMapperable $obj)
-	{
-		return $this->dbGetAllChildren($obj);
-	}
-	
-	
-	public function delete(IMapperable $obj)
-	{
-		// if the object is a Parent object, can delete (delete should cascade on database)
-		if ($this->isOwnedByCurrentUser() && $obj->isParent())
-		{
-			return $this->dbDelete($obj);
-		}
-		else
-		{
-			throw new IllegalAccessException();
-		}
-	}
-}
-
-
-/*** Submitted ***/
-class StateSubmitted extends State
-{
-	public function get(IMapperable $obj)
-	{
-		if ($this->isOwnedByCurrentUser())
-		{
-			return $this->dbSelect($obj);
-		}
-		else
-		{
-			throw new IllegalAccessException();
-		}
-	}
-	
-}
-
-
-/*** NonApproved ***/
-class StateNonApproved extends State
-{
-	
-	public function search(IMapperable $obj)
-	{
-		if ($this->isOwnedByCurrentUser($obj))
-		{
-			return $this->dbQuery($obj);
-		}
-		
-		throw new IllegalAccessException();
-	}
-	
-	
-	public function get(IMapperable $obj)
-	{
-		if ($this->isOwnedByCurrentUser($obj))
-		{
-			return $this->dbSelect($obj);
-		}
-		else
-		{
-			throw new IllegalAccessException();
-		}
-	}
-	
-	
-	public function update(IMapperable $obj)
-	{
-		if ($this->isOwnedByCurrentUser($obj))
-		{
-			return $this->dbUpdate($obj);
-		}
-		else
-		{
-			throw new IllegalAccessException();
-		}
-	}
-	
-	
-	public function add(IMapperable $obj)
-	{
-		if ($obj->isParent() || $this->isOwnedByCurrentUser($obj) )
-		{
-			return $this->dbInsert($obj);
-		}
-		else
-		{
-			throw new IllegalAccessException();
-		}
-	}
-	
-	
-	public function delete(IMapperable $obj)
-	{
-		if ($this->isOwnedByCurrentUser($obj))
-		{
-			return $this->dbDelete($obj);
-		}
-		else
-		{
-			throw new IllegalAccessException();
-		}
-	}
-	
-	
-}
-
-
-/*** Stateless ***/
-/* This is the state that a top-level IMapperable object lives in before being put in
- * the database.  (Hunt)
- * 
- * It also applies to anything when using the query() function.
- */
-class Stateless extends State
-{
-	// If the object is stateless, it doesn't exist in the database.
-	public function get(IMapperable $obj)
-	{
-		throw new ResourceNotFoundException();
-	}
-	
-	
-	// Takes a object with the fields set to whatever you're searching for
-	public function search(IMapperable $obj)
-	{	
-		if ($obj->isParent())
-		{
-			return $this->dbQuery($obj);
-		}
-		else
-		{
-			throw new UnsupportedOperationException();
-		}
-	}
-	
-	
-	public function add(IMapperable $obj)
-	{
-		// Adding Parent objects when they don't exist in the database is fine.
-		if ($obj->isParent())
-		{
-			return $this->dbInsert($obj);
-		}
-		// Throw an Exception if someone tries to add a Child into the database without a parent.
-		else
-		{
-			throw new IllegalAccessException();
-		}
-	}
-}
-
-
 
 
 ?>

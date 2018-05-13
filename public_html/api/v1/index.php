@@ -1,5 +1,10 @@
 <?php
 
+
+/* Composer Stuff */
+require './vendor/autoload.php';
+
+
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 //use \Interop\Container\ContainerInterface as ContainerInterface;	//https://stackoverflow.com/questions/37906363/slim-controller-issue-must-be-an-instance-of-containerinterface-instance-of-s
@@ -7,24 +12,14 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 use Firebase\Auth\Token\Exception\InvalidToken;
 
+use MagpieAPI\UserManager;
+use MagpieAPI\AuthenticationMiddleware;
+use MagpieAPI\CustomExceptions;
 
-require './classes/creds/creds.php';					// Configuration stuff
-require './classes/AuthenticationMiddleware.php';		// User Authentication code
-require './classes/UserManager.php';					// Checks users against 'creators' table
+use MagpieAPI\Controllers\HuntController;
+use MagpieAPI\Controllers\BadgeController;
 
-/* Interfaces and Basic classes */
-require './classes/CustomExceptions.php';
-require './classes/Interfaces.php';
-require './classes/Hunt.php';
-require './classes/Badge.php';
-
-/* Mapper classes (Endpoint <-> Database Interfacers) */
-require './classes/State.php';				// 
-require './classes/Mapper.php';				// Mapper holds a State
-
-/* Composer Stuff */
-require './vendor/autoload.php';
-
+require_once './src/Creds/creds.php';					// Configuration stuff
 
 /*************************************
  *				SLIM
@@ -52,8 +47,37 @@ $app->add( new UserManager($container) );			// Checks if the current user is ent
 $app->add( new AuthenticationMiddleware() );		// Authentication with google and tokens and stuff
 
 
+/****************************************
+ * 				URI Endpoints
+ * ***********************************/
 
-/* Route used for testing */
+
+/* Hunts */
+$app->post('/hunts', HuntController::class . ':add');
+$app->get('/hunts/{hunt_id}', HuntController::class . ':getSingleHunt');
+$app->get('/hunts', HuntController::class . ':search');
+$app->put('/hunts/{hunt_id}', HuntController::class . ':update');
+$app->delete('/hunts/{hunt_id}', HuntController::class . ':delete');
+$app->patch('/hunts/{hunt_id}', HuntController::class . ':submit');
+
+/* Badges */
+
+$app->post('/hunts/{hunt_id}/badges', BadgeController::class . ':add');
+$app->get('/hunts/{hunt_id}/badges/{badge_id}', BadgeController::class . ':getSingleBadge');
+$app->get('/hunts/{hunt_id}/badges', BadgeController::class . ':getAllBadges');
+$app->put('/hunts/{hunt_id}/badges/{badge_id}', BadgeController::class . ':update');
+$app->delete('/hunts/{hunt_id}/badges/{badge_id}', BadgeController::class . ':delete');
+
+/* Admin */
+
+
+
+/* Start the Slim instance */
+$app->run();
+
+
+
+/* Route used for testing 
 $app->get('/test', function (Request $request, Response $response, array $args) {
     
     //GET
@@ -61,7 +85,7 @@ $app->get('/test', function (Request $request, Response $response, array $args) 
 	
 	/*foreach($allGetVars as $key => $param){
 	   //GET parameters list
-	}*/
+	}
     
     //$getParam = $allGetVars['name'];
     
@@ -83,23 +107,6 @@ $app->get('/test', function (Request $request, Response $response, array $args) 
     return $response;
 });
 
-
-/****************************************
- * 				URI Endpoints
- * ***********************************/
-
-require_once './endpoints/badges.php';
-require_once './endpoints/hunts.php';
-
-
-//require_once 'path_to_your_dir/admin_routes.php';
-//require_once 'path_to_your_dir/some_other_routes.php';
-
-
-$app->run();
+*/
 
 ?>
-
-
-
-

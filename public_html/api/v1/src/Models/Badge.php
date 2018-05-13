@@ -11,8 +11,12 @@
  * 
  */
 
+namespace MagpieAPI\Models;
 
-class Badge implements JsonSerializable, IMapperable
+use MagpieAPI\Mapper\IMapperable;
+
+
+class Badge implements \JsonSerializable, IMapperable
 {	
 	/* The name of the table that the class maps to */
 	// TODO: change to const?  const vs static?

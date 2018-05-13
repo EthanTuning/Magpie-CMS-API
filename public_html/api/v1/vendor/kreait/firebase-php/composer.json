@@ -10,6 +10,11 @@
             "homepage": "https://github.com/jeromegamez"
         }
     ],
+    "support": {
+        "docs": "https://firebase-php.readthedocs.io",
+        "issues": "https://github.com/kreait/firebase-php/issues",
+        "source": "https://github.com/kreait/firebase-php"
+    },
     "require": {
         "php": "^7.0",
         "ext-mbstring": "*",
@@ -48,8 +53,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "4.x-dev",
-            "dev-5.0": "5.x-dev"
+            "dev-master": "4.x-dev"
         }
     }
 }
