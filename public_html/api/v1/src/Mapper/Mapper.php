@@ -83,6 +83,12 @@ class Mapper
 	}
 	
 
+	public function submit(IMapperable $obj)
+	{
+		$this->state = $this->setState($obj);
+		return $this->state->submit($obj);
+	}
+	
 	
 	/******** Approval and Ownership checks *************/
 	

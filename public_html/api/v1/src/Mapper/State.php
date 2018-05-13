@@ -99,6 +99,10 @@ abstract class State
 	}
 	
 	
+	public function submit(IMapperable $obj)
+	{
+		throw new UnsupportedOperationException();
+	}
 	
 	/*****************************************************
 	 * 				CRUD OPERATIONS
@@ -362,6 +366,37 @@ abstract class State
 	}
 	
 	
+	/* Submit
+	 * 
+	 * Submit a Hunt for Approval (Just change approval_status to submitted) */
+	protected function dbSubmit(IMapperable $object)
+	{
+		if ($object == null)
+		{
+			throw new Exception('$object is null!');
+		}
+		
+		// Get Primary Key
+		$primarykey = $object->getPrimaryKey()['value'];
+
+		$sql = 'UPDATE `hunts` SET `approval_status` ="submitted" WHERE `hunt_id`=?';
+		$stmt = $this->db->prepare($sql);
+		$stmt->execute([$primarykey]);
+		$result = $stmt->rowCount();
+	
+		if ($result < 1)
+		{
+			$result = "Already submitted.";
+		}
+		else
+		{
+			$result = "Successfully submitted.";
+		}
+		
+		return $result;
+	}
+	
+
 	/* Delete - Delete a single object from database
 	 * 
 	 * Delete the object with the specified ID */

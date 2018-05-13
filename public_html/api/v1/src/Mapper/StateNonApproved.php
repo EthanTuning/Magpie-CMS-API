@@ -73,6 +73,18 @@ class StateNonApproved extends State
 	}
 	
 	
+	public function submit(IMapperable $obj)
+	{
+		if ($this->isOwnedByCurrentUser($obj))
+		{
+			return $this->dbSubmit($obj);
+		}
+		else
+		{
+			throw new IllegalAccessException();
+		}
+	}
+	
 }
 
 

@@ -165,8 +165,20 @@ class HuntController
 	// yea this isn't how patch is supposed to be used, oh well
 
 	public function submit($request, $response, $args)
-	{    
-		$response->getBody()->write(" HUNTS PATCH ROUTE (used for submitting, not implemented yet)");
+	{   
+		/* Create the Mappers used */
+		$uid = $request->getAttribute('uid');
+		$mapper = new Mapper($this->container->db, $uid);
+		
+		/* Grab hunt id from URL, shove it in assoc array w/rest of request */
+		$parameters = $request->getParsedBody();
+		
+		$hunt = new Hunt($parameters);
+		$hunt->setPrimaryKeyValue($args['hunt_id']);		// set the Hunt ID from the URL
+		
+		$result = $mapper->submit($hunt);
+		$response->getBody()->write(json_encode($result));
+		
 		return $response;
 	}
 

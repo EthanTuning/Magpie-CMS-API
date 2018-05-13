@@ -2,14 +2,25 @@
 
 namespace MagpieAPI\Mapper;
 
-
 use MagpieAPI\Exceptions\IllegalAccessException;
 use MagpieAPI\Exceptions\ResourceNotFoundException;
 use MagpieAPI\Exceptions\UnsupportedOperationException;
 
-/*** Approved ***/
-class StateApproved extends State
+/*********************************************************
+ * This is only for use by the AdminController
+ * *****************************************************/
+
+
+/*** Bypass the State of the parent object and do stuff ***/
+class StateBypass extends State
 {
+	
+	public function search(IMapperable $obj)
+	{
+		return $this->dbQuery($obj);
+	}
+	
+	
 	public function get(IMapperable $obj)
 	{
 		return $this->dbSelect($obj);
@@ -24,16 +35,11 @@ class StateApproved extends State
 	
 	public function delete(IMapperable $obj)
 	{
-		// if the object is a Parent object, can delete (delete should cascade on database)
-		if ($this->isOwnedByCurrentUser($obj) && $obj->isParent())
-		{
-			return $this->dbDelete($obj);
-		}
-		else
-		{
-			throw new IllegalAccessException();
-		}
+		return $this->dbDelete($obj);
 	}
+	
+	
 }
+
 
 ?>

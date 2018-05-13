@@ -9,12 +9,13 @@
  * the AdminChecker class as middleware on the '/admin' route group (done!).
  * 
  * This does not use a Mapper, it makes a StateApproved object and uses that directly.
+ * Or it does some direct SQL via PDO.
  * 
  * */
 
 namespace MagpieAPI\Controllers;
 
-use MagpieAPI\Mapper\StateApproved;		// We're using this as a bypass to the state-checking
+use MagpieAPI\Mapper\StateBypass;		// We're using this as a bypass to the state-checking
 
 use MagpieAPI\Models\Hunt;
 use MagpieAPI\Models\Badge;
@@ -29,7 +30,7 @@ class AdminController
 	protected $container;
 
 	// constructor receives container instance
-	public function __construct(/*Interop\Container\ContainerInterface*/ $container)
+	public function __construct($container)
 	{
 		$this->container = $container;
 	}	
@@ -42,7 +43,7 @@ class AdminController
 	public function getSingleHunt($request, $response, $args)
 	{
 		// Bypassing functionality of the mapper by making a State object directly
-		$mapperBypass = new StateApproved($this->container->db, $request->getAttribute('uid'));
+		$mapperBypass = new StateBypass($this->container->db, $request->getAttribute('uid'));
 		
 		$hunt = new Hunt(null);
 		$hunt->setPrimaryKeyValue($args['hunt_id']);
@@ -54,12 +55,22 @@ class AdminController
 	}
 	
 	/************************************
-	 *				GET (Search With Parameters)
+	 *				GET
+	 * 
+	 * GET A LIST OF NON-APPROVED HUNTS FOR REVIEW
 	 ***********************************/
 
 	public function getNonApprovedList($request, $response, $args)
 	{
-		$response->write("GET A LIST OF NON-APPROVED HUNTS FOR REVIEW");
+		//TODO: add in query functionality
+		
+		//direct SQL query
+		$sql = 'SELECT * from `hunts` WHERE `approval_status` = "submitted"';
+		$stmt = $this->container->db->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		
+		$response->getBody()->write(json_encode($result));
 		
 		return $response;
 	}
@@ -67,13 +78,41 @@ class AdminController
 
 	/************************************
 	 *				PUT (Update)
+	 * 
+	 * CHANGE THE STATUS OF A HUNT (APPROVE OR DISAPPROVE)
+	 * 
+	 * The hunt should be in the "submitted" state, but this doesn't check that.
+	 * If you're an admin you can do whatever you want.
+	 * (See Hunt state diagram)
 	 ***********************************/
 
 	public function changeStatus($request, $response, $args)
 	{
-		$response->write("CHANGE THE STATUS OF A HUNT (YEA OR NAY)");
+		// direct SQL query
+		$huntid = $args['hunt_id'];			// get hunt ID from URI
 		
-		return $response;
+		$parameters = $request->getParsedBody();
+		
+		$status = $parameters['approval_status'];
+		
+		if ($status == 'approved' || $status == 'non-approved')
+		{
+			$sql = 'UPDATE `hunts` SET `approval_status` =? WHERE `hunt_id`=?';
+			$stmt = $this->container->db->prepare($sql);
+			$stmt->execute([$status, $huntid]);
+			$result = $stmt->rowCount();
+		
+			if ($result < 1)
+			{
+				$result = "Nothing changed.";
+			}
+			
+			$response->getBody()->write(json_encode($result));
+		
+			return $response;
+		}
+
+		throw new \InvalidArgumentException();
 	}
 
 	/************************************
@@ -82,8 +121,15 @@ class AdminController
 
 	public function delete($request, $response, $args)
 	{
-		$response->write("DELETE A HUNT");
+		// Bypassing functionality of the mapper by making a State object directly
+		$mapperBypass = new StateBypass($this->container->db, $request->getAttribute('uid'));
 		
+		$hunt = new Hunt(null);
+		$hunt->setPrimaryKeyValue($args['hunt_id']);
+		
+		$result = $mapperBypass->delete($hunt);
+		
+		$response->getBody()->write(json_encode($result));
 		return $response;
 		
 	}
