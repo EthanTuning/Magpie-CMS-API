@@ -5,8 +5,14 @@
 namespace MagpieAPI\Controllers;
 
 use MagpieAPI\Mapper\Mapper;
+
 use MagpieAPI\Models\Hunt;
 use MagpieAPI\Models\Badge;
+
+use MagpieAPI\Exceptions\IllegalAccessException;
+use MagpieAPI\Exceptions\ResourceNotFoundException;
+use MagpieAPI\Exceptions\UnsupportedOperationException;
+
 
 class BadgeController
 {

@@ -19,6 +19,7 @@ namespace MagpieAPI\Mapper;
 use MagpieAPI\Exceptions\IllegalAccessException;
 use MagpieAPI\Exceptions\ResourceNotFoundException;
 use MagpieAPI\Exceptions\UnsupportedOperationException;
+use \Exception;
 
 abstract class State
 {
@@ -129,7 +130,7 @@ abstract class State
 		
 		if ($result == null)
 		{
-			throw new Exception("Couldn't get from database.");
+			throw new ResourceNotFoundException();
 		}
 		
 		return $result;

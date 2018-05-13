@@ -1,7 +1,7 @@
 <?php
 
 
-namespace MagpieAPI\Exceptions
+namespace MagpieAPI\Exceptions;
 
 /* Just use existing Exception type with cool new names */
 

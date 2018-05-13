@@ -12,12 +12,13 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 use Firebase\Auth\Token\Exception\InvalidToken;
 
-use MagpieAPI\UserManager;
-use MagpieAPI\AuthenticationMiddleware;
-use MagpieAPI\CustomExceptions;
+use MagpieAPI\UserManager;					// Checks if user is in database
+use MagpieAPI\AuthenticationMiddleware;		// Firebase Token stuff
+use MagpieAPI\AdminChecker;					// local admin checker
 
 use MagpieAPI\Controllers\HuntController;
 use MagpieAPI\Controllers\BadgeController;
+use MagpieAPI\Controllers\AdminController;
 
 require_once './src/Creds/creds.php';					// Configuration stuff
 
@@ -41,12 +42,6 @@ $container['db'] = function ($c) {
     return $pdo;
 };
 
-/* Add the additional Middleware Layers (! The last ond loaded runs first !) */
-
-$app->add( new UserManager($container) );			// Checks if the current user is entered in the creators table
-$app->add( new AuthenticationMiddleware() );		// Authentication with google and tokens and stuff
-
-
 /****************************************
  * 				URI Endpoints
  * ***********************************/
@@ -69,7 +64,23 @@ $app->put('/hunts/{hunt_id}/badges/{badge_id}', BadgeController::class . ':updat
 $app->delete('/hunts/{hunt_id}/badges/{badge_id}', BadgeController::class . ':delete');
 
 /* Admin */
+$app->group('/admin', function () {
+	$this->get('/{hunt_id}', AdminController::class . ':getSingleHunt');
+    $this->get('', AdminController::class . ':getNonApprovedList');
+    $this->put('/{hunt_id}', AdminController::class . ':changeStatus');
+    $this->delete('/{hunt_id}', AdminController::class . ':delete');
+    $this->options('', AdminController::class . ':options');
+})->add( new AdminChecker($container));
 
+
+/* Images */
+// sweet jesus I have no idea how authentication for images will work.
+
+
+/* Add the additional Middleware Layers (! The last ond loaded runs first !) */
+
+$app->add( new UserManager($container) );			// Checks if the current user is entered in the creators table
+$app->add( new AuthenticationMiddleware() );		// Authentication with google and tokens and stuff
 
 
 /* Start the Slim instance */
