@@ -406,8 +406,8 @@ abstract class State
 	// TODO: Make this work with other parent classes, by using variable for tablename
 	public function isOwnedByCurrentUser(IMapperable $obj)
 	{
-		// Parent
-		if ($obj->isParent())
+		// Parents and blank Children
+		if ($obj->isParent() || !isset($obj->getPrimaryKey()['value']) )
 		{
 			$parentkey = $obj->getParentKey();
 			$name = $parentkey['name'];
@@ -417,19 +417,19 @@ abstract class State
 			$stmt->execute([$value]); 
 			$uidFromTable = $stmt->fetchColumn();
 		}
-		// Children
+		// Child object with specific ID
 		else
 		{
-			$parentkey = $obj->getParentKey();
-			$parentName = $parentkey['name'];
-			
-			$primaryName = $obj->getPrimaryKey()['name'];
-			$primaryValue = $obj->getPrimaryKey()['value'];
-			$table = $obj->getTable();
-			
-			$stmt = $this->db->prepare('SELECT uid FROM hunts INNER JOIN '.$table.' ON hunts.hunt_id = '.$table.'.hunt_id WHERE '.$primaryName.'=?');
-			$stmt->execute([$primaryValue]); 
-			$uidFromTable = $stmt->fetchColumn();
+				$parentkey = $obj->getParentKey();
+				$parentName = $parentkey['name'];
+				
+				$primaryName = $obj->getPrimaryKey()['name'];
+				$primaryValue = $obj->getPrimaryKey()['value'];
+				$table = $obj->getTable();
+				
+				$stmt = $this->db->prepare('SELECT uid FROM hunts INNER JOIN '.$table.' ON hunts.hunt_id = '.$table.'.hunt_id WHERE '.$primaryName.'=?');
+				$stmt->execute([$primaryValue]); 
+				$uidFromTable = $stmt->fetchColumn();
 		}
 		
 		if ( isset($uidFromTable) )
