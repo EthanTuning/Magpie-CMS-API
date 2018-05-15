@@ -112,7 +112,7 @@ class AdminController
 			return $response;
 		}
 
-		throw new \InvalidArgumentException();
+		throw new \InvalidArgumentException("'approval_status' not found.");
 	}
 
 	/************************************

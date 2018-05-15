@@ -19,11 +19,12 @@ use MagpieAPI\AdminChecker;					// local admin checker
 use MagpieAPI\Controllers\HuntController;
 use MagpieAPI\Controllers\BadgeController;
 use MagpieAPI\Controllers\AdminController;
+use MagpieAPI\Controllers\ImageController;
 
 require_once './src/Creds/creds.php';					// Configuration stuff
 
 /*************************************
- *				SLIM
+ *				SLIM CONTAINER INITIALIZATION
  *************************************/
 
 /* Load the stuff from 'creds/creds.php' into Slim */
@@ -31,6 +32,9 @@ $app = new \Slim\App(['settings' => $config]);
 
 /* Get the Slim container array */
 $container = $app->getContainer();
+
+$container['upload_directory'] = __DIR__ . '/uploads';									// Add upload directory for image files
+$container['base_url'] = 'http://localhost/magpie/magpie-php/public_html/api/v1';		// there's probably a dynamic way to do this.
 
 /* Add the PDO container */
 $container['db'] = function ($c) {
@@ -62,6 +66,13 @@ $app->get('/hunts/{hunt_id}/badges/{badge_id}', BadgeController::class . ':getSi
 $app->get('/hunts/{hunt_id}/badges', BadgeController::class . ':getAllBadges');
 $app->put('/hunts/{hunt_id}/badges/{badge_id}', BadgeController::class . ':update');
 $app->delete('/hunts/{hunt_id}/badges/{badge_id}', BadgeController::class . ':delete');
+
+
+/* Images */
+$app->post('/images', ImageController::class . ':add');
+//get() handled by apache
+$app->delete('/images/{image_id}', ImageController::class . ':delete');
+
 
 /* Admin */
 $app->group('/admin', function () {

@@ -61,13 +61,15 @@ The folders are:
         Require all granted
 </Directory>
 ```
+    * Note: Under Apache 2, you must set UseCanonicalName = On and ServerName. Otherwise, this value reflects the hostname supplied by the client, which can be spoofed. It is not safe to rely on this value in security-dependent contexts. 
 
 3. Enable apache2 module thingy:
     * sudo a2enmod rewrite && sudo service apache2 restart
 
 4. API Configuration
-    * In the 'creds/' folder, add your Firebase Admin SDK json credential
-    * Modify the 'authentication.php' file to reflect this credential
+    * In the 'src/Creds/' folder, add your Firebase Admin SDK json credential (download it from Firebase Console).
+    * Modify the 'src/AuthenticationMiddleware.php' file to reflect this credential.
+	* In 'index.php', change the "base_url" string to reflect the deployment location.
 
 5. Run the .sql script in the database folder.
 

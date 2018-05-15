@@ -7,18 +7,19 @@
 -- Server version: 5.6.37
 -- PHP Version: 5.6.31
 
+/*********************************************************
+	This will create the Database and make a user for the API to read/write
+	to the databse.
+	
+	On phpMyAdmin, go to "Import", select this file, and hit Go
+	***************************************************************/
+
 /* Updated with some stuff to make a user */
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
 -- Database: `MagpieDB`
 --
 
