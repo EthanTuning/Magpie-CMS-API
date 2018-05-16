@@ -62,6 +62,7 @@ The folders are:
 </Directory>
 ```
     * Note: Under Apache 2, you must set UseCanonicalName = On and ServerName. Otherwise, this value reflects the hostname supplied by the client, which can be spoofed. It is not safe to rely on this value in security-dependent contexts. 
+	* Disable directory browsing.
 
 3. Enable apache2 module thingy:
     * sudo a2enmod rewrite && sudo service apache2 restart

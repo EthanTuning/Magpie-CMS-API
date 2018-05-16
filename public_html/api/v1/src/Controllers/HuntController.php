@@ -8,6 +8,7 @@ use MagpieAPI\Mapper\Mapper;
 
 use MagpieAPI\Models\Hunt;
 use MagpieAPI\Models\Badge;
+use MagpieAPI\Models\HuntFactory;
 
 use MagpieAPI\Exceptions\IllegalAccessException;
 use MagpieAPI\Exceptions\ResourceNotFoundException;
@@ -24,6 +25,24 @@ class HuntController
 		$this->container = $container;
 	}
 
+
+	/* Prepare the results array from the database for the user 
+	 * 
+	 * This adds in links to the sub-resources.
+	 * This could also be used to remove unwanted fields from the results, like 'uid'.
+	 * 
+	 * */
+	private function prepareResponse($response, $result)
+	{
+		$huntid = $result['hunt_id'];
+		$result['badges'] = $this->container['base_url']."/hunts/".$huntid."/badges";
+		$result['awards'] = $this->container['base_url']."/hunts/".$huntid."/awards";
+		
+		$response->getBody()->write(json_encode($result));		//add jsonSerialze() to interface?
+		
+		return $response;
+	}
+	
 	
 	/************************************
 	 *				GET (Single Hunt identified by ID)
@@ -33,7 +52,7 @@ class HuntController
 	{
 		/* Create the Mappers used */
 		$uid = $request->getAttribute('uid');
-		$mapper = new Mapper($this->container->db, $uid);
+		$mapper = new Mapper($this->container, $uid);
 		
 		/* Grab hunt id */
 		$huntid = $args['hunt_id'];
@@ -42,21 +61,13 @@ class HuntController
 		$hunt = new Hunt(null);
 		$hunt->setPrimaryKeyValue($huntid);
 		
-		try
-		{
-			/* Retreive the Hunt from the mapper */
-			$result = $mapper->get($hunt);
-			$response->getBody()->write(json_encode($result));		//add jsonSerialze() to interface?
-		}
-		catch (IllegalAccessException $e)
-		{
-			$response = $response->withStatus(403);
-		}
-		catch (ResourceNotFoundException $e)
-		{
-			$response = $response->withStatus(404);
-		}
+		//$factory = new HuntFactory($mapper, $this->container);
+		//$result = $factory->build($hunt);
+		$result = $mapper->get($hunt);
 		
+		$response->getBody()->write(json_encode($result));
+		//$response = $this->prepareResponse($response, $result);
+			
 		return $response;
 	}
 	
@@ -68,7 +79,7 @@ class HuntController
 	{
 		/* Create the Mappers used */
 		$uid = $request->getAttribute('uid');
-		$mapper = new Mapper($this->container->db, $uid);
+		$mapper = new Mapper($this->container, $uid);
 		
 		/* Grab the query parameters */
 		$params = $request->getQueryParams();
@@ -76,20 +87,9 @@ class HuntController
 		// make Hunt
 		$hunt = new Hunt($params);
 		
-		try
-		{
-			/* Retreive the Hunt from the mapper */
-			$result = $mapper->search($hunt);
-			$response->getBody()->write(json_encode($result));		//add jsonSerialze() to interface?
-		}
-		catch (IllegalAccessException $e)
-		{
-			$response = $response->withStatus(403);
-		}
-		catch (ResourceNotFoundException $e)
-		{
-			$response = $response->withStatus(404);
-		}
+		$result = $mapper->search($hunt);
+		//$response = $this->prepareResponse($response, $result);
+		$response->getBody()->write(json_encode($result));
 		
 		return $response;
 	}
@@ -104,7 +104,7 @@ class HuntController
 	{
 		/* Create the Mappers used */
 		$uid = $request->getAttribute('uid');
-		$mapper = new Mapper($this->container->db, $uid);
+		$mapper = new Mapper($this->container, $uid);
 		
 		$parameters = $request->getParsedBody();
 		
@@ -132,7 +132,7 @@ class HuntController
 	{
 		/* Create the Mappers used */
 		$uid = $request->getAttribute('uid');
-		$mapper = new Mapper($this->container->db, $uid);
+		$mapper = new Mapper($this->container, $uid);
 		
 		/* Grab hunt id from URL, shove it in assoc array w/rest of request */
 		$parameters = $request->getParsedBody();
@@ -168,7 +168,7 @@ class HuntController
 	{   
 		/* Create the Mappers used */
 		$uid = $request->getAttribute('uid');
-		$mapper = new Mapper($this->container->db, $uid);
+		$mapper = new Mapper($this->container, $uid);
 		
 		/* Grab hunt id from URL, shove it in assoc array w/rest of request */
 		$parameters = $request->getParsedBody();
@@ -190,7 +190,7 @@ class HuntController
 		
 		/* Create the Mappers used */
 		$uid = $request->getAttribute('uid');
-		$mapper = new Mapper($this->container->db, $uid);
+		$mapper = new Mapper($this->container, $uid);
 		
 		/* Make blank Hunt */
 		$hunt = new Hunt(null);

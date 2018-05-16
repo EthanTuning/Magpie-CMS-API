@@ -33,7 +33,7 @@ class BadgeController
 	{
 		/* Create the Mappers used */
 		$uid = $request->getAttribute('uid');
-		$mapper = new Mapper($this->container->db, $uid);
+		$mapper = new Mapper($this->container, $uid);
 		
 		/* Grab hunt id */
 		$huntid = $args['hunt_id'];
@@ -67,7 +67,7 @@ class BadgeController
 	{
 		/* Create the Mappers used */
 		$uid = $request->getAttribute('uid');
-		$mapper = new Mapper($this->container->db, $uid);
+		$mapper = new Mapper($this->container, $uid);
 		
 		// make Badge
 		$badge = new Badge(null);
@@ -100,7 +100,7 @@ class BadgeController
 	{
 		/* Create the Mappers used */
 		$uid = $request->getAttribute('uid');
-		$mapper = new Mapper($this->container->db, $uid);
+		$mapper = new Mapper($this->container, $uid);
 		
 		$parameters = $request->getParsedBody();
 		
@@ -129,7 +129,7 @@ class BadgeController
 	{
 		/* Create the Mappers used */
 		$uid = $request->getAttribute('uid');
-		$mapper = new Mapper($this->container->db, $uid);
+		$mapper = new Mapper($this->container, $uid);
 		
 		/* Grab hunt id from URL, shove it in assoc array w/rest of request */
 		$parameters = $request->getParsedBody();
@@ -164,7 +164,7 @@ class BadgeController
 		
 		/* Create the Mappers used */
 		$uid = $request->getAttribute('uid');
-		$mapper = new Mapper($this->container->db, $uid);
+		$mapper = new Mapper($this->container, $uid);
 		
 		/* Make blank Badge */
 		$badge = new Badge(null);

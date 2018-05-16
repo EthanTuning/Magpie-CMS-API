@@ -20,23 +20,26 @@ use MagpieAPI\Exceptions\IllegalAccessException;
 use MagpieAPI\Exceptions\ResourceNotFoundException;
 use MagpieAPI\Exceptions\UnsupportedOperationException;
 use \Exception;
+use \InvalidArgumentException;
 
 abstract class State
 {
 	
-	protected $db;		// PDO object (already instantiated and stuff)
-	protected $uid;		// user id extracted from Firebase token (represents current user)
+	protected $db;			// PDO object (already instantiated and stuff)
+	protected $uid;			// user id extracted from Firebase token (represents current user)
+	protected $baseURL;		//base URL of API (from the container).  You know I should just pass the container.
 	
 	/* Constructor */
-	function __construct($db, $uid)
+	function __construct($db, $uid, $baseURL)
 	{
-		if ($uid == null || $db == null)
+		if ($uid == null || $db == null || $baseURL == null)
 		{
 			throw new Exception('State CTOR: something is null!');
 		}
 		
 		$this->db = $db;
 		$this->uid = $uid;
+		$this->baseURL = $baseURL;
 	}
 	
 	
@@ -137,6 +140,13 @@ abstract class State
 			throw new ResourceNotFoundException();
 		}
 		
+		// If the object was a parent, add in links to their children (sub-resources)
+		if ($object->isParent())
+		{		
+			$result = $this->addChildren($result);	// array_map: (http://php.net/manual/en/function.array-map.php)
+			//Passing a callback function:  A method of an instantiated object is passed as an array containing an object at index 0 and the method name at index 1.
+		}
+		
 		return $result;
 	}
 
@@ -153,7 +163,11 @@ abstract class State
 	{
 		if ($object == null)
 		{
-			throw new Exception('Mapper->dbQuery(): $object is null!');
+			throw new InvalidArgumentException('Mapper->dbQuery(): $object is null!');
+		}
+		if (!$object->isParent())
+		{
+			throw new Exception("Can't query sub-resources.");
 		}
 		
 		$primarykey = $object->getPrimaryKey();
@@ -163,7 +177,6 @@ abstract class State
 		$table = $object->getTable();
 		
 		$data = $object->getFields();
-		
 		
 		//loop through and delete empty values in the array
 		foreach ($data as $key => $value)
@@ -193,10 +206,15 @@ abstract class State
 		$stmt->execute($data); 
 		$result = $stmt->fetchAll();
 		
-		// If no results returned
+		
 		if ($result == null)
 		{
-			$result = array();	//return an empty array, for now
+			throw new ResourceNotFoundException();
+		}
+		else
+		{
+			$result = array_map(array($this, 'addChildren'), $result);	// array_map: (http://php.net/manual/en/function.array-map.php)
+			//Passing a callback function:  A method of an instantiated object is passed as an array containing an object at index 0 and the method name at index 1.
 		}
 		
 		return $result;
@@ -228,11 +246,10 @@ abstract class State
 		
 		if ($result == null)
 		{
-			$result = array();
+			throw new ResourceNotFoundException();
 		}
 		
 		return $result;
-		
 	}
 	
 	
@@ -424,7 +441,7 @@ abstract class State
 		
 		if ($result < 1)
 		{
-			throw new Exception("Delete fail.");
+			throw new Exception("Delete fail.");  //throw new ResourceNotFoundException();??
 		}
 		
 		return true;
@@ -475,6 +492,21 @@ abstract class State
 		
 		throw new ResourceNotFoundException();
 	}
+
+
+	/* This is a callback function for the array_map() used in dbSelect() and dbQuery()
+	 * 
+	 * This could be modified to remove fields from the result array as well. (uid maybe?)
+	 * */
+	private function addChildren($array)
+	{
+		$array['badges'] = $this->baseURL."/hunts/".$array['hunt_id']."/badges";
+		$array['awards'] = $this->baseURL."/hunts/".$array['hunt_id']."/awards";
+		
+		return $array;
+	}
+
+
 	
 }
 

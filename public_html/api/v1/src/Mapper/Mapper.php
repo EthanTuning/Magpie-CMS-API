@@ -19,20 +19,24 @@ class Mapper
 {
 	protected $db;		// PDO object (already instantiated and stuff)
 	protected $uid;		// user id extracted from Firebase token (represents current user)
+	protected $baseURL;		//can be found from the Slim container
 	
+	private $container;		//Slim container
 	private $state;		// the state of the object the Mapper is operating on.
 							// this will change on setState()
 	
 	/* Constructor */
-	function __construct($db, $uid)
+	function __construct($container, $uid)
 	{
-		if ($uid == null || $db == null)
+		if ($container == null || $uid == null)
 		{
 			throw new Exception('Mapper CTOR: something is null!');
 		}
 		
-		$this->db = $db;
+		$this->container = $container;
+		$this->db = $container->db;
 		$this->uid = $uid;
+		$this->baseURL = $container['base_url'];
 	}
 	
 	
@@ -102,13 +106,13 @@ class Mapper
 			switch ($status)
 			{
 				case 'approved':
-					return new StateApproved($this->db, $this->uid);
+					return new StateApproved($this->db, $this->uid, $this->baseURL);
 					break;
 				case 'submitted':
-					return new StateSubmitted($this->db, $this->uid);
+					return new StateSubmitted($this->db, $this->uid, $this->baseURL);
 					break;
 				case 'non-approved':
-					return new StateNonApproved($this->db, $this->uid);
+					return new StateNonApproved($this->db, $this->uid, $this->baseURL);
 					break;
 				default:
 					throw new ResourceNotFoundException();
@@ -119,7 +123,7 @@ class Mapper
 			// At this point, there is no approval_status because the object doesn't exist in the database
 			// thus the object is stateless
 			
-			return new Stateless($this->db, $this->uid);
+			return new Stateless($this->db, $this->uid, $this->baseURL);
 		}
 		
 	}

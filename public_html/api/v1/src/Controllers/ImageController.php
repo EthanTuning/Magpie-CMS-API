@@ -96,31 +96,8 @@ class ImageController
 
 	public function delete($request, $response, $args)
 	{
-		/* Create the Mappers used */
-		$uid = $request->getAttribute('uid');
-		$mapper = new Mapper($this->container->db, $uid);
-		
-		/* Make blank Hunt */
-		$hunt = new Hunt(null);
-		$hunt->setPrimaryKeyValue($args['hunt_id']);		// set the Hunt ID from the URL
-		
-		try
-		{
-			/* Use the Mapper to delete the hunt with that hunt_id */
-			$temp = $mapper->delete($hunt);
-			$response->getBody()->write(json_encode($temp));		//add jsonSerialze() to interface?
-		}
-		catch (IllegalAccessException $e)
-		{
-			$response = $response->withStatus(403);
-		}
-		catch (ResourceNotFoundException $e)
-		{
-			$response = $response->withStatus(404);
-		}
-		
+		$response->getBody()->write("Not implemented");
 		return $response;
-		
 	}
 
 
