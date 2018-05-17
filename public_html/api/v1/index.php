@@ -20,6 +20,7 @@ use MagpieAPI\Controllers\HuntController;
 use MagpieAPI\Controllers\BadgeController;
 use MagpieAPI\Controllers\AdminController;
 use MagpieAPI\Controllers\ImageController;
+use MagpieAPI\Controllers\AwardController;
 
 require_once './src/Creds/creds.php';					// Configuration stuff
 
@@ -60,12 +61,18 @@ $app->delete('/hunts/{hunt_id}', HuntController::class . ':delete');
 $app->patch('/hunts/{hunt_id}', HuntController::class . ':submit');
 
 /* Badges */
-
 $app->post('/hunts/{hunt_id}/badges', BadgeController::class . ':add');
 $app->get('/hunts/{hunt_id}/badges/{badge_id}', BadgeController::class . ':getSingleBadge');
 $app->get('/hunts/{hunt_id}/badges', BadgeController::class . ':getAllBadges');
 $app->put('/hunts/{hunt_id}/badges/{badge_id}', BadgeController::class . ':update');
 $app->delete('/hunts/{hunt_id}/badges/{badge_id}', BadgeController::class . ':delete');
+
+/* Awards */
+$app->post('/hunts/{hunt_id}/awards', AwardController::class . ':add');
+$app->get('/hunts/{hunt_id}/awards/{award_id}', AwardController::class . ':getSingleAward');
+$app->get('/hunts/{hunt_id}/awards', AwardController::class . ':getAllAwards');
+$app->put('/hunts/{hunt_id}/awards/{award_id}', AwardController::class . ':update');
+$app->delete('/hunts/{hunt_id}/awards/{award_id}', AwardController::class . ':delete');
 
 
 /* Images */
@@ -81,7 +88,7 @@ $app->group('/admin', function () {
     $this->put('/{hunt_id}', AdminController::class . ':changeStatus');
     $this->delete('/{hunt_id}', AdminController::class . ':delete');
     $this->options('', AdminController::class . ':options');
-})->add( new AdminChecker($container));
+})->add( new AdminChecker($container));		// grouping these endpoints allows us to use middleware on the entire group
 
 
 /* Images */
