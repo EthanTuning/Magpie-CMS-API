@@ -55,39 +55,24 @@ class ImageController
 	 ***********************************/
 
 	public function add($request, $response, $args)
-	{
+	{	
+		//note: uploaded files must have a key
 		
-		//$uid = $request->getAttribute('uid');
+		$uploadedFiles = $request->getUploadedFiles();	//gets all the files
+		$array = array();				//holds the result urls
 		
-		$uploadedFiles = $request->getUploadedFiles();
-
-		// handle single input with single file upload
-		$uploadedFile = $uploadedFiles['image'];
+		foreach ($uploadedFiles as $name => $uploadedFile)		//for every file, save it and add url to $array
+		{
+			if ($uploadedFile->getError() === UPLOAD_ERR_OK)
+			{
+				$result = $this->addImage($uploadedFile);
+				$array[$name] = ['url' => $result];
+			}
+		}
 		
-		$result = $this->addImage($uploadedFile);
-		
-		$response->write(json_encode(['url' => $result]));
+		$response->write(json_encode($array));
 			
 		return $response;
-		
-		// TODO: load all the images, regardless of key
-		/*
-		// handle multiple inputs with the same key
-		foreach ($uploadedFiles['example2'] as $uploadedFile) {
-			if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
-				$filename = moveUploadedFile($directory, $uploadedFile);
-				$response->write('uploaded ' . $filename . '<br/>');
-			}
-		}
-
-		// handle single input with multiple file uploads
-		foreach ($uploadedFiles['example3'] as $uploadedFile) {
-			if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
-				$filename = moveUploadedFile($directory, $uploadedFile);
-				$response->write('uploaded ' . $filename . '<br/>');
-			}
-		}
-		*/
 	}
 	
 	
