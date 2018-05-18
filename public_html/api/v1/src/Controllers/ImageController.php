@@ -56,19 +56,21 @@ class ImageController
 
 	public function add($request, $response, $args)
 	{
-		$directory = $this->container->get('upload_directory');
+		
 		//$uid = $request->getAttribute('uid');
 		
 		$uploadedFiles = $request->getUploadedFiles();
 
 		// handle single input with single file upload
 		$uploadedFile = $uploadedFiles['image'];
-		if ($uploadedFile->getError() === UPLOAD_ERR_OK)
-		{
-			$filename = $this->moveUploadedFile($directory, $uploadedFile);
-			$response->write(json_encode(['uri' => $this->container['base_url'].'/uploads/'.$filename]));
-		}
-
+		
+		$result = $this->addImage($uploadedFile);
+		
+		$response->write(json_encode(['url' => $result]));
+			
+		return $response;
+		
+		// TODO: load all the images, regardless of key
 		/*
 		// handle multiple inputs with the same key
 		foreach ($uploadedFiles['example2'] as $uploadedFile) {
@@ -86,7 +88,24 @@ class ImageController
 			}
 		}
 		*/
-		return $response;
+	}
+	
+	
+	// Takes a Slim\Http\UploadedFile type
+	// other Controllers use this though so its public
+	public function addImage($uploadedFile)
+	{
+		if ($uploadedFile->getError() === UPLOAD_ERR_OK)
+		{
+			$directory = $this->container->get('upload_directory');
+			$filename = $this->moveUploadedFile($directory, $uploadedFile);
+			return $this->container['base_url'].'/uploads/'.$filename;		// returns URL string
+			
+		}
+		else
+		{
+			throw new Exception("Can't add an image for whatever reason.");
+		}
 	}
 
 

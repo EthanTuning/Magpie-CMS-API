@@ -68,6 +68,7 @@ The folders are:
     * sudo a2enmod rewrite && sudo service apache2 restart
 
 4. API Configuration
+	* In 'src'Creds/config.php', change '$config['displayErrorDetails']' to 'false';
     * In the 'src/Creds/' folder, add your Firebase Admin SDK json credential (download it from Firebase Console).
     * Modify the 'src/AuthenticationMiddleware.php' file to reflect this credential.
 	* In 'index.php', change the "base_url" string to reflect the deployment location.

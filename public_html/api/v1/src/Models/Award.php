@@ -5,8 +5,8 @@
  * 
  * This class is used as a filter for user-entered data.
  * 
- * NOTE:  After constructing a Badge, if applicable, call:
- * 	setPrimaryKeyValue($newValue) to set the badge_id
+ * NOTE:  After constructing an Award, if applicable, call:
+ * 	setPrimaryKeyValue($newValue) to set the award_id
  * 	setParentKeyValue($newValue) to set the hunt_id
  * 
  * If the database changes, this should be the only class that needs to change.

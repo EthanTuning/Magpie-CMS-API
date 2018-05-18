@@ -1,5 +1,10 @@
 <?php
 
+/* This is the starting point for the Magpie API.
+ * 
+ * User documentation for using the API is in the /documentation folder on the github. (will be moved to /public_html when finished)
+ * Developer documentation is in the /documentation folder.
+ */
 
 /* Composer Stuff */
 require './vendor/autoload.php';
@@ -24,6 +29,7 @@ use MagpieAPI\Controllers\AwardController;
 
 require_once './src/Creds/creds.php';					// Configuration stuff
 
+
 /*************************************
  *				SLIM CONTAINER INITIALIZATION
  *************************************/
@@ -46,6 +52,19 @@ $container['db'] = function ($c) {
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
     return $pdo;
 };
+
+/* Add Error Handler 
+
+$container['errorHandler'] = function ($container) {
+    return function ($request, $response, $exception) use ($container) {
+        return $container['response']->withStatus(500)
+                             ->withHeader('Content-Type', 'text/html')
+                             ->write('Something went wrong!');
+    };
+};
+
+...later */
+
 
 /****************************************
  * 				URI Endpoints
@@ -77,8 +96,8 @@ $app->delete('/hunts/{hunt_id}/awards/{award_id}', AwardController::class . ':de
 
 /* Images */
 $app->post('/images', ImageController::class . ':add');
-//get() handled by apache
-$app->delete('/images/{image_id}', ImageController::class . ':delete');
+//get() handled by apache (this could be added later to avoid using magpie as a public image host)
+$app->delete('/images/{image_id}', ImageController::class . ':delete');		// not really needed, not implemented yet
 
 
 /* Admin */
@@ -91,10 +110,6 @@ $app->group('/admin', function () {
 })->add( new AdminChecker($container));		// grouping these endpoints allows us to use middleware on the entire group
 
 
-/* Images */
-// sweet jesus I have no idea how authentication for images will work.
-
-
 /* Add the additional Middleware Layers (! The last ond loaded runs first !) */
 
 $app->add( new UserManager($container) );			// Checks if the current user is entered in the creators table
@@ -104,38 +119,5 @@ $app->add( new AuthenticationMiddleware() );		// Authentication with google and 
 /* Start the Slim instance */
 $app->run();
 
-
-
-/* Route used for testing 
-$app->get('/test', function (Request $request, Response $response, array $args) {
-    
-    //GET
-	$allGetVars = $request->getQueryParams();
-	
-	/*foreach($allGetVars as $key => $param){
-	   //GET parameters list
-	}
-    
-    //$getParam = $allGetVars['name'];
-    
-    $hunt = new Hunt(array('name'=>"BobTheHunter", 'hunt_id'=>1));
-	$uid = $request->getAttribute('uid');
-	$huntMapper = new HuntMapper($this->db, $uid);
-	try
-	{
-		$resultingHunt = $huntMapper->get(666);
-		$response->getBody()->write(json_encode($resultingHunt->jsonSerialize()));
-	}
-	catch (IllegalAccessException $e)
-	{
-		$response = $response->withStatus(403);
-	}
-
-	
-
-    return $response;
-});
-
-*/
 
 ?>

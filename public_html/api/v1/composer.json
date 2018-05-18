@@ -2,7 +2,8 @@
     "require": {
         "slim/slim": "^3.0",
         "firebase/php-jwt": "^5.0",
-        "kreait/firebase-php": "^4.0"
+        "kreait/firebase-php": "^4.0",
+        "phpmailer/phpmailer": "^6.0"
     },
 	
 	"autoload": {

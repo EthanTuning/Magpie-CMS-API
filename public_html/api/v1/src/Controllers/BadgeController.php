@@ -101,11 +101,34 @@ class BadgeController
 		/* Create the Mappers used */
 		$uid = $request->getAttribute('uid');
 		$mapper = new Mapper($this->container, $uid);
+		$imageController = new ImageController($this->container);	// make an ImageController to add images
 		
-		$parameters = $request->getParsedBody();
+		$parameters = $request->getParsedBody();		// get the text from the request
 		
-		$badge = new Badge($parameters);
-		$badge->setParentKeyValue($args['hunt_id']);
+		$files = $request->getUploadedFiles();			// get array of uploaded files (if any)
+		
+		/* if the request contains images, process those images */
+		if ( isset($files['icon_file']) )
+		{
+			// get file, send to /images controller
+			$image = $files['icon_file'];
+			$url = $imageController->addImage($image);
+			
+			// place URL in the $badge
+			$parameters['icon'] = $url;
+		}
+		if ( isset($files['image_file']) )
+		{
+			// get file, send to /images controller
+			$image = $files['icon_file'];
+			$url = $imageController->addImage($image);			
+			
+			// place URL in the $badge
+			$parameters['image'] = $url;
+		}
+		
+		$badge = new Badge($parameters);				// make a Badge to hold the values
+		$badge->setParentKeyValue($args['hunt_id']);	
 		
 		try
 		{
