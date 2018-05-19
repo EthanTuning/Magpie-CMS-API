@@ -139,16 +139,8 @@ class Badge implements \JsonSerializable, IMapperable
 
 	/* Convert to an associative array for json_encode() to work with */
 	function jsonSerialize()
-	{
-		/*move the 3 references of arrays into the body
-		
-		$this->fields['badges'] = $this->badges;
-		$this->fields['awards'] = $this->awards;
-		$this->fields['images'] = $this->images;*/
-		
+	{		
 		return $this->fields;
-		
-		//return get_object_vars($this);
 	}
 	
 

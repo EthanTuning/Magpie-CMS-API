@@ -42,21 +42,10 @@ class AwardController
 		$award = new Award(null);
 		$award->setPrimaryKeyValue($args['award_id']);
 		$award->setParentKeyValue($args['hunt_id']);
-		
-		try
-		{
-			/* Retreive the Award from the mapper */
-			$result = $mapper->get($award);
-			$response->getBody()->write(json_encode($result));		//add jsonSerialze() to interface?
-		}
-		catch (IllegalAccessException $e)
-		{
-			$response = $response->withStatus(403);
-		}
-		catch (ResourceNotFoundException $e)
-		{
-			$response = $response->withStatus(404);
-		}
+	
+		/* Retreive the Award from the mapper */
+		$result = $mapper->get($award);
+		$response->getBody()->write(json_encode($result));		//add jsonSerialze() to interface?
 		
 		return $response;
 	}
@@ -73,20 +62,9 @@ class AwardController
 		$award = new Award(null);
 		$award->setParentKeyValue($args['hunt_id']);
 		
-		try
-		{
-			/* Retreive the Award from the mapper */
-			$result = $mapper->getAllChildren($award);
-			$response->getBody()->write(json_encode($result));		//add jsonSerialze() to interface?
-		}
-		catch (IllegalAccessException $e)
-		{
-			$response = $response->withStatus(403);
-		}
-		catch (ResourceNotFoundException $e)
-		{
-			$response = $response->withStatus(404);
-		}
+		/* Retreive the Award from the mapper */
+		$result = $mapper->getAllChildren($award);
+		$response->getBody()->write(json_encode($result));		//add jsonSerialze() to interface?
 		
 		return $response;
 	}
@@ -107,15 +85,8 @@ class AwardController
 		$award = new Award($parameters);
 		$award->setParentKeyValue($args['hunt_id']);
 		
-		try
-		{
-			$result = $mapper->add($award);
-			$response->getBody()->write(json_encode($result));
-		}
-		catch (IllegalAccessException $e)
-		{
-			$response = $response->withStatus(403);
-		}
+		$result = $mapper->add($award);
+		$response->getBody()->write(json_encode($result));
 		
 		return $response;
 	}
@@ -138,19 +109,8 @@ class AwardController
 		$award->setPrimaryKeyValue($args['award_id']);
 		$award->setParentKeyValue($args['hunt_id']);
 		
-		try
-		{
-			$result = $mapper->update($award);
-			$response->getBody()->write(json_encode($result));
-		}
-		catch (IllegalAccessException $e)
-		{
-			$response = $response->withStatus(403);
-		}
-		catch (ResourceNotFoundException $e)
-		{
-			$response = $response->withStatus(404);
-		}
+		$result = $mapper->update($award);
+		$response->getBody()->write(json_encode($result));
 		
 		return $response;
 	}
@@ -171,23 +131,12 @@ class AwardController
 		$award->setPrimaryKeyValue($args['award_id']);
 		$award->setParentKeyValue($args['hunt_id']);
 		
-		try
-		{
-			/* Use the Mapper to delete the award with that award_id */
-			$temp = $mapper->delete($award);
-			$response->getBody()->write(json_encode($temp));		//add jsonSerialze() to interface?
-		}
-		catch (IllegalAccessException $e)
-		{
-			$response = $response->withStatus(403);
-		}
-		catch (ResourceNotFoundException $e)
-		{
-			$response = $response->withStatus(404);
-		}
+
+		/* Use the Mapper to delete the award with that award_id */
+		$temp = $mapper->delete($award);
+		$response->getBody()->write(json_encode($temp));		//add jsonSerialze() to interface?
 		
 		return $response;
-		
 	}
 
 

@@ -43,20 +43,9 @@ class BadgeController
 		$badge->setPrimaryKeyValue($args['badge_id']);
 		$badge->setParentKeyValue($args['hunt_id']);
 		
-		try
-		{
-			/* Retreive the Badge from the mapper */
-			$result = $mapper->get($badge);
-			$response->getBody()->write(json_encode($result));		//add jsonSerialze() to interface?
-		}
-		catch (IllegalAccessException $e)
-		{
-			$response = $response->withStatus(403);
-		}
-		catch (ResourceNotFoundException $e)
-		{
-			$response = $response->withStatus(404);
-		}
+		/* Retreive the Badge from the mapper */
+		$result = $mapper->get($badge);
+		$response->getBody()->write(json_encode($result));		//add jsonSerialze() to interface?
 		
 		return $response;
 	}
@@ -72,21 +61,10 @@ class BadgeController
 		// make Badge
 		$badge = new Badge(null);
 		$badge->setParentKeyValue($args['hunt_id']);
-		
-		try
-		{
-			/* Retreive the Badge from the mapper */
-			$result = $mapper->getAllChildren($badge);
-			$response->getBody()->write(json_encode($result));		//add jsonSerialze() to interface?
-		}
-		catch (IllegalAccessException $e)
-		{
-			$response = $response->withStatus(403);
-		}
-		catch (ResourceNotFoundException $e)
-		{
-			$response = $response->withStatus(404);
-		}
+
+		/* Retreive the Badge from the mapper */
+		$result = $mapper->getAllChildren($badge);
+		$response->getBody()->write(json_encode($result));		//add jsonSerialze() to interface?
 		
 		return $response;
 	}
@@ -108,19 +86,19 @@ class BadgeController
 		$files = $request->getUploadedFiles();			// get array of uploaded files (if any)
 		
 		/* if the request contains images, process those images */
-		if ( isset($files['icon_file']) )
+		if ( isset($files['icon']) )
 		{
 			// get file, send to /images controller
-			$image = $files['icon_file'];
+			$image = $files['icon'];
 			$url = $imageController->addImage($image);
 			
 			// place URL in the $badge
 			$parameters['icon'] = $url;
 		}
-		if ( isset($files['image_file']) )
+		if ( isset($files['image']) )
 		{
 			// get file, send to /images controller
-			$image = $files['icon_file'];
+			$image = $files['icon'];
 			$url = $imageController->addImage($image);			
 			
 			// place URL in the $badge
@@ -129,16 +107,8 @@ class BadgeController
 		
 		$badge = new Badge($parameters);				// make a Badge to hold the values
 		$badge->setParentKeyValue($args['hunt_id']);	
-		
-		try
-		{
-			$result = $mapper->add($badge);
-			$response->getBody()->write(json_encode($result));
-		}
-		catch (IllegalAccessException $e)
-		{
-			$response = $response->withStatus(403);
-		}
+		$result = $mapper->add($badge);
+		$response->getBody()->write(json_encode($result));
 		
 		return $response;
 	}
@@ -161,19 +131,8 @@ class BadgeController
 		$badge->setPrimaryKeyValue($args['badge_id']);
 		$badge->setParentKeyValue($args['hunt_id']);
 		
-		try
-		{
-			$result = $mapper->update($badge);
-			$response->getBody()->write(json_encode($result));
-		}
-		catch (IllegalAccessException $e)
-		{
-			$response = $response->withStatus(403);
-		}
-		catch (ResourceNotFoundException $e)
-		{
-			$response = $response->withStatus(404);
-		}
+		$result = $mapper->update($badge);
+		$response->getBody()->write(json_encode($result));
 		
 		return $response;
 	}
@@ -194,23 +153,11 @@ class BadgeController
 		$badge->setPrimaryKeyValue($args['badge_id']);
 		$badge->setParentKeyValue($args['hunt_id']);
 		
-		try
-		{
-			/* Use the Mapper to delete the hunt with that hunt_id */
-			$temp = $mapper->delete($badge);
-			$response->getBody()->write(json_encode($temp));		//add jsonSerialze() to interface?
-		}
-		catch (IllegalAccessException $e)
-		{
-			$response = $response->withStatus(403);
-		}
-		catch (ResourceNotFoundException $e)
-		{
-			$response = $response->withStatus(404);
-		}
+		/* Use the Mapper to delete the hunt with that hunt_id */
+		$temp = $mapper->delete($badge);
+		$response->getBody()->write(json_encode($temp));		//add jsonSerialze() to interface?
 		
 		return $response;
-		
 	}
 
 

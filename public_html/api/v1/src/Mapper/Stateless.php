@@ -17,7 +17,7 @@ class Stateless extends State
 	// If the object is stateless, it doesn't exist in the database.
 	public function get(IMapperable $obj)
 	{
-		throw new ResourceNotFoundException();
+		throw new ResourceNotFoundException("Resource doesn't exist.");
 	}
 	
 	
@@ -30,7 +30,7 @@ class Stateless extends State
 		}
 		else
 		{
-			throw new UnsupportedOperationException();
+			throw new UnsupportedOperationException("Cannot query sub-resources.");
 		}
 	}
 	
@@ -45,7 +45,7 @@ class Stateless extends State
 		// Throw an Exception if someone tries to add a Child into the database without a parent.
 		else
 		{
-			throw new IllegalAccessException();
+			throw new IllegalAccessException("Cannot add sub-resource to non-owned primary resource.");
 		}
 	}
 }

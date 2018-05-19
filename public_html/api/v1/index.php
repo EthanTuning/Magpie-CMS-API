@@ -21,6 +21,8 @@ use MagpieAPI\UserManager;					// Checks if user is in database
 use MagpieAPI\AuthenticationMiddleware;		// Firebase Token stuff
 use MagpieAPI\AdminChecker;					// local admin checker
 
+use MagpieAPI\Exceptions\CustomHandler;		// Exception handler
+
 use MagpieAPI\Controllers\HuntController;
 use MagpieAPI\Controllers\BadgeController;
 use MagpieAPI\Controllers\AdminController;
@@ -53,17 +55,10 @@ $container['db'] = function ($c) {
     return $pdo;
 };
 
-/* Add Error Handler 
-
+/* Add Error Handler (of class CustomHandler) */
 $container['errorHandler'] = function ($container) {
-    return function ($request, $response, $exception) use ($container) {
-        return $container['response']->withStatus(500)
-                             ->withHeader('Content-Type', 'text/html')
-                             ->write('Something went wrong!');
-    };
-};
-
-...later */
+		return new CustomHandler();
+	};
 
 
 /****************************************

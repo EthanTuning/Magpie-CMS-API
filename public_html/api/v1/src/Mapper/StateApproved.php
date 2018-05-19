@@ -31,7 +31,7 @@ class StateApproved extends State
 		}
 		else
 		{
-			throw new IllegalAccessException();
+			throw new IllegalAccessException("Cannot delete non-owned resource.");
 		}
 	}
 }

@@ -107,18 +107,9 @@ class HuntController
 		$mapper = new Mapper($this->container, $uid);
 		
 		$parameters = $request->getParsedBody();
-		
 		$hunt = new Hunt($parameters);
-		
-		try
-		{
-			$result = $mapper->add($hunt);
-			$response->getBody()->write(json_encode($result));
-		}
-		catch (IllegalAccessException $e)
-		{
-			$response = $response->withStatus(403);
-		}
+		$result = $mapper->add($hunt);
+		$response->getBody()->write(json_encode($result));
 		
 		return $response;
 	}
@@ -139,21 +130,9 @@ class HuntController
 		
 		$hunt = new Hunt($parameters);
 		$hunt->setPrimaryKeyValue($args['hunt_id']);		// set the Hunt ID from the URL
-		
-		try
-		{
-			$result = $mapper->update($hunt);
-			$response->getBody()->write(json_encode($result));
-		}
-		catch (IllegalAccessException $e)
-		{
-			$response = $response->withStatus(403);
-		}
-		catch (ResourceNotFoundException $e)
-		{
-			$response = $response->withStatus(404);
-		}
-		
+		$result = $mapper->update($hunt);
+		$response->getBody()->write(json_encode($result));
+
 		return $response;
 	}
 
@@ -196,23 +175,11 @@ class HuntController
 		$hunt = new Hunt(null);
 		$hunt->setPrimaryKeyValue($args['hunt_id']);		// set the Hunt ID from the URL
 		
-		try
-		{
-			/* Use the Mapper to delete the hunt with that hunt_id */
-			$temp = $mapper->delete($hunt);
-			$response->getBody()->write(json_encode($temp));		//add jsonSerialze() to interface?
-		}
-		catch (IllegalAccessException $e)
-		{
-			$response = $response->withStatus(403);
-		}
-		catch (ResourceNotFoundException $e)
-		{
-			$response = $response->withStatus(404);
-		}
+		/* Use the Mapper to delete the hunt with that hunt_id */
+		$temp = $mapper->delete($hunt);
+		$response->getBody()->write(json_encode($temp));		//add jsonSerialze() to interface?
 		
 		return $response;
-		
 	}
 
 

@@ -17,7 +17,7 @@ class StateNonApproved extends State
 			return $this->dbQuery($obj);
 		}
 		
-		throw new IllegalAccessException();
+		throw new IllegalAccessException("Cannot query non-approved resource.");
 	}
 	
 	
@@ -29,7 +29,7 @@ class StateNonApproved extends State
 		}
 		else
 		{
-			throw new IllegalAccessException();
+			throw new IllegalAccessException("Cannot retrieve non-approved resource that you don't own.");
 		}
 	}
 	
@@ -42,7 +42,7 @@ class StateNonApproved extends State
 		}
 		else
 		{
-			throw new IllegalAccessException();
+			throw new IllegalAccessException("Cannot update non-approved resource that you don't own.");
 		}
 	}
 	
@@ -55,7 +55,7 @@ class StateNonApproved extends State
 		}
 		else
 		{
-			throw new IllegalAccessException();
+			throw new IllegalAccessException("Cannot add non-approved resource that you don't own.");
 		}
 	}
 	
@@ -68,7 +68,7 @@ class StateNonApproved extends State
 		}
 		else
 		{
-			throw new IllegalAccessException();
+			throw new IllegalAccessException("Cannot delete non-approved resource that you don't own.");
 		}
 	}
 	
@@ -81,7 +81,7 @@ class StateNonApproved extends State
 		}
 		else
 		{
-			throw new IllegalAccessException();
+			throw new IllegalAccessException("Cannot submit non-approved resource that you don't own.");
 		}
 	}
 	

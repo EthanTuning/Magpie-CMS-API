@@ -99,33 +99,23 @@ class Mapper
 	// Returns a new State object based on the passed in object
 	private function setState(IMapperable $obj)
 	{
-		try
-		{
-			$status = $this->getApprovalStatus($obj);
-			
-			switch ($status)
-			{
-				case 'approved':
-					return new StateApproved($this->db, $this->uid, $this->baseURL);
-					break;
-				case 'submitted':
-					return new StateSubmitted($this->db, $this->uid, $this->baseURL);
-					break;
-				case 'non-approved':
-					return new StateNonApproved($this->db, $this->uid, $this->baseURL);
-					break;
-				default:
-					throw new ResourceNotFoundException();
-			}
-		}
-		catch (ResourceNotFoundException $e)
-		{
-			// At this point, there is no approval_status because the object doesn't exist in the database
-			// thus the object is stateless
-			
-			return new Stateless($this->db, $this->uid, $this->baseURL);
-		}
+		$status = $this->getApprovalStatus($obj);
 		
+		switch ($status)
+		{
+			case 'approved':
+				return new StateApproved($this->db, $this->uid, $this->baseURL);
+				break;
+			case 'submitted':
+				return new StateSubmitted($this->db, $this->uid, $this->baseURL);
+				break;
+			case 'non-approved':
+				return new StateNonApproved($this->db, $this->uid, $this->baseURL);
+				break;
+			default:
+				return new Stateless($this->db, $this->uid, $this->baseURL);
+				break;
+		}
 	}
 		
 	
@@ -147,7 +137,7 @@ class Mapper
 			
 		}
 		
-		throw new ResourceNotFoundException();
+		throw new ResourceNotFoundException("Approval Check: Resource doesn't exist.");
 	}
 	
 	

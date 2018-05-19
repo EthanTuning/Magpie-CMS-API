@@ -1,17 +1,17 @@
 <?php
 
-
 namespace MagpieAPI\Exceptions;
 
 /* Just use existing Exception type with cool new names */
 
 
-class IllegalAccessException extends CustomException
+abstract class CustomException extends \Exception
 {
-	//403
+	//return status code;
 	public function getErrorCode()
 	{
-		return 403;
+		return 0;	//??
+		//need to be implemented in subclasses;
 	}
 }
 

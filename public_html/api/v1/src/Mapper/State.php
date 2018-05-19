@@ -60,14 +60,14 @@ abstract class State
 	// Get - Returns an IMapperable object
 	public function get(IMapperable $obj)
 	{
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("Not supported in current state.");
 	}		
 	
 	
 	// Takes a object with the fields set to whatever you're searching for
 	public function search(IMapperable $obj)
 	{		
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("Not supported in current state.");
 	}
 	
 	
@@ -80,31 +80,31 @@ abstract class State
 		}
 		else
 		{
-			throw new IllegalAccessException();
+			throw new IllegalAccessException("Cannot retrieve children you don't own and aren't part of an approved Hunt.");
 		}
 	}
 	
 	public function update(IMapperable $obj)
 	{
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("Not supported in current state.");
 	}	
 	
 	
 	public function delete(IMapperable $obj)
 	{
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("Not supported in current state.");
 	}	
 	
 	
 	public function add(IMapperable $obj)
 	{
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("Not supported in current state.");
 	}
 	
 	
 	public function submit(IMapperable $obj)
 	{
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("Not supported in current state.");
 	}
 	
 	/*****************************************************
@@ -137,7 +137,7 @@ abstract class State
 		
 		if ($result == null)
 		{
-			throw new ResourceNotFoundException();
+			throw new ResourceNotFoundException("Can't find that object");
 		}
 		
 		// If the object was a parent, add in links to their children (sub-resources)
@@ -209,7 +209,7 @@ abstract class State
 		
 		if ($result == null)
 		{
-			throw new ResourceNotFoundException();
+			throw new ResourceNotFoundException("No results matching that query");
 		}
 		else
 		{
@@ -376,7 +376,7 @@ abstract class State
 		
 		if ($result < 1)
 		{
-			return "Nothing updated.";
+			throw new Exception("Nothing updated.");
 		}
 		
 		return true;
@@ -490,7 +490,7 @@ abstract class State
 			return ($this->uid == $uidFromTable) ;
 		}
 		
-		throw new ResourceNotFoundException();
+		throw new ResourceNotFoundException("You don't own that resource.");
 	}
 
 
