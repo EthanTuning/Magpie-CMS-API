@@ -1,0 +1,40 @@
+{
+	"class" : "hunt",
+	"data" : {
+		"x" : "y",
+		"foo": "bar",
+		"icon" : {
+			"href" : "http://blahblah.com",
+			"type" : "image"
+		}
+	},
+	"subresources" : [
+		{
+			"class" : "badge",
+			"href" : "http://google.com",
+			"type" : "json"
+		},
+		{
+			"class" : "awards",
+			"href" : "http://google.com",
+			"type: "json"
+		}
+	]
+}
+
+
+============================
+
+{
+	"class" : "hunt",
+	"data" : {
+		"x" : "y",
+		"foo": "bar",
+	},
+	"_links" : {
+		"self" : "url",
+		"awards" : "url",
+		"badges" : "url",
+		"icon" : "url"
+	}
+}

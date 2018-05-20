@@ -38,8 +38,8 @@
 
 	<h2>Overview</h2>
 	<p>The API is a portal for users to send and receive data to Magpie.  The API does not distinguish between client types, web and mobile clients are given the same responses.
-	Hunts are the primary resource.  They contain their own datafields, as well as act as containers for the sub-resources (Badges and Awards).
-	Sub-resources are added to a Hunt piecewise.  However, Hunts are retreived in a complete form.</p>
+	Hunts are the primary resource.  They contain their own datafields, as well as links for the sub-resources (Badges and Awards).
+	Sub-resources are added to a Hunt after a Hunt has been created.</p>
 
 <h2>Access</h2>
 	<p>All requests to the API must contain an Authorization Header with a Bearer token.  The token is aquired from a Google login flow.</p>
@@ -50,19 +50,19 @@
     
 <h2>API Resources (Click for that Resource's Documentation)</h2>
 	<ul>
-  <li><h4><a href="hunt.html">Hunt</a></h4> - Primary Resource.  Contains sub-resources.</li>
+  <li><h4><a href="hunt.html">Hunt</a></h4> Primary Resource.  Contains sub-resources.</li>
   <ul>
 	  <li><h4><a href="badge.html">Badge</a></h4></li>
 	  <li><h4><a href="award.html">Award</a></h4></li>
   </ul>
-    <li><h4><a href="admin.html">Admin</a></h4> - Used to perform administrative tasks on the database (Approve Hunts, etc).</li>
-	<li><h4><a href="images.html">Images</a></h4> - Upload images to this endpoint for inclusion in other resources.</li>
+    <li><h4><a href="admin.html">Admin</a></h4>  Used to perform administrative tasks on the database (Approve Hunts, etc).</li>
+	<li><h4><a href="images.html">Images</a></h4> Upload images to this endpoint for inclusion in other resources.</li>
   </ul>
   
   <br>
   
   <h2>Responses</h2>
-	<p> All requests return a status code.</p>
+	<p> All responses return a status code.</p>
 
 		<table>
 			<th>Status Code</th>
@@ -70,6 +70,10 @@
 			<tr>
 				<td>200</td>
 				<td>Operation Completed Successfully</td>
+			</tr>
+			<tr>
+				<td>201</td>
+				<td>Resource Created Successfully</td>
 			</tr>
 			<tr>
 				<td>401</td>
@@ -81,7 +85,7 @@
 			</tr>
 			<tr>
 				<td>405</td>
-				<td>The operation requested is not supported</td>
+				<td>The operation requested is not supported.  Usually this means that the state of the Resource doesn't allow that action (you can't edit an 'approved' Hunt).</td>
 			</tr>
 		</table>
   

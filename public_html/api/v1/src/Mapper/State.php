@@ -140,14 +140,10 @@ abstract class State
 			throw new ResourceNotFoundException("Can't find that object");
 		}
 		
-		// If the object was a parent, add in links to their children (sub-resources)
-		if ($object->isParent())
-		{		
-			$result = $this->addChildren($result);	// array_map: (http://php.net/manual/en/function.array-map.php)
-			//Passing a callback function:  A method of an instantiated object is passed as an array containing an object at index 0 and the method name at index 1.
-		}
+		// start building the return array
+		$build = $this->buildResults($result, $object);
 		
-		return $result;
+		return $build;
 	}
 
 	
@@ -206,18 +202,17 @@ abstract class State
 		$stmt->execute($data); 
 		$result = $stmt->fetchAll();
 		
-		
 		if ($result == null)
 		{
 			throw new ResourceNotFoundException("No results matching that query");
 		}
-		else
+		
+		foreach ($result as $element)
 		{
-			$result = array_map(array($this, 'addChildren'), $result);	// array_map: (http://php.net/manual/en/function.array-map.php)
-			//Passing a callback function:  A method of an instantiated object is passed as an array containing an object at index 0 and the method name at index 1.
+			$build[] = $this->buildResults($element, $object);
 		}
 		
-		return $result;
+		return $build;
 	}
 	
 	
@@ -249,7 +244,12 @@ abstract class State
 			throw new ResourceNotFoundException();
 		}
 		
-		return $result;
+		foreach ($result as $element)
+		{
+			$build[] = $this->buildResults($element, $object);
+		}
+		
+		return $build;
 	}
 	
 	
@@ -333,9 +333,6 @@ abstract class State
 			throw new Exception("Mapper: primary key not set");
 		}
 		
-		// delete things from array that are unwanted before adding to database
-		//unset($data['hunt_id'], $data['approval_status']);
-		
 		//loop through and delete empty values in the array
 		foreach ($data as $key => $value)
 		{
@@ -379,7 +376,7 @@ abstract class State
 			throw new Exception("Nothing updated.");
 		}
 		
-		return true;
+		return $this->responseMessage(true, "Successful update");
 	}
 	
 	
@@ -403,14 +400,10 @@ abstract class State
 	
 		if ($result < 1)
 		{
-			$result = "Already submitted.";
+			throw new UnsupportedOperationException("Already submitted.");
 		}
-		else
-		{
-			$result = "Successfully submitted.";
-		}
-		
-		return $result;
+
+		return $this->responseMessage(true, "Successfully submitted.");
 	}
 	
 
@@ -441,10 +434,10 @@ abstract class State
 		
 		if ($result < 1)
 		{
-			throw new Exception("Delete fail.");  //throw new ResourceNotFoundException();??
+			throw new ResourceNotFoundException("Delete fail - Resource probably doesn't exist.");
 		}
 		
-		return true;
+		return $this->responseMessage(true, "Successfully deleted.");
 	}
 	
 	
@@ -494,14 +487,79 @@ abstract class State
 	}
 
 
-	/* This is a callback function for the array_map() used in dbSelect() and dbQuery()
+
+	/* Response Message
 	 * 
-	 * This could be modified to remove fields from the result array as well. (uid maybe?)
+	 * Inform the user what happened.
+	 */
+	private function responseMessage($bool, $message)
+	{
+		$array['status'] = $bool;
+		$array['message'] = $message;
+		
+		return $array;
+	}
+
+
+	/* Build Results 
+	 * 
+	 * Takes an array of results representing an object and returns 
+	 * a beefed-up array.
+	 * */
+	private function buildResults($result, IMapperable $object)
+	{
+		// start building the return array
+		$build['class'] = substr(strrchr(get_class($object), '\\'), 1);		//this removes the namespace from the returned string by get_class()
+		$build['data'] = $this->expandURL($result);						// expand the fields that contain URLs
+	
+		if ($object->isParent())
+		{		
+			$build = $this->addChildren($build);	
+		}
+		
+		return $build;
+	}
+
+
+
+	/* Expand URL
+	 * 
+	 * Runs through the result set and turns specified fields into associative arrays.
+	 * Turns a ['image' : 'url'] into a ['image': ['href' => 'url']] */
+	private function expandURL($result)
+	{
+		if ($result == null)
+		{
+			throw new \Exception('expandURL: $results is null.');
+		}
+		
+		//list of fields that are links
+		$links = ['image', 'icon'];
+		
+		// change urls to have a 'href' key
+		// for each field thats a link, change it to [href => url]
+		foreach ($links as $key)
+		{
+			if ( isset($result[$key]))
+			{
+				$result[$key] = ['href' => $result[$key]];
+			}
+		}
+		
+		return $result;
+	}
+
+
+	/* Add Children
+	 * 
+	 * This adds in links to the sub-resources.
 	 * */
 	private function addChildren($array)
 	{
-		$array['badges'] = $this->baseURL."/hunts/".$array['hunt_id']."/badges";
-		$array['awards'] = $this->baseURL."/hunts/".$array['hunt_id']."/awards";
+		$children[] = ['class' => 'badges', 'href' => $this->baseURL."/hunts/".$array['data']['hunt_id']."/badges", 'type' => 'json'];
+		$children[] = ['class' => 'awards', 'href' => $this->baseURL."/hunts/".$array['data']['hunt_id']."/awards", 'type' => 'json'];
+		
+		$array['subresources'] = $children;
 		
 		return $array;
 	}

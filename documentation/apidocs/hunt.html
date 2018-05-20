@@ -17,21 +17,25 @@
   
   <pre><code>
     {
-        "hunt_id": "667",
-        "abbreviation": "ABR",
-        "approval_status": "non-approved",
-        "audience": "Everyone",
-        "date_end": "2010-10-10",
-        "date_start": "2015-10-20",
-        "name": "Name of Hunt",
-        "ordered": null,
-        "summary": "Description of the Hunt",
-        "sponsor": null,
-        "super_badge": null,
-        "uid": "userIDstring",
-        "city": "Spokane",
-        "state": "WA",
-        "zipcode": "99227"
+		{
+			"hunt_id": "667",
+			"abbreviation": "ABR",
+			"approval_status": "approved",
+			"audience": "ANY",
+			"date_end": "2010-10-10",
+			"date_start": "2015-10-20",
+			"name": "Hunt Name",
+			"ordered": null,
+			"summary": "A small Hunt",
+			"sponsor": null,
+			"super_badge": null,
+			"uid": "uid",
+			"city": "Spokane",
+			"state": "WA",
+			"zipcode": "99227",
+			"badges": "http://localhost/magpie/magpie-php/public_html/api/v1/hunts/667/badges",
+			"awards": "http://localhost/magpie/magpie-php/public_html/api/v1/hunts/667/awards"
+		}
     }
   </pre></code>
   
@@ -56,18 +60,37 @@
     
     <div class="method-summary">
 	<h3>Description</h3>
-    <p>Retrives a list of Hunts that match the search criteria.  This method does not return complete Hunts, only the first level data.</p>
+    <p>Retrives a list of Hunts that match the search criteria.</p>
 
     <h3>Example</h3>
-		<p>When called without parameters, returns all available Hunts to the current user.</p>
+		<p>When called without parameters, returns all 'approved' Hunts and all Hunts that the user owns.</p>
 		<code>
 		http://magpiehunt.com/api/v1/hunts
 		</code>
 		
-		<p>Any user-editable attribute can be a query parameter.</p> 
+		<p>Any user-editable attribute can be a query parameter, such as state.</p> 
 		<code>
 		http://magpiehunt.com/api/v1/hunts?state=WA
 		</code>
+		
+		<p>User editable attributes are currently:</p>
+		<code>
+			"abbreviation": "ABR",
+			"audience": "ANY",
+			"date_end": "2010-10-10",
+			"date_start": "2015-10-20",
+			"name": "Hunt Name",
+			"ordered": null,
+			"summary": "A small Hunt",
+			"sponsor": null,
+			"super_badge": null,
+			"city": "Spokane",
+			"state": "WA",
+			"zipcode": "99227",
+			"badges": "url",
+			"awards": "url"
+		</code>
+		
 		
 		<p>Parameters can also be chained together.</p>
 		<code>
@@ -77,41 +100,48 @@
     <h3>Return type</h3>
    
 	<div class="example-data-content-type">Content-Type: application/json</div>
-    <pre class="example"><code>[     {
-        "hunt_id": "668",
-        "abbreviation": "H1",
-        "approval_status": "non-approved",
-        "audience": "Everyone",
-        "date_end": "2010-10-10",
-        "date_start": "2015-10-20",
-        "name": "Hunt1",
-        "ordered": null,
-        "summary": "A small Hunt",
-        "sponsor": null,
-        "super_badge": null,
-        "uid": "userIDstring",
-        "city": "Spokane",
-        "state": "WA",
-        "zipcode": "99227"
-    },
-    {
-        "hunt_id": "669",
-        "abbreviation": "H2",
-        "approval_status": "non-approved",
-        "audience": "13+",
-        "date_end": "2010-10-10",
-        "date_start": "2015-10-20",
-        "name": "Hunt2",
-        "ordered": null,
-        "summary": "A small Hunt",
-        "sponsor": null,
-        "super_badge": null,
-        "uid": "userIDstring",
-        "city": "Spokane",
-        "state": "WA",
-        "zipcode": "99227"
-    }
-]</code></pre>
+    <pre class="example"><code>
+	[
+		{
+			"hunt_id": "668",
+			"abbreviation": "H1",
+			"approval_status": "non-approved",
+			"audience": "Everyone",
+			"date_end": "2010-10-10",
+			"date_start": "2015-10-20",
+			"name": "Hunt1",
+			"ordered": null,
+			"summary": "A small Hunt",
+			"sponsor": null,
+			"super_badge": null,
+			"uid": "userIDstring",
+			"city": "Spokane",
+			"state": "WA",
+			"zipcode": "99227"
+			"badges": "http://localhost/magpie/magpie-php/public_html/api/v1/hunts/668/badges",
+			"awards": "http://localhost/magpie/magpie-php/public_html/api/v1/hunts/668/awards"
+		},
+		{
+			"hunt_id": "669",
+			"abbreviation": "H2",
+			"approval_status": "non-approved",
+			"audience": "13+",
+			"date_end": "2010-10-10",
+			"date_start": "2015-10-20",
+			"name": "Hunt2",
+			"ordered": null,
+			"summary": "A small Hunt",
+			"sponsor": null,
+			"super_badge": null,
+			"uid": "userIDstring",
+			"city": "Spokane",
+			"state": "WA",
+			"zipcode": "99227"
+			"badges": "http://localhost/magpie/magpie-php/public_html/api/v1/hunts/668/badges",
+			"awards": "http://localhost/magpie/magpie-php/public_html/api/v1/hunts/668/awards"
+		}
+	]
+	</code></pre>
 
     </div>
    
