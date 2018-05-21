@@ -11,14 +11,13 @@ The folders are:
     * webclient - This contains everything needed to serve the Magpie webclient pages.
 
 
-# API Note
+# Authentication Note
 
 * The API requires an Authentication header of type Bearer in every API request.  The token is grabbed from the user's Firebase login.
 
-
 # Development Setup
 
-## Ubuntu LAMP
+### Ubuntu LAMP
 
 1. Install the packages for a LAMP stack
     * sudo apt-get install apache2 mysql-server libapache2-mod-php php
@@ -27,11 +26,11 @@ The folders are:
 3. Move the git directory to /var/www/html/
 4. You might have to chown the magpie directory
 
-## AMPPS
+### AMPPS
 
 1. http://www.ampps.com/download
 
-## XAMPP
+### XAMPP
 
 1. Download and install XAMPP from https://www.apachefriends.org/index.html
 2. Navigate to C:\xampp\apache\conf\extra and open httpd-vhosts.conf, replace its contents with:
@@ -51,6 +50,8 @@ The folders are:
 
 # Deployment Notes
 
+### Server setup
+
 1. Follow the Ubuntu LAMP deployment steps first.
 
 2. Modify the apache configuration files appropriately, add the following to either apache2.conf or httpd.conf:
@@ -61,17 +62,30 @@ The folders are:
         Require all granted
 </Directory>
 ```
+
     * Note: Under Apache 2, you must set UseCanonicalName = On and ServerName. Otherwise, this value reflects the hostname supplied by the client, which can be spoofed. It is not safe to rely on this value in security-dependent contexts. 
 	* Disable directory browsing.
 
 3. Enable apache2 module thingy:
     * sudo a2enmod rewrite && sudo service apache2 restart
 
-4. API Configuration
-	* In 'src'Creds/config.php', change '$config['displayErrorDetails']' to 'false';
-    * In the 'src/Creds/' folder, add your Firebase Admin SDK json credential (download it from Firebase Console).
-    * Modify the 'src/AuthenticationMiddleware.php' file to reflect this credential.
-	* In 'index.php', change the "base_url" string to reflect the deployment location.
+4. In the deplotment_files/ directory, follow those instructions to setup SSL.
 
-5. Run the .sql script in the database folder.
+### Database setup
+
+1. Refer to the MagpieDB.sql script in the database folder.
+
+### API Configuration
+
+1. Firebase Config
+	* In the 'src/Creds/' folder, add your Firebase Admin SDK json credential (download it from Firebase Console).
+	* Modify the 'src/AuthenticationMiddleware.php' file to reflect this credential.
+
+2. In 'src'Creds/config.php':
+	* change '$config['displayErrorDetails']' to 'false'
+	* change the password to reflect the actual password for 'magpiehu_api' user
+
+3. In 'index.php', change the "base_url" string to reflect the deployment location.
+
+
 

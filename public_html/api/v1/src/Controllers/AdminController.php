@@ -161,6 +161,9 @@ class AdminController
 	/* Send email to user with the approval status */
 	private function sendEmail($status)
 	{
+		return;
+		
+		// this is disabled for now
 		
 		$mail = new PHPMailer(true);                              // Passing `true` enables exceptions
 		try {

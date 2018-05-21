@@ -1,21 +1,22 @@
--- phpMyAdmin SQL Dump
--- version 4.4.15.7
--- http://www.phpmyadmin.net
---
--- Host: 127.0.0.1
--- Generation Time: Mar 20, 2018 at 08:41 PM
--- Server version: 5.6.37
--- PHP Version: 5.6.31
-
 /*********************************************************
 	This will create the Database and make a user for the API to read/write
 	to the databse.
 	
-	On phpMyAdmin, go to "Import", select this file, and hit Go
+	Using on local machine (development environment):
+
+		1) Open phpMyAdmin
+		2) Go to the "Import" tab, select this file, and hit Go
+
+	Using on a live server (deployment environment):
+	
+		When using this script on bluehost, you'll need to use their MySQL tools to do steps 1 and 2:
+		1) Create the database called `magpiehu_primary`
+		2) Create a user `magpiehu_api` and give ONLY (SELECT, INSERT, UPDATE, DELETE) privilleges.
+		
+		Go to the phpMyAdmin from bluehost cpanel page (or whatever page links to it)
+		3) Comment out the VERY bottom part of this script with the user stuff
+		4) Follow the local machine steps above to Import into phpMyAdmin
 	***************************************************************/
-
-/* Updated with some stuff to make a user */
-
 
 -- /*40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;  removed the ! before number
 -- /*40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
@@ -26,11 +27,11 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
--- Database: `MagpieDB`
+-- Database: `magpiehu_primary`
 --
 
-CREATE DATABASE IF NOT EXISTS MagpieDB;
-USE MagpieDB;
+CREATE DATABASE IF NOT EXISTS magpiehu_primary;
+USE magpiehu_primary;
 
 -- --------------------------------------------------------
 
@@ -173,43 +174,17 @@ CREATE TABLE IF NOT EXISTS `awards` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
---
--- Indexes for table `badge`
---
-/*
-ALTER TABLE `badges`
-  ADD KEY `FKltwn4wel4vhkw4bfy5wh4m5gc` (`hunt_id`);
-
---
--- Indexes for table `hunt`
---
-ALTER TABLE `hunts`
-  ADD KEY `FKfwvuo3fy0wagttifb1gjedxhk` (`uid`);
-
--- Constraints for table `badges`
---
-ALTER TABLE `badges`
-  ADD CONSTRAINT `FKltwn4wel4vhkw4bfy5wh4m5gc` FOREIGN KEY (`hunt_id`) REFERENCES `hunts` (`hunt_id`);
-
---
--- Constraints for table `hunt`
---
-ALTER TABLE `hunts`
-  ADD CONSTRAINT `FKfwvuo3fy0wagttifb1gjedxhk` FOREIGN KEY (`uid`) REFERENCES `creators` (`uid`);
-*/
-
-
-
 
 /* Creates the user for the API, 'magpieapi', so the API can work out-of-the-box with the
    config file.
+
    Note: This file is a security vulnerability, since it includes the password for the api user.
    However, the MySQL database should not be accessible via the network anyways. */
 
-CREATE USER IF NOT EXISTS 'magpieapi'@'localhost' IDENTIFIED BY 'eMO3B8cxFSo6usst';
+CREATE USER IF NOT EXISTS 'magpiehu_api'@'localhost' IDENTIFIED BY 'eMO3B8cxFSo6usst';
 
 /* This line is for reference: GRANT SELECT, INSERT, UPDATE, DELETE, FILE ON `MagpieDB`.* TO 'magpieapi'@'localhost';   */
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON `MagpieDB`.* TO 'magpieapi'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON `magpiehu_primary`.* TO 'magpiehu_api'@'localhost';
 
 

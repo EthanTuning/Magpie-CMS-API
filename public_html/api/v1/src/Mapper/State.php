@@ -53,6 +53,9 @@ abstract class State
 	 * 			Public Access Functions
 	 * 
 	 * 	These functions should be defined in a subclass, by default they throw Exceptions.
+	 *  Unless it's something can happen regardless of the state of the object.
+	 * 
+	 *  The whole permissions and state thing needs to be cleaned up.  This is getting hard to maintain.
 	 * 
 	 * ***************************************************************/
 	
@@ -115,6 +118,9 @@ abstract class State
 	
 	/*****************************************************
 	 * 				CRUD OPERATIONS
+	 * 
+	 * 	Also includes getAll() and submit() stuff	
+	 * 
 	 * ****************************************************/
 
 	/* Get - Get one object.
@@ -247,7 +253,7 @@ abstract class State
 		
 		if ($result == null)
 		{
-			throw new ResourceNotFoundException();
+			throw new ResourceNotFoundException("No sub-resources found.");
 		}
 		
 		foreach ($result as $element)
@@ -449,6 +455,9 @@ abstract class State
 	
 	/******************************************************
 	 * 					Helper Functions
+	 * 
+	 * 	Used to help.
+	 * 
 	 * ****************************************************/
 	
 	/* Is the specified hunt owned by the current owner? 
@@ -558,7 +567,8 @@ abstract class State
 
 	/* Add Children
 	 * 
-	 * This adds in links to the sub-resources.
+	 * This adds in links to the sub-resources.  Yea it's hardcoded because child-parent relationships aren't really
+	 * established very well.  Thus the children become undisciplined and hard to manage. JUST LIKE IN REAL LIFE LOL
 	 * */
 	private function addChildren($array)
 	{
