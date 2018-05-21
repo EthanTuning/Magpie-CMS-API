@@ -11,7 +11,7 @@ The folders are:
     * webclient - This contains everything needed to serve the Magpie webclient pages.
 
 
-# Authentication Note
+### Authentication Note
 
 * The API requires an Authentication header of type Bearer in every API request.  The token is grabbed from the user's Firebase login.
 
@@ -34,7 +34,7 @@ The folders are:
 
 1. Download and install XAMPP from https://www.apachefriends.org/index.html
 2. Navigate to C:\xampp\apache\conf\extra and open httpd-vhosts.conf, replace its contents with:
-
+	```
     <VirtualHost *:80>
         DocumentRoot "your-repository-directory\public_html"
         ServerName home.dev
@@ -44,7 +44,7 @@ The folders are:
             AllowOverride All
         </Directory>
     </VirtualHost>
-    
+    ```
 3. Navigate to C:\Windows\System32\drivers\etc\hosts and add '127.0.0.1 home.dev' to the bottom.
 4. start Apache through the XAMPP Control Panel then in a browser search home.dev (the MagpieHunt homepage should pop up)
 
@@ -52,24 +52,26 @@ The folders are:
 
 ### Server setup
 
-1. Follow the Ubuntu LAMP deployment steps first.
+1. If using shared hosting (like Bluehost) you can skip to step 5.
 
-2. Modify the apache configuration files appropriately, add the following to either apache2.conf or httpd.conf:
+2. Follow the Ubuntu LAMP deployment steps first.
+
+3. Modify the apache configuration files appropriately, add the following to either apache2.conf or httpd.conf (linux command: httpd -V):
     * On Ubuntu: /etc/apache2/apache2.conf
- ```
-<Directory FULL_PATH_TO_MAGPIE_DIRECTORY_GOES_HERE>
-        AllowOverride All
-        Require all granted
-</Directory>
-```
-
+		 ```
+		<Directory FULL_PATH_TO_MAGPIE_DIRECTORY_GOES_HERE>
+				AllowOverride All
+				Require all granted
+		</Directory>
+		```
     * Note: Under Apache 2, you must set UseCanonicalName = On and ServerName. Otherwise, this value reflects the hostname supplied by the client, which can be spoofed. It is not safe to rely on this value in security-dependent contexts. 
-	* Disable directory browsing.
 
-3. Enable apache2 module thingy:
+4. Enable apache2 module thingy:
     * sudo a2enmod rewrite && sudo service apache2 restart
 
-4. In the deplotment_files/ directory, follow those instructions to setup SSL.
+5. In the deployment_files/ directory, follow the Readme.htaccess file instructions.
+
+6. Ensure you have PHP 7. In bluehost there's a web configuration tool for this. Latest versions of Ubuntu (18.04+) use PHP 7 by default.
 
 ### Database setup
 
@@ -81,11 +83,12 @@ The folders are:
 	* In the 'src/Creds/' folder, add your Firebase Admin SDK json credential (download it from Firebase Console).
 	* Modify the 'src/AuthenticationMiddleware.php' file to reflect this credential.
 
-2. In 'src'Creds/config.php':
+2. In 'src/Creds/config.php':
 	* change '$config['displayErrorDetails']' to 'false'
 	* change the password to reflect the actual password for 'magpiehu_api' user
 
 3. In 'index.php', change the "base_url" string to reflect the deployment location.
 
+4. Change the permissions of the entire src/ folder: `chmod -R 700 src/`
 
 

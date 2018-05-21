@@ -1,3 +1,5 @@
+# Use PHP7 Single php.ini as default
+AddHandler application/x-httpd-php70s .php
 # FORCE HTTPS CONNECTIONS
 # https://www.ssl.com/how-to/force-https-connections-in-an-apache-server-environment/
 
@@ -19,3 +21,6 @@ RewriteRule ^(.*)$ https://magpiehunt.com/$1 [R=301,L]
 # Original example: RewriteRule ^(.*)$ https://www.example.com/$1 [R=301,L]
 # This rule will redirect users from their original location to the same location but using HTTPS.
 # Example: Visitors trying to access http://www.domain.com/somesubsection/ will be redirected to https://www.domain.com/somesubsection/
+
+# Disable directory browsing
+Options -Indexes

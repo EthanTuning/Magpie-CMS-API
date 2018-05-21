@@ -17,8 +17,8 @@
 	/* Database configuration stuff (for PDO) */
 	
 	$config['db']['host']   = 'localhost';
-	$config['db']['user']   = 'magpieapi';
+	$config['db']['user']   = 'magpiehu_api';
 	$config['db']['pass']   = 'eMO3B8cxFSo6usst';
-	$config['db']['dbname'] = 'MagpieDB';
+	$config['db']['dbname'] = 'magpiehu_primary';
 	
 ?>

@@ -54,7 +54,8 @@ INSERT INTO `creators` (`uid`, `email`, `is_valid`) VALUES
 ('pacmanw2', 'pacmanw2@mailinator.com', NULL),
 ('six_god', '6@god.com', NULL),
 ('someUser', 'some@thing.com', NULL),
-('SYMuIyLoFkek6h0Vx8xy36T5aqK2', 'marcog3210@gmail.com', b'1');
+('SYMuIyLoFkek6h0Vx8xy36T5aqK2', 'marcog3210@gmail.com', b'1'),
+('zz2y1CPHhpYFZz2hFX0xGirs3iR2', 'wolfofhalo@gmail.com', NULL);
 
 -- --------------------------------------------------------
 
@@ -69,6 +70,11 @@ CREATE TABLE IF NOT EXISTS `administrators` (
 
 ) ENGINE=InnoDB;
 
+-- Make Marco and Rem Administrators
+
+INSERT INTO `administrators` (`uid`) VALUES
+('SYMuIyLoFkek6h0Vx8xy36T5aqK2'),
+('zz2y1CPHhpYFZz2hFX0xGirs3iR2');
 
 /*
 -- Table structure for table `hunt_status`
