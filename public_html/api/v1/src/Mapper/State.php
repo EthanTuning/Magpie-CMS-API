@@ -90,8 +90,14 @@ abstract class State
 	}	
 	
 	
+	// Delete - No matter the state someone can delete their Hunt
 	public function delete(IMapperable $obj)
 	{
+		if ($this->isOwnedByCurrentUser($obj) && $obj->isParent())
+		{
+			return $this->dbDelete($obj);
+		}
+		
 		throw new UnsupportedOperationException("Not supported in current state.");
 	}	
 	
