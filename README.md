@@ -5,11 +5,14 @@ This is a PHP fork of the Magpie CMS.
 The folders are:
 
 * database - This has the .sql code to import the database locally so the API can work.
-* documentation - Will hold the SRS, etc
+* documentation - Will hold the SRS and developer documentation
 * public_html
     * api - This holds everything needed to run the API, minus the database initialization.  Slim framework is included in here.
-    * webclient - This contains everything needed to serve the Magpie webclient pages.
+    * tester - This holds a simple webpage for grabbing a Google token to test the API with.
 
+### Additional Documentation
+
+API User documentation is at:  https://documenter.getpostman.com/view/4418001/RW87rVjU
 
 ### Authentication Note
 
