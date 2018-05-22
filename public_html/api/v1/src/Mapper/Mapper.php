@@ -124,8 +124,8 @@ class Mapper
 	// ALSO: All this parent / child checking crap could be solved by making every subresource ID a combination of a Parent ID + subresource id or something
 	private function getApprovalStatus(IMapperable $obj)
 	{
-		// Hunts
-		if ($obj->isParent() )
+		// Hunts and blank Subresources
+		if ($obj->isParent() || !isset($obj->getPrimaryKey()['value']))
 		{
 			$parentid = $obj->getParentKey();
 			$name = $parentid['name'];
@@ -135,7 +135,7 @@ class Mapper
 			$stmt->execute([$value]); 
 			$approvalStatus = $stmt->fetchColumn();	
 		}
-		// Badges / Awards
+		// Badges / Awards that already exist
 		else
 		{			
 			$primaryName = $obj->getPrimaryKey()['name'];
