@@ -153,7 +153,7 @@ class BadgeController
 		$badge->setPrimaryKeyValue($args['badge_id']);
 		$badge->setParentKeyValue($args['hunt_id']);
 		
-		/* Use the Mapper to delete the hunt with that hunt_id */
+		/* Use the Mapper to delete the object */
 		$temp = $mapper->delete($badge);
 		$response->getBody()->write(json_encode($temp));		//add jsonSerialze() to interface?
 		

@@ -20,20 +20,6 @@ class StateApproved extends State
 	{
 		return $this->dbGetAllChildren($obj);
 	}
-	
-	
-	public function delete(IMapperable $obj)
-	{
-		// if the object is a Parent object, can delete (delete should cascade on database)
-		if ($this->isOwnedByCurrentUser($obj) && $obj->isParent())
-		{
-			return $this->dbDelete($obj);
-		}
-		else
-		{
-			throw new IllegalAccessException("Cannot delete non-owned resource.");
-		}
-	}
 }
 
 ?>

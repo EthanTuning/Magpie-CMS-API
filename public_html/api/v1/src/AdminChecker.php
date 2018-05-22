@@ -42,7 +42,7 @@ class AdminChecker
 		
 		if ( null == $stmt->fetchColumn() )		//if the user ID is not in the database, throw exception
 		{
-			throw new IllegalAccessException();
+			throw new IllegalAccessException("You must be an administrator to access this endpoint.");
 		}	
 		
         $response = $next($request, $response);	//next layer

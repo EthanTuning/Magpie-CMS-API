@@ -8,18 +8,29 @@
  * AdminChecker class needs to be run before this.  With Slim that means loading
  * the AdminChecker class as middleware on the '/admin' route group (done!).
  * 
- * This does not use a Mapper, it makes a StateApproved object and uses that directly.
+ * This does not use a Mapper, it makes a AdminState object and uses that directly.
  * Or it does some direct SQL via PDO.
  * 
+ * Currently the AdminController handles:
+ * 
+ * 1) Giving the client a list of "submitted" Hunts
+ * 2) Handling Hunt approval
+ * 3) Deleting Hunts
+ * 
+ * Getting resources is done via the normal /hunts/ routes, there's checks to see
+ * if the requestor is an administrator.  Admins should have no trouble getting
+ * submitted and non-approved resources for review.
+ * 
+ * The mailer functionality is currently disabled.
  * */
 
 namespace MagpieAPI\Controllers;
 
+
 use PHPMailer\PHPMailer\PHPMailer;		// phpmailer used to send emails
 use PHPMailer\PHPMailer\Exception;		// https://github.com/PHPMailer/PHPMailer
 
-
-use MagpieAPI\Mapper\StateBypass;		// We're using this as a bypass to the state-checking
+use MagpieAPI\Mapper\AdminState;		// We're using this as a bypass to the state-checking
 
 use MagpieAPI\Models\Hunt;
 use MagpieAPI\Models\Badge;
@@ -41,24 +52,6 @@ class AdminController
 	
 	
 	/************************************
-	 *				GET (Single Hunt identified by ID)
-	 ***********************************/
-	
-	public function getSingleHunt($request, $response, $args)
-	{
-		// Bypassing functionality of the mapper by making a State object directly
-		$mapperBypass = new StateBypass($this->container->db, $request->getAttribute('uid'));
-		
-		$hunt = new Hunt(null);
-		$hunt->setPrimaryKeyValue($args['hunt_id']);
-		
-		$result = $mapperBypass->get($hunt);
-		
-		$response->getBody()->write(json_encode($result));
-		return $response;
-	}
-	
-	/************************************
 	 *				GET
 	 * 
 	 * GET A LIST OF NON-APPROVED HUNTS FOR REVIEW
@@ -68,13 +61,26 @@ class AdminController
 	{
 		//TODO: add in query functionality
 		
+		//mapperBypass is just used for the buildResults() function
+		$mapperBypass = new AdminState($this->container->db, $request->getAttribute('uid'), $this->container['base_url']);		
+		
 		//direct SQL query
 		$sql = 'SELECT * from `hunts` WHERE `approval_status` = "submitted"';
 		$stmt = $this->container->db->prepare($sql);
 		$stmt->execute();
 		$result = $stmt->fetchAll();
 		
-		$response->getBody()->write(json_encode($result));
+		if ($result == null)
+		{
+			throw new ResourceNotFoundException("No hunts have been submitted.");
+		}
+		
+		foreach ($result as $element)
+		{
+			$build[] = $mapperBypass->buildResults($element, new Hunt(null));
+		}
+		
+		$response->getBody()->write(json_encode($build));
 		
 		return $response;
 	}
@@ -92,6 +98,9 @@ class AdminController
 
 	public function changeStatus($request, $response, $args)
 	{
+		//mapperBypass is just used for the responseMessage() function
+		$mapperBypass = new AdminState($this->container->db, $request->getAttribute('uid'), $this->container['base_url']);	
+		
 		// direct SQL query
 		$huntid = $args['hunt_id'];			// get hunt ID from URI
 		
@@ -108,21 +117,21 @@ class AdminController
 		
 			if ($result < 1)
 			{
-				$result = "Nothing changed.";
+				$build = $mapperBypass->responseMessage(false, "Nothing changed.");
 			}
 			else
 			{
-				//sendEmail() goes here, moved outside for testing.
+				$this->sendEmail($status);
+			
+				$build = $mapperBypass->responseMessage(true, "Hunt $huntid has been $status.");
 			}
 			
-			$this->sendEmail($status);
-			
-			$response->getBody()->write(json_encode($result));
+			$response->getBody()->write(json_encode($build));
 		
 			return $response;
 		}
 
-		throw new \InvalidArgumentException("'approval_status' not found.");
+		throw new \InvalidArgumentException("'approval_status' not found or not set correctly.");
 	}
 
 	/************************************
@@ -132,7 +141,7 @@ class AdminController
 	public function delete($request, $response, $args)
 	{
 		// Bypassing functionality of the mapper by making a State object directly
-		$mapperBypass = new StateBypass($this->container->db, $request->getAttribute('uid'));
+		$mapperBypass = new AdminState($this->container->db, $request->getAttribute('uid'), $this->container['base_url']);
 		
 		$hunt = new Hunt(null);
 		$hunt->setPrimaryKeyValue($args['hunt_id']);
@@ -201,11 +210,11 @@ class AdminController
 			// Set PHPMailer to use the sendmail transport
 			//$mail->isSendmail();
 			//Set who the message is to be sent from
-			$mail->setFrom('from@portable.whatever', 'First Last');
+			$mail->setFrom('noreply@magpiehunt.com', 'Magpiehunt.com');
 			//Set an alternative reply-to address
 			//$mail->addReplyTo('replyto@example.com', 'First Last');
 			//Set who the message is to be sent to
-			$mail->addAddress('admin@rkwitz.com', 'John Doe');
+			$mail->addAddress('insert address here', 'John Doe');
 			//Set the subject line
 			$mail->Subject = 'PHPMailer sendmail test';
 			//Read an HTML message body from an external file, convert referenced images to embedded,
@@ -216,10 +225,6 @@ class AdminController
 			$mail->AltBody = 'This is a plain-text message body';
 			//Attach an image file
 			//$mail->addAttachment('images/phpmailer_mini.png');
-
-			
-			
-			
 			
 
 			$mail->send();

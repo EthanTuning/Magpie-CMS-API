@@ -121,23 +121,38 @@ class Mapper
 	
 	/* NO DUPLICATION OF SQL! */
 	// TODO: make this work with other parent tables, possibly add a value to the getParentKey() to include a 'table' value
+	// ALSO: All this parent / child checking crap could be solved by making every subresource ID a combination of a Parent ID + subresource id or something
 	private function getApprovalStatus(IMapperable $obj)
 	{
-		$parentid = $obj->getParentKey();
-		$name = $parentid['name'];
-		$value = $parentid['value'];
-		
-		$stmt = $this->db->prepare('SELECT approval_status FROM hunts WHERE '.$name.'=?');		//then shove table value in here
-		$stmt->execute([$value]); 
-		$approvalStatus = $stmt->fetchColumn();
-		
+		// Hunts
+		if ($obj->isParent() )
+		{
+			$parentid = $obj->getParentKey();
+			$name = $parentid['name'];
+			$value = $parentid['value'];
+			
+			$stmt = $this->db->prepare('SELECT approval_status FROM hunts WHERE '.$name.'=?');		//then shove table value in here
+			$stmt->execute([$value]); 
+			$approvalStatus = $stmt->fetchColumn();	
+		}
+		// Badges / Awards
+		else
+		{			
+			$primaryName = $obj->getPrimaryKey()['name'];
+			$primaryValue = $obj->getPrimaryKey()['value'];
+			$table = $obj->getTable();
+			
+			$stmt = $this->db->prepare('SELECT approval_status FROM hunts INNER JOIN '.$table.' ON hunts.hunt_id = '.$table.'.hunt_id WHERE '.$primaryName.'=?');
+			$stmt->execute([$primaryValue]); 
+			$approvalStatus = $stmt->fetchColumn();
+		}
+			
 		if ( isset($approvalStatus) )
 		{
 			return $approvalStatus;
-			
-		}
+		}		
 		
-		throw new ResourceNotFoundException("Approval Check: Resource doesn't exist.");
+		throw new ResourceNotFoundException("Approval Check: Resource doesn't exist or some other Approval mis-match is going on.");
 	}
 	
 	

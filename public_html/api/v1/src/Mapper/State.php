@@ -74,10 +74,10 @@ abstract class State
 	}
 	
 	
-	// No matter the state, the owner can get his children
+	// No matter the state, the owner can get his children (and administrators)
 	public function getAllChildren(IMapperable $obj)
 	{
-		if ($this->isOwnedByCurrentUser($obj))
+		if ($this->isOwnedByCurrentUser($obj) || $this->isCurrentUserAdmin() )
 		{
 			return $this->dbGetAllChildren($obj);
 		}
@@ -311,10 +311,11 @@ abstract class State
 		$stmt= $this->db->prepare($sql);
 		$stmt->execute($data);
 		
-		// return something like {'hunt_id', '299292'};
-		$result = array($object->getPrimaryKey()['name'] => $this->db->lastInsertId() );
+		// Add the assigned ID to the object
+		$newid = $this->db->lastInsertId();
+		$object->setPrimaryKeyValue($newid);
 		
-		return $result;
+		return $this->dbSelect($object);		// make a SELECT call to return it to the user
 	}
 	
 	
@@ -388,7 +389,7 @@ abstract class State
 			throw new Exception("Nothing updated.");
 		}
 		
-		return $this->responseMessage(true, "Successful update");
+		return $this->dbSelect($object);	//return the newly updated object from database
 	}
 	
 	
@@ -502,12 +503,41 @@ abstract class State
 	}
 
 
+	/* Administrator Check
+	 * 
+	 * Is the current user an Administrator?
+	 * 
+	 * This was origninally tied up in the AdminChecker middleware (and still is)
+	 * but there was a lot of code duplication going on, making it hard to modify.
+	 * 
+	 * The /admin endpoint still exists, but to simplify getting resources administrators
+	 * can use the existing sub-resource links.
+	 */
+	protected function isCurrentUserAdmin()
+	{
+		$uid = $this->uid;
+		$db = $this->db;
+		
+		$sql = 'SELECT `uid` FROM `administrators` WHERE uid=?';
+		$stmt = $db->prepare($sql);
+		$stmt->execute([$uid]);		//yes we have to make a 1D array from an associative array
+		
+		if ( null == $stmt->fetchColumn() )	
+		{
+			return false;		// if the uid is not in the admin table, return false
+		}
+		
+		return true;
+	}
+	
+
+
 
 	/* Response Message
 	 * 
 	 * Inform the user what happened.
 	 */
-	private function responseMessage($bool, $message)
+	public function responseMessage($bool, $message)
 	{
 		$array['status'] = $bool;
 		$array['message'] = $message;
@@ -521,15 +551,24 @@ abstract class State
 	 * Takes an array of results representing an object and returns 
 	 * a beefed-up array.
 	 * */
-	private function buildResults($result, IMapperable $object)
+	public function buildResults($result, IMapperable $object)
 	{
 		// start building the return array
-		$build['class'] = substr(strrchr(get_class($object), '\\'), 1);		//this removes the namespace from the returned string by get_class()
+		$class = strtolower(substr(strrchr(get_class($object), '\\'), 1));		// this removes the namespace from the returned string by get_class() and makes it lowercase
+		
+		$build['class'] = $class;
 		$build['data'] = $this->expandURL($result);						// expand the fields that contain URLs
-	
+		
 		if ($object->isParent())
-		{		
+		{	
+			$build['href'] = $this->baseURL."/hunts/".$build['data']['hunt_id'];
 			$build = $this->addChildren($build);	
+		}
+		else
+		{
+			//children objects are a bitch to program
+			$keyName = $object->getPrimaryKey()['name'];
+			$build['href'] = $this->baseURL."/hunts/".$build['data']['hunt_id']."/$class/".$build['data'][$keyName];
 		}
 		
 		return $build;

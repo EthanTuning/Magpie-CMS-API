@@ -12,7 +12,7 @@ use MagpieAPI\Exceptions\UnsupportedOperationException;
 
 
 /*** Bypass the State of the parent object and do stuff ***/
-class StateBypass extends State
+class AdminState extends State
 {
 	
 	public function search(IMapperable $obj)
@@ -37,7 +37,6 @@ class StateBypass extends State
 	{
 		return $this->dbDelete($obj);
 	}
-	
 	
 }
 

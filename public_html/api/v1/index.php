@@ -97,7 +97,6 @@ $app->delete('/images/{image_id}', ImageController::class . ':delete');		// not 
 
 /* Admin */
 $app->group('/admin', function () {
-	$this->get('/{hunt_id}', AdminController::class . ':getSingleHunt');
     $this->get('', AdminController::class . ':getNonApprovedList');
     $this->put('/{hunt_id}', AdminController::class . ':changeStatus');
     $this->delete('/{hunt_id}', AdminController::class . ':delete');

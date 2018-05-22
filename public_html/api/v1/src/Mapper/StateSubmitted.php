@@ -13,7 +13,7 @@ class StateSubmitted extends State
 {
 	public function get(IMapperable $obj)
 	{
-		if ($this->isOwnedByCurrentUser($obj))
+		if ($this->isOwnedByCurrentUser($obj) || $this->isCurrentUserAdmin() )
 		{
 			return $this->dbSelect($obj);
 		}
