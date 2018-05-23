@@ -26,9 +26,9 @@
 		  firebase.initializeApp(config);
 
 			
-			function signinX()
+			function signinRedirect()
 			{			
-				console.log("CLICKED SIGNIN");
+				console.log("CLICKED SIGNIN WITH REDIRECT");
 				
 				var provider = new firebase.auth.GoogleAuthProvider();
 
@@ -54,7 +54,31 @@
 				});
 				
 			}	
-	
+			
+		
+		function signinPopup()
+		{
+			console.log("CLICKED SIGNIN WITH POPUP");
+				
+			var provider = new firebase.auth.GoogleAuthProvider();
+				
+			firebase.auth().signInWithPopup(provider).then(function(result) {
+				// This gives you a Google Access Token. You can use it to access the Google API.
+				var token = result.credential.accessToken;
+				// The signed-in user info.
+				var user = result.user;
+				// ...
+				}).catch(function(error) {
+				// Handle Errors here.
+				var errorCode = error.code;
+				var errorMessage = error.message;
+				// The email of the user's account used.
+				var email = error.email;
+				// The firebase.auth.AuthCredential type that was used.
+				var credential = error.credential;
+				// ...
+			});
+		}
 			
 			function signoutX()
 			{
@@ -84,7 +108,11 @@
 	<h1>GOOGLE LOGIN TOKEN GRABBER</h1>
 	<p>This is used for testing the API (https://magpiehunt.com/api/v1/hunts)</p>
 	
-	<button id='btnSignin' onclick="signinX()">Sign In</button>
+	<button id='btnSigninR' onclick="signinRedirect()">Sign In with Redirect</button>
+	
+	<br>
+	
+	<button id='btnSigninP' onclick="signinPopup()">Sign In with Popup</button>
 	
 	<br>
 	
