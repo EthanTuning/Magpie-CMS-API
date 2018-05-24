@@ -70,10 +70,14 @@ CREATE TABLE IF NOT EXISTS `administrators` (
 
 ) ENGINE=InnoDB;
 
--- Make Marco and Rem Administrators
+-- Make Everyone Administrators
 
 INSERT INTO `administrators` (`uid`) VALUES
+('jaksEPf7HjPI2uRA1gnQ0yhYJyy1'),
+('neijx6Zyw7bRHSD4ePEwZatSSyA2'),
+('OVjryNCEB3VIyMgKrmAv28vcg1n1'),
 ('SYMuIyLoFkek6h0Vx8xy36T5aqK2'),
+('uBUCKptDBxfsPOww71lLi0UXvgk2'),
 ('zz2y1CPHhpYFZz2hFX0xGirs3iR2');
 
 /*

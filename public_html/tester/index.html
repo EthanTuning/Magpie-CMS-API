@@ -13,6 +13,9 @@
 		<link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css" />
 		
 		<script>
+			
+		var globalToken;
+		
 		  // Initialize Firebase
 		  var config = {
 			apiKey: "AIzaSyA7FjQrDYSP5Ew5J2BCWtEPAHD5rKYV6T8",
@@ -94,10 +97,31 @@
 			{
 				firebase.auth().currentUser.getIdToken(/* forceRefresh */ false).then(function(idToken) {
 					  $('#results').text(idToken);
+					  globalToken = idToken;
 					}).catch(function(error) {
 					  console.log(error);
 					});
 			}
+	
+	
+		function jstest()
+		{
+				var settings = {
+			  "async": true,
+			  "crossDomain": true,
+			  "url": "https://magpiehunt.com/api/v1/hunts",
+			  "method": "GET",
+			  "headers": {}
+			}
+			
+			console.log(globalToken);
+			settings['headers']['Authorization'] = "Bearer " + globalToken;
+			
+			$.ajax(settings).done(function (response) {
+			  console.log(response);
+			});
+		}
+	
 	
 		</script>
 		
@@ -124,6 +148,12 @@
 	<div id='divResults'>
 	
 	<p id='results'></p>
+	</div>
+	
+	<div>
+	<button id="btnTest" onclick="jstest()">TEST BUTTON</button>
+	
+	
 	</div>
 	
 	

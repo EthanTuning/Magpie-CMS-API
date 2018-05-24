@@ -67,6 +67,13 @@ abstract class State
 	}		
 	
 	
+	// Get All - Returns all the Hunts a user owns. (Regardless of state).
+	public function getAll(IMapperable $obj)
+	{
+		return $this->dbGetAllHunts($obj);
+	}
+	
+	
 	// Takes a object with the fields set to whatever you're searching for
 	public function search(IMapperable $obj)
 	{		
@@ -154,6 +161,41 @@ abstract class State
 		
 		// start building the return array
 		$build = $this->buildResults($result, $object);
+		
+		return $build;
+	}
+
+
+	/* Get All - Get all the Hunts.
+	 * 
+	 * Takes a IMapperable, returns all Hunts owned by current user.
+	 * */
+	protected function dbGetAllHunts(IMapperable $object)
+	{
+		if ($object == null)
+		{
+			throw new Exception('Mapper->getAllHunts(): $object is null!');
+		}
+		
+		$table = $object->getTable();
+		$uid = $this->uid;
+		$sql = 'SELECT * FROM '.$table.' WHERE `uid`=?';
+		
+		// PDO code
+		$stmt = $this->db->prepare($sql);
+		$stmt->execute([$uid]); 
+		$result = $stmt->fetchAll();
+		
+		if ($result == null)
+		{
+			throw new ResourceNotFoundException("No Hunts for this user.");
+		}
+		
+		// start building the return array
+		foreach ($result as $element)
+		{
+			$build[] = $this->buildResults($element, $object);
+		}
 		
 		return $build;
 	}
@@ -529,8 +571,6 @@ abstract class State
 		
 		return true;
 	}
-	
-
 
 
 	/* Response Message
@@ -559,6 +599,8 @@ abstract class State
 		$build['class'] = $class;
 		$build['data'] = $this->expandURL($result);						// expand the fields that contain URLs
 		
+		$table = $object->getTable();
+		
 		if ($object->isParent())
 		{	
 			$build['href'] = $this->baseURL."/hunts/".$build['data']['hunt_id'];
@@ -568,7 +610,7 @@ abstract class State
 		{
 			//children objects are a bitch to program
 			$keyName = $object->getPrimaryKey()['name'];
-			$build['href'] = $this->baseURL."/hunts/".$build['data']['hunt_id']."/$class/".$build['data'][$keyName];
+			$build['href'] = $this->baseURL."/hunts/".$build['data']['hunt_id']."/$table/".$build['data'][$keyName];
 		}
 		
 		return $build;

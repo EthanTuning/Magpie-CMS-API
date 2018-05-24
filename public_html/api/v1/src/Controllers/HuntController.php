@@ -84,11 +84,18 @@ class HuntController
 		/* Grab the query parameters */
 		$params = $request->getQueryParams();
 		
-		// make Hunt
-		$hunt = new Hunt($params);
-		
-		$result = $mapper->search($hunt);
-		//$response = $this->prepareResponse($response, $result);
+		/* If there are no parameters, just get Hunts belonging to the user */
+		if ($params == null)
+		{
+			$hunt = new Hunt(null);
+			$result = $mapper->getAll($hunt);
+		}
+		else
+		{
+			// make Hunt with search parameters
+			$hunt = new Hunt($params);
+			$result = $mapper->search($hunt);
+		}
 		$response->getBody()->write(json_encode($result));
 		
 		return $response;

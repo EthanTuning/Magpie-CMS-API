@@ -52,6 +52,12 @@ class Mapper
 	}		
 	
 	
+	public function getAll(IMapperable $obj)
+	{
+		$this->state = $this->setState($obj);
+		return $this->state->getAll($obj);
+	}
+	
 	public function update(IMapperable $obj)
 	{
 		$this->state = $this->setState($obj);

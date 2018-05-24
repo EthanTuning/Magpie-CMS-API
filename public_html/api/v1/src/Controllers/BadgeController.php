@@ -71,10 +71,10 @@ class BadgeController
 	
 
 /************************************
- *				POST (Add)
+ *				POST (Add or Update)
  ***********************************/
 
-	public function add($request, $response, $args)
+	public function addOrUpdate($request, $response, $args)
 	{
 		/* Create the Mappers used */
 		$uid = $request->getAttribute('uid');
@@ -106,34 +106,21 @@ class BadgeController
 		}
 		
 		$badge = new Badge($parameters);				// make a Badge to hold the values
-		$badge->setParentKeyValue($args['hunt_id']);	
-		$result = $mapper->add($badge);
-		$response->getBody()->write(json_encode($result));
-		
-		return $response;
-	}
-
-
-	/************************************
-	 *				PUT (Update)
-	 ***********************************/
-
-	public function update($request, $response, $args)
-	{
-		/* Create the Mappers used */
-		$uid = $request->getAttribute('uid');
-		$mapper = new Mapper($this->container, $uid);
-		
-		/* Grab hunt id from URL, shove it in assoc array w/rest of request */
-		$parameters = $request->getParsedBody();
-		
-		$badge = new Badge($parameters);
-		$badge->setPrimaryKeyValue($args['badge_id']);
 		$badge->setParentKeyValue($args['hunt_id']);
 		
-		$result = $mapper->update($badge);
-		$response->getBody()->write(json_encode($result));
+		// If the URL contains a badge ID then we're updating an existing badge
+		if (isset($args['badge_id']))
+		{
+			$badge->setPrimaryKeyValue($args['badge_id']);
+			$result = $mapper->update($badge);
+		}
+		// Otherwise add it
+		else
+		{
+			$result = $mapper->add($badge);
+		}
 		
+		$response->getBody()->write(json_encode($result));
 		return $response;
 	}
 
@@ -159,21 +146,6 @@ class BadgeController
 		
 		return $response;
 	}
-
-
-	/************************************
-	 *				OPTIONS
-	 ***********************************/
-
-	public function options($request, $response, $args)
-	{
-		// Return response headers
-		
-		$response->getBody()->write(" HUNTS OPTIONS ROUTE ");
-		return $response;
-	}
-		
-		
 
 	
 }

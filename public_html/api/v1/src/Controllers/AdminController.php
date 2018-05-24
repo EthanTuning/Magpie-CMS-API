@@ -32,6 +32,8 @@ use PHPMailer\PHPMailer\Exception;		// https://github.com/PHPMailer/PHPMailer
 
 use MagpieAPI\Mapper\AdminState;		// We're using this as a bypass to the state-checking
 
+use MagpieAPI\AdminChecker;			// used for the HEAD request.  This is a client convenience method.
+
 use MagpieAPI\Models\Hunt;
 use MagpieAPI\Models\Badge;
 
@@ -155,14 +157,19 @@ class AdminController
 
 
 	/************************************
-	 *				OPTIONS
+	 *				GET (Used by a client to check if user is an admin to control flow of client)
 	 ***********************************/
 
-	public function options($request, $response, $args)
+	public function isAdmin($request, $response, $args)
 	{
-		// Return response headers
+		$adminChecker = new AdminChecker($this->container);
+		$bool = $adminChecker->isAdmin($request);
 		
-		$response->getBody()->write("ADMIN OPTIONS ROUTE ");
+		$mapperBypass = new AdminState($this->container->db, $request->getAttribute('uid'), $this->container['base_url']);
+		$build = $mapperBypass->responseMessage($bool, "This user is an admin");
+		$build['isAdmin'] = $bool;		// yea its in there twice oh well
+		
+		$response->getBody()->write(json_encode($build));
 		return $response;
 	}
 		

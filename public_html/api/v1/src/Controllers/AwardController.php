@@ -71,10 +71,10 @@ class AwardController
 	
 
 /************************************
- *				POST (Add)
+ *				POST (Add or Update)
  ***********************************/
 
-	public function add($request, $response, $args)
+	public function addOrUpdate($request, $response, $args)
 	{
 		/* Create the Mappers used */
 		$uid = $request->getAttribute('uid');
@@ -85,33 +85,19 @@ class AwardController
 		$award = new Award($parameters);
 		$award->setParentKeyValue($args['hunt_id']);
 		
-		$result = $mapper->add($award);
+		// If the URL contains an award ID then we're updating an existing award
+		if (isset($args['award_id']))
+		{
+			$award->setPrimaryKeyValue($args['award_id']);
+			$result = $mapper->update($award);
+		}
+		// Otherwise add it
+		else
+		{
+			$result = $mapper->add($award);
+		}
+		
 		$response->getBody()->write(json_encode($result));
-		
-		return $response;
-	}
-
-
-	/************************************
-	 *				PUT (Update)
-	 ***********************************/
-
-	public function update($request, $response, $args)
-	{
-		/* Create the Mappers used */
-		$uid = $request->getAttribute('uid');
-		$mapper = new Mapper($this->container, $uid);
-		
-		/* Grab hunt id from URL, shove it in assoc array w/rest of request */
-		$parameters = $request->getParsedBody();
-		
-		$award = new Award($parameters);
-		$award->setPrimaryKeyValue($args['award_id']);
-		$award->setParentKeyValue($args['hunt_id']);
-		
-		$result = $mapper->update($award);
-		$response->getBody()->write(json_encode($result));
-		
 		return $response;
 	}
 
@@ -138,21 +124,6 @@ class AwardController
 		
 		return $response;
 	}
-
-
-	/************************************
-	 *				OPTIONS
-	 ***********************************/
-
-	public function options($request, $response, $args)
-	{
-		// Return response headers
-		
-		$response->getBody()->write("AWARDS OPTIONS ROUTE ");
-		return $response;
-	}
-		
-		
 
 	
 }

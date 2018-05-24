@@ -20,6 +20,7 @@ use Firebase\Auth\Token\Exception\InvalidToken;
 use MagpieAPI\UserManager;					// Checks if user is in database
 use MagpieAPI\AuthenticationMiddleware;		// Firebase Token stuff
 use MagpieAPI\AdminChecker;					// local admin checker
+use MagpieAPI\CORSManager;
 
 use MagpieAPI\Exceptions\CustomHandler;		// Exception handler
 
@@ -70,22 +71,22 @@ $container['errorHandler'] = function ($container) {
 $app->post('/hunts', HuntController::class . ':add');
 $app->get('/hunts/{hunt_id}', HuntController::class . ':getSingleHunt');
 $app->get('/hunts', HuntController::class . ':search');
-$app->put('/hunts/{hunt_id}', HuntController::class . ':update');
+$app->post('/hunts/{hunt_id}', HuntController::class . ':update');
 $app->delete('/hunts/{hunt_id}', HuntController::class . ':delete');
 $app->patch('/hunts/{hunt_id}', HuntController::class . ':submit');
 
 /* Badges */
-$app->post('/hunts/{hunt_id}/badges', BadgeController::class . ':add');
+$app->post('/hunts/{hunt_id}/badges', BadgeController::class . ':addOrUpdate');
 $app->get('/hunts/{hunt_id}/badges/{badge_id}', BadgeController::class . ':getSingleBadge');
 $app->get('/hunts/{hunt_id}/badges', BadgeController::class . ':getAllBadges');
-$app->put('/hunts/{hunt_id}/badges/{badge_id}', BadgeController::class . ':update');
+$app->post('/hunts/{hunt_id}/badges/{badge_id}', BadgeController::class . ':addOrUpdate');
 $app->delete('/hunts/{hunt_id}/badges/{badge_id}', BadgeController::class . ':delete');
 
 /* Awards */
-$app->post('/hunts/{hunt_id}/awards', AwardController::class . ':add');
+$app->post('/hunts/{hunt_id}/awards', AwardController::class . ':addOrUpdate');
 $app->get('/hunts/{hunt_id}/awards/{award_id}', AwardController::class . ':getSingleAward');
 $app->get('/hunts/{hunt_id}/awards', AwardController::class . ':getAllAwards');
-$app->put('/hunts/{hunt_id}/awards/{award_id}', AwardController::class . ':update');
+$app->post('/hunts/{hunt_id}/awards/{award_id}', AwardController::class . ':addOrUpdate');
 $app->delete('/hunts/{hunt_id}/awards/{award_id}', AwardController::class . ':delete');
 
 
@@ -100,14 +101,15 @@ $app->group('/admin', function () {
     $this->get('', AdminController::class . ':getNonApprovedList');
     $this->put('/{hunt_id}', AdminController::class . ':changeStatus');
     $this->delete('/{hunt_id}', AdminController::class . ':delete');
-    $this->options('', AdminController::class . ':options');
 })->add( new AdminChecker($container));		// grouping these endpoints allows us to use middleware on the entire group
-
+//$app->map(['HEAD'], '/admin', AdminController::class . ':isAdmin');	// this one is outside the group because it just returns whether the current user is an admin or not (for client user-experience flow)
+$app->get('/admin/check', AdminController::class . ':isAdmin');
 
 /* Add the additional Middleware Layers (! The last ond loaded runs first !) */
 
 $app->add( new UserManager($container) );			// Checks if the current user is entered in the creators table
 $app->add( new AuthenticationMiddleware() );		// Authentication with google and tokens and stuff
+$app->add( new CORSManager() );		// If the server gets an OPTIONS request its probably that stupid CORS preflight request so this handles that
 
 
 /* Start the Slim instance */
