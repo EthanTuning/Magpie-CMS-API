@@ -23,11 +23,11 @@ API User documentation is at:  https://documenter.getpostman.com/view/4418001/RW
 ### Ubuntu LAMP
 
 1. Install the packages for a LAMP stack
-    * sudo apt-get install apache2 mysql-server libapache2-mod-php php
+    * `sudo apt-get install apache2 mysql-server libapache2-mod-php php`
 2. (Optional) Install phpmyadmin
-    * sudo apt-get install phpmyadmin
-3. Move the git directory to /var/www/html/
-4. You might have to chown the magpie directory
+    * `sudo apt-get install phpmyadmin`
+3. Move the git directory to `/var/www/html/`
+4. You might have to `chown` the magpie directory
 
 ### AMPPS
 
@@ -70,9 +70,9 @@ API User documentation is at:  https://documenter.getpostman.com/view/4418001/RW
     * Note: Under Apache 2, you must set UseCanonicalName = On and ServerName. Otherwise, this value reflects the hostname supplied by the client, which can be spoofed. It is not safe to rely on this value in security-dependent contexts. 
 
 4. Enable apache2 module thingy:
-    * sudo a2enmod rewrite && sudo service apache2 restart
+    * `sudo a2enmod rewrite && sudo service apache2 restart`
 
-5. In the deployment_files/ directory, follow the Readme.htaccess file instructions.
+5. In the `public_html/api/v1/deployment_files/` directory, follow the Readme.htaccess file instructions.
 
 6. Ensure you have PHP 7. In bluehost there's a web configuration tool for this. Latest versions of Ubuntu (18.04+) use PHP 7 by default.
 
@@ -83,15 +83,15 @@ API User documentation is at:  https://documenter.getpostman.com/view/4418001/RW
 ### API Configuration
 
 1. Firebase Config
-	* In the 'src/Creds/' folder, add your Firebase Admin SDK json credential (download it from Firebase Console).
+	* In the `public_html/api/v1/src/Creds/` folder, add your Firebase Admin SDK json credential (download it from Firebase Console).
 	* Modify the 'src/AuthenticationMiddleware.php' file to reflect this credential.
 
-2. In 'src/Creds/config.php':
-	* change '$config['displayErrorDetails']' to 'false'
+2. In `public_html/api/v1/src/Creds/config.php`:
+	* change `$config['displayErrorDetails']` to 'false'
 	* change the password to reflect the actual password for 'magpiehu_api' user
 
-3. In 'index.php', change the "base_url" string to reflect the deployment location.
+3. In `public_html/api/v1/src/index.php`, change the "base_url" string to reflect the deployment location.
 
-4. Change the permissions of the entire src/ folder: `chmod -R 700 src/`
+4. Change the permissions of the entire `src/` folder: `chmod -R 700 src/`
 
 

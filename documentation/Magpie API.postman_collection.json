@@ -1,0 +1,3935 @@
+{
+	"info": {
+		"_postman_id": "77e248cd-93c3-47cd-80f3-b5fe665a973b",
+		"name": "Magpie API",
+		"description": "# Introduction\nThis is the API for magpiehunt.com\n\n# Overview\nhttps://github.com/rkwitz/magpie-php\n\n# Authentication\nThe API requires an Authentication header of type Bearer in every API request. The token should be grabbed from the user's Firebase login.\nex header:\n\n`Authentication Bearer *base64 encoded token goes here*`\n\n# Error Codes\n* 200 - OK\n* 401 - Unauthorized\n* 404 - Resource Not Found\n* 405 - The operation requested is not supported. Usually this means that the state of the Resource doesn't allow that action (you can't edit an 'approved' Hunt).\n\n# Error Reporting\nPlease submit an issue on the Github page, or email admin*AT*magpiehunt.com\n\n# Updating Resources\nUpdating a Resource replaces all content with the data sent.\n",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Hunts",
+			"description": "Perform actions on Hunts.\n\nNote: Hunt states cannot be user set but are one of:\n* `approved`\n* `submitted`\n* `non-approved`",
+			"item": [
+				{
+					"name": "Get all hunts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://magpiehunt.com/api/v1/hunts",
+							"protocol": "https",
+							"host": [
+								"magpiehunt",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"hunts"
+							]
+						},
+						"description": "Get all Hunts that the current user owns."
+					},
+					"response": [
+						{
+							"id": "fe3a0f90-80c5-44db-8dab-f1bb195e16d1",
+							"name": "Get all hunts - No Hunts Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "https://magpiehunt.com/api/v1/hunts",
+									"protocol": "https",
+									"host": [
+										"magpiehunt",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"hunts"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"name": "Connection",
+									"description": "Options that are desired for the connection"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip",
+									"name": "Content-Encoding",
+									"description": "The type of encoding used on the data."
+								},
+								{
+									"key": "Content-Length",
+									"value": "80",
+									"name": "Content-Length",
+									"description": "The length of the response body in octets (8-bit bytes)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 22 May 2018 08:49:42 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Server",
+									"value": "nginx/1.12.2",
+									"name": "Server",
+									"description": "A name for the server"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								}
+							],
+							"cookie": [],
+							"body": "{\"status\":\"error\",\"message\":\"No results matching that query\"}"
+						},
+						{
+							"id": "df016414-306d-4f1d-b4a6-a1dcf6cfe348",
+							"name": "Get all hunts - User-owned",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "https://magpiehunt.com/api/v1/hunts",
+									"protocol": "https",
+									"host": [
+										"magpiehunt",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"hunts"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "html",
+							"header": [
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"name": "Connection",
+									"description": "Options that are desired for the connection"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip",
+									"name": "Content-Encoding",
+									"description": "The type of encoding used on the data."
+								},
+								{
+									"key": "Content-Length",
+									"value": "322",
+									"name": "Content-Length",
+									"description": "The length of the response body in octets (8-bit bytes)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/html; charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 22 May 2018 08:55:35 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Server",
+									"value": "nginx/1.12.2",
+									"name": "Server",
+									"description": "A name for the server"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								}
+							],
+							"cookie": [],
+							"body": "[{\"class\":\"hunt\",\"data\":{\"hunt_id\":\"671\",\"abbreviation\":\"string\",\"approval_status\":\"non-approved\",\"audience\":\"string\",\"date_end\":\"1902-01-10\",\"date_start\":\"2120-12-25\",\"name\":\"string\",\"ordered\":\"0\",\"summary\":\"string\",\"sponsor\":\"string\",\"super_badge\":\"string\",\"uid\":\"jaksEPf7HjPI2uRA1gnQ0yhYJyy1\",\"city\":\"City\",\"state\":\"WA\",\"zipcode\":\"99227\"},\"href\":\"https:\\/\\/magpiehunt.com\\/api\\/v1\\/hunts\\/671\",\"subresources\":[{\"class\":\"badges\",\"href\":\"https:\\/\\/magpiehunt.com\\/api\\/v1\\/hunts\\/671\\/badges\",\"type\":\"json\"},{\"class\":\"awards\",\"href\":\"https:\\/\\/magpiehunt.com\\/api\\/v1\\/hunts\\/671\\/awards\",\"type\":\"json\"}]}]"
+						}
+					]
+				},
+				{
+					"name": "Get single hunt",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "https://magpiehunt.com/api/v1/hunts/671",
+							"protocol": "https",
+							"host": [
+								"magpiehunt",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"hunts",
+								"671"
+							]
+						},
+						"description": "Get a single Hunt.  Subresources are referenced by links in the returned JSON object."
+					},
+					"response": [
+						{
+							"id": "8290514b-001d-4087-8cdf-b202bfe35953",
+							"name": "Get single hunt - Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "https://magpiehunt.com/api/v1/hunts/671",
+									"protocol": "https",
+									"host": [
+										"magpiehunt",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"hunts",
+										"671"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "html",
+							"header": [
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"name": "Connection",
+									"description": "Options that are desired for the connection"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip",
+									"name": "Content-Encoding",
+									"description": "The type of encoding used on the data."
+								},
+								{
+									"key": "Content-Length",
+									"value": "321",
+									"name": "Content-Length",
+									"description": "The length of the response body in octets (8-bit bytes)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/html; charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 22 May 2018 08:56:10 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Server",
+									"value": "nginx/1.12.2",
+									"name": "Server",
+									"description": "A name for the server"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								}
+							],
+							"cookie": [],
+							"body": "{\"class\":\"hunt\",\"data\":{\"hunt_id\":\"671\",\"abbreviation\":\"string\",\"approval_status\":\"non-approved\",\"audience\":\"string\",\"date_end\":\"1902-01-10\",\"date_start\":\"2120-12-25\",\"name\":\"string\",\"ordered\":\"0\",\"summary\":\"string\",\"sponsor\":\"string\",\"super_badge\":\"string\",\"uid\":\"jaksEPf7HjPI2uRA1gnQ0yhYJyy1\",\"city\":\"City\",\"state\":\"WA\",\"zipcode\":\"99227\"},\"href\":\"https:\\/\\/magpiehunt.com\\/api\\/v1\\/hunts\\/671\",\"subresources\":[{\"class\":\"badges\",\"href\":\"https:\\/\\/magpiehunt.com\\/api\\/v1\\/hunts\\/671\\/badges\",\"type\":\"json\"},{\"class\":\"awards\",\"href\":\"https:\\/\\/magpiehunt.com\\/api\\/v1\\/hunts\\/671\\/awards\",\"type\":\"json\"}]}"
+						}
+					]
+				},
+				{
+					"name": "Search for Hunts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "https://magpiehunt.com/api/v1/hunts?state=wa",
+							"protocol": "https",
+							"host": [
+								"magpiehunt",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"hunts"
+							],
+							"query": [
+								{
+									"key": "state",
+									"value": "wa"
+								}
+							]
+						},
+						"description": "Search for approved and owned Hunts using given parameters.  Any user-editable field is a valid parameter (see Creating a Hunt).  Parameters can be chained together."
+					},
+					"response": [
+						{
+							"id": "d63dcbff-e20e-4dea-a47a-9d796978f47b",
+							"name": "Get Query - Filter by state",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "https://magpiehunt.com/api/v1/hunts?state=wa",
+									"protocol": "https",
+									"host": [
+										"magpiehunt",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"hunts"
+									],
+									"query": [
+										{
+											"key": "state",
+											"value": "wa"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "html",
+							"header": [
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"name": "Connection",
+									"description": "Options that are desired for the connection"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip",
+									"name": "Content-Encoding",
+									"description": "The type of encoding used on the data."
+								},
+								{
+									"key": "Content-Length",
+									"value": "352",
+									"name": "Content-Length",
+									"description": "The length of the response body in octets (8-bit bytes)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/html; charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 22 May 2018 08:57:07 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Server",
+									"value": "nginx/1.12.2",
+									"name": "Server",
+									"description": "A name for the server"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								}
+							],
+							"cookie": [],
+							"body": "[{\"class\":\"hunt\",\"data\":{\"hunt_id\":\"671\",\"abbreviation\":\"string\",\"approval_status\":\"non-approved\",\"audience\":\"string\",\"date_end\":\"1902-01-10\",\"date_start\":\"2120-12-25\",\"name\":\"string\",\"ordered\":\"0\",\"summary\":\"string\",\"sponsor\":\"string\",\"super_badge\":\"string\",\"uid\":\"jaksEPf7HjPI2uRA1gnQ0yhYJyy1\",\"city\":\"City\",\"state\":\"WA\",\"zipcode\":\"99227\"},\"href\":\"https:\\/\\/magpiehunt.com\\/api\\/v1\\/hunts\\/671\",\"subresources\":[{\"class\":\"badges\",\"href\":\"https:\\/\\/magpiehunt.com\\/api\\/v1\\/hunts\\/671\\/badges\",\"type\":\"json\"},{\"class\":\"awards\",\"href\":\"https:\\/\\/magpiehunt.com\\/api\\/v1\\/hunts\\/671\\/awards\",\"type\":\"json\"}]},{\"class\":\"hunt\",\"data\":{\"hunt_id\":\"672\",\"abbreviation\":\"string\",\"approval_status\":\"non-approved\",\"audience\":\"string\",\"date_end\":\"1902-01-10\",\"date_start\":\"2120-12-25\",\"name\":\"string\",\"ordered\":\"0\",\"summary\":\"string\",\"sponsor\":\"string\",\"super_badge\":\"string\",\"uid\":\"jaksEPf7HjPI2uRA1gnQ0yhYJyy1\",\"city\":\"City\",\"state\":\"WA\",\"zipcode\":\"99227\"},\"href\":\"https:\\/\\/magpiehunt.com\\/api\\/v1\\/hunts\\/672\",\"subresources\":[{\"class\":\"badges\",\"href\":\"https:\\/\\/magpiehunt.com\\/api\\/v1\\/hunts\\/672\\/badges\",\"type\":\"json\"},{\"class\":\"awards\",\"href\":\"https:\\/\\/magpiehunt.com\\/api\\/v1\\/hunts\\/672\\/awards\",\"type\":\"json\"}]}]"
+						}
+					]
+				},
+				{
+					"name": "Create Hunt",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "abbreviation",
+									"value": "string",
+									"type": "text"
+								},
+								{
+									"key": "audience",
+									"value": "string",
+									"type": "text"
+								},
+								{
+									"key": "date_end",
+									"value": "1902-01-10",
+									"type": "text"
+								},
+								{
+									"key": "date_start",
+									"value": "2120-12-25",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "string",
+									"type": "text"
+								},
+								{
+									"key": "ordered",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "summary",
+									"value": "string",
+									"type": "text"
+								},
+								{
+									"key": "sponsor",
+									"value": "string",
+									"type": "text"
+								},
+								{
+									"key": "super_badge",
+									"value": "string",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "City",
+									"type": "text"
+								},
+								{
+									"key": "state",
+									"value": "WA",
+									"type": "text"
+								},
+								{
+									"key": "zipcode",
+									"value": "99227",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://magpiehunt.com/api/v1/hunts",
+							"protocol": "https",
+							"host": [
+								"magpiehunt",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"hunts"
+							]
+						}
+					},
+					"response": [
+						{
+							"id": "6dcc4b7d-4c38-4f43-83a0-cc666041da98",
+							"name": "Create Hunt",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "abbreviation",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "audience",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "date_end",
+											"value": "1902-01-10",
+											"type": "text"
+										},
+										{
+											"key": "date_start",
+											"value": "2120-12-25",
+											"type": "text"
+										},
+										{
+											"key": "name",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "ordered",
+											"value": "0",
+											"type": "text"
+										},
+										{
+											"key": "summary",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "sponsor",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "super_badge",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "City",
+											"type": "text"
+										},
+										{
+											"key": "state",
+											"value": "WA",
+											"type": "text"
+										},
+										{
+											"key": "zipcode",
+											"value": "99227",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://magpiehunt.com/api/v1/hunts",
+									"protocol": "https",
+									"host": [
+										"magpiehunt",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"hunts"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "html",
+							"header": [
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"name": "Connection",
+									"description": "Options that are desired for the connection"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip",
+									"name": "Content-Encoding",
+									"description": "The type of encoding used on the data."
+								},
+								{
+									"key": "Content-Length",
+									"value": "320",
+									"name": "Content-Length",
+									"description": "The length of the response body in octets (8-bit bytes)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/html; charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 22 May 2018 21:31:00 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Server",
+									"value": "nginx/1.12.2",
+									"name": "Server",
+									"description": "A name for the server"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								}
+							],
+							"cookie": [],
+							"body": "{\"class\":\"hunt\",\"data\":{\"hunt_id\":\"673\",\"abbreviation\":\"string\",\"approval_status\":\"non-approved\",\"audience\":\"string\",\"date_end\":\"1902-01-10\",\"date_start\":\"2120-12-25\",\"name\":\"string\",\"ordered\":\"0\",\"summary\":\"string\",\"sponsor\":\"string\",\"super_badge\":\"string\",\"uid\":\"zz2y1CPHhpYFZz2hFX0xGirs3iR2\",\"city\":\"City\",\"state\":\"WA\",\"zipcode\":\"99227\"},\"href\":\"https:\\/\\/magpiehunt.com\\/api\\/v1\\/hunts\\/673\",\"subresources\":[{\"class\":\"badges\",\"href\":\"https:\\/\\/magpiehunt.com\\/api\\/v1\\/hunts\\/673\\/badges\",\"type\":\"json\"},{\"class\":\"awards\",\"href\":\"https:\\/\\/magpiehunt.com\\/api\\/v1\\/hunts\\/673\\/awards\",\"type\":\"json\"}]}"
+						}
+					]
+				},
+				{
+					"name": "Update Hunt",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "abbreviation",
+									"value": "string",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "audience",
+									"value": "string",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "date_end",
+									"value": "1902-01-10",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "date_start",
+									"value": "2120-12-25",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "name",
+									"value": "UPDATED",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "summary",
+									"value": "UPDATED",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "sponsor",
+									"value": "string",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "super_badge",
+									"value": "string",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "city",
+									"value": "George",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "state",
+									"value": "WA",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "zipcode",
+									"value": "30220",
+									"type": "text",
+									"description": ""
+								}
+							]
+						},
+						"url": {
+							"raw": "https://magpiehunt.com/api/v1/hunts/678",
+							"protocol": "https",
+							"host": [
+								"magpiehunt",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"hunts",
+								"678"
+							]
+						},
+						"description": "Update a Hunt."
+					},
+					"response": [
+						{
+							"id": "703b8503-8665-4ffa-9861-ac5a5845ad2a",
+							"name": "Update Hunt",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "abbreviation",
+											"value": "string",
+											"type": "text",
+											"description": ""
+										},
+										{
+											"key": "audience",
+											"value": "string",
+											"type": "text",
+											"description": ""
+										},
+										{
+											"key": "date_end",
+											"value": "1902-01-10",
+											"type": "text",
+											"description": ""
+										},
+										{
+											"key": "date_start",
+											"value": "2120-12-25",
+											"type": "text",
+											"description": ""
+										},
+										{
+											"key": "name",
+											"value": "UPDATED",
+											"type": "text",
+											"description": ""
+										},
+										{
+											"key": "summary",
+											"value": "UPDATED",
+											"type": "text",
+											"description": ""
+										},
+										{
+											"key": "sponsor",
+											"value": "string",
+											"type": "text",
+											"description": ""
+										},
+										{
+											"key": "super_badge",
+											"value": "string",
+											"type": "text",
+											"description": ""
+										},
+										{
+											"key": "city",
+											"value": "George",
+											"type": "text",
+											"description": ""
+										},
+										{
+											"key": "state",
+											"value": "WA",
+											"type": "text",
+											"description": ""
+										},
+										{
+											"key": "zipcode",
+											"value": "30220",
+											"type": "text",
+											"description": ""
+										}
+									]
+								},
+								"url": {
+									"raw": "https://magpiehunt.com/api/v1/hunts/678",
+									"protocol": "https",
+									"host": [
+										"magpiehunt",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"hunts",
+										"678"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "html",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "POST, GET, OPTIONS, DELETE, PATCH",
+									"name": "Access-Control-Allow-Methods",
+									"description": "Specifies the method or methods allowed when accessing the resource. This is used in response to a preflight request."
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*",
+									"name": "Access-Control-Allow-Origin",
+									"description": "Specifies a URI that may access the resource. For requests without credentials, the server may specify '*' as a wildcard, thereby allowing any origin to access the resource."
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"name": "Connection",
+									"description": "Options that are desired for the connection"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip",
+									"name": "Content-Encoding",
+									"description": "The type of encoding used on the data."
+								},
+								{
+									"key": "Content-Length",
+									"value": "334",
+									"name": "Content-Length",
+									"description": "The length of the response body in octets (8-bit bytes)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/html; charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 24 May 2018 14:30:51 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Server",
+									"value": "nginx/1.12.2",
+									"name": "Server",
+									"description": "A name for the server"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								}
+							],
+							"cookie": [],
+							"body": "{\"class\":\"hunt\",\"data\":{\"hunt_id\":\"678\",\"abbreviation\":\"string\",\"approval_status\":\"non-approved\",\"audience\":\"string\",\"date_end\":\"1902-01-10\",\"date_start\":\"2120-12-25\",\"name\":\"UPDATED\",\"ordered\":\"0\",\"summary\":\"UPDATED\",\"sponsor\":\"string\",\"super_badge\":\"string\",\"uid\":\"jaksEPf7HjPI2uRA1gnQ0yhYJyy1\",\"city\":\"George\",\"state\":\"WA\",\"zipcode\":\"30220\"},\"href\":\"https:\\/\\/magpiehunt.com\\/api\\/v1\\/hunts\\/678\",\"subresources\":[{\"class\":\"badges\",\"href\":\"https:\\/\\/magpiehunt.com\\/api\\/v1\\/hunts\\/678\\/badges\",\"type\":\"json\"},{\"class\":\"awards\",\"href\":\"https:\\/\\/magpiehunt.com\\/api\\/v1\\/hunts\\/678\\/awards\",\"type\":\"json\"}]}"
+						}
+					]
+				},
+				{
+					"name": "Submit Hunt",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://magpiehunt.com/api/v1/hunts/678",
+							"protocol": "https",
+							"host": [
+								"magpiehunt",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"hunts",
+								"678"
+							]
+						},
+						"description": "Submit a Hunt for approval by an admin.  Once submitted, Hunts cannot be modified and subresources cannot be modified, deleted, or altered.  This action locks down the Hunt.  However, Hunts can be deleted."
+					},
+					"response": [
+						{
+							"id": "db157c81-5fa7-42fa-866c-522af2ce39e0",
+							"name": "Submit Hunt",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"name": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"disabled": false
+									}
+								],
+								"body": {},
+								"url": {
+									"raw": "https://magpiehunt.com/api/v1/hunts/678",
+									"protocol": "https",
+									"host": [
+										"magpiehunt",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"hunts",
+										"678"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "html",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "POST, PUT, PATCH, GET, OPTIONS, DELETE",
+									"name": "Access-Control-Allow-Methods",
+									"description": "Specifies the method or methods allowed when accessing the resource. This is used in response to a preflight request."
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*",
+									"name": "Access-Control-Allow-Origin",
+									"description": "Specifies a URI that may access the resource. For requests without credentials, the server may specify '*' as a wildcard, thereby allowing any origin to access the resource."
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"name": "Connection",
+									"description": "Options that are desired for the connection"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip",
+									"name": "Content-Encoding",
+									"description": "The type of encoding used on the data."
+								},
+								{
+									"key": "Content-Length",
+									"value": "69",
+									"name": "Content-Length",
+									"description": "The length of the response body in octets (8-bit bytes)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/html; charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 24 May 2018 20:49:24 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Server",
+									"value": "nginx/1.12.2",
+									"name": "Server",
+									"description": "A name for the server"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								}
+							],
+							"cookie": [],
+							"body": "{\"status\":true,\"message\":\"Successfully submitted.\"}"
+						},
+						{
+							"id": "fd4ff5ed-b9be-41a9-8025-e440c1f7b739",
+							"name": "Submit Hunt",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "abbreviation",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "audience",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "date_end",
+											"value": "1902-01-10",
+											"type": "text"
+										},
+										{
+											"key": "date_start",
+											"value": "2120-12-25",
+											"type": "text"
+										},
+										{
+											"key": "name",
+											"value": "UPDATED",
+											"type": "text"
+										},
+										{
+											"key": "summary",
+											"value": "UPDATED",
+											"type": "text"
+										},
+										{
+											"key": "sponsor",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "super_badge",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "George",
+											"type": "text"
+										},
+										{
+											"key": "state",
+											"value": "WA",
+											"type": "text"
+										},
+										{
+											"key": "zipcode",
+											"value": "30220",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://magpiehunt.com/api/v1/hunts/671",
+									"protocol": "https",
+									"host": [
+										"magpiehunt",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"hunts",
+										"671"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "html",
+							"header": [
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"name": "Connection",
+									"description": "Options that are desired for the connection"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip",
+									"name": "Content-Encoding",
+									"description": "The type of encoding used on the data."
+								},
+								{
+									"key": "Content-Length",
+									"value": "69",
+									"name": "Content-Length",
+									"description": "The length of the response body in octets (8-bit bytes)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/html; charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 22 May 2018 09:18:46 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Server",
+									"value": "nginx/1.12.2",
+									"name": "Server",
+									"description": "A name for the server"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								}
+							],
+							"cookie": [],
+							"body": "{\"status\":true,\"message\":\"Successfully submitted.\"}"
+						}
+					]
+				},
+				{
+					"name": "Delete Hunt",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "abbreviation",
+									"value": "string",
+									"type": "text"
+								},
+								{
+									"key": "audience",
+									"value": "string",
+									"type": "text"
+								},
+								{
+									"key": "date_end",
+									"value": "1902-01-10",
+									"type": "text"
+								},
+								{
+									"key": "date_start",
+									"value": "2120-12-25",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "UPDATED",
+									"type": "text"
+								},
+								{
+									"key": "summary",
+									"value": "UPDATED",
+									"type": "text"
+								},
+								{
+									"key": "sponsor",
+									"value": "string",
+									"type": "text"
+								},
+								{
+									"key": "super_badge",
+									"value": "string",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "George",
+									"type": "text"
+								},
+								{
+									"key": "state",
+									"value": "WA",
+									"type": "text"
+								},
+								{
+									"key": "zipcode",
+									"value": "30220",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://magpiehunt.com/api/v1/hunts/667",
+							"protocol": "https",
+							"host": [
+								"magpiehunt",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"hunts",
+								"667"
+							]
+						},
+						"description": "Delete a Hunt and all subresources associated with it."
+					},
+					"response": [
+						{
+							"id": "179d0676-5495-4945-bfbd-b060bd272505",
+							"name": "Delete Hunt",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "abbreviation",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "audience",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "date_end",
+											"value": "1902-01-10",
+											"type": "text"
+										},
+										{
+											"key": "date_start",
+											"value": "2120-12-25",
+											"type": "text"
+										},
+										{
+											"key": "name",
+											"value": "UPDATED",
+											"type": "text"
+										},
+										{
+											"key": "summary",
+											"value": "UPDATED",
+											"type": "text"
+										},
+										{
+											"key": "sponsor",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "super_badge",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "George",
+											"type": "text"
+										},
+										{
+											"key": "state",
+											"value": "WA",
+											"type": "text"
+										},
+										{
+											"key": "zipcode",
+											"value": "30220",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://magpiehunt.com/api/v1/hunts/672",
+									"protocol": "https",
+									"host": [
+										"magpiehunt",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"hunts",
+										"672"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "html",
+							"header": [
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"name": "Connection",
+									"description": "Options that are desired for the connection"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip",
+									"name": "Content-Encoding",
+									"description": "The type of encoding used on the data."
+								},
+								{
+									"key": "Content-Length",
+									"value": "67",
+									"name": "Content-Length",
+									"description": "The length of the response body in octets (8-bit bytes)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/html; charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 22 May 2018 09:19:04 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Server",
+									"value": "nginx/1.12.2",
+									"name": "Server",
+									"description": "A name for the server"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								}
+							],
+							"cookie": [],
+							"body": "{\"status\":true,\"message\":\"Successfully deleted.\"}"
+						}
+					]
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "a9a0cf68-6caa-49aa-8825-d1911bf4f02b",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "ab558ca5-cf54-4e66-bec8-344f2266bd7d",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Badges",
+			"description": "Perform actions on Badges.  Note: A Badge needs a Hunt to exist.",
+			"item": [
+				{
+					"name": "Get All Badges",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "icon",
+									"value": "differentURL.com",
+									"type": "text"
+								},
+								{
+									"key": "date_end",
+									"value": "1902-01-10",
+									"type": "text"
+								},
+								{
+									"key": "date_start",
+									"value": "2120-12-25",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "string",
+									"type": "text"
+								},
+								{
+									"key": "summary",
+									"value": "string",
+									"type": "text"
+								},
+								{
+									"key": "lat",
+									"value": "100.30",
+									"type": "text"
+								},
+								{
+									"key": "lon",
+									"value": "90.23232",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://magpiehunt.com/api/v1/hunts/667/badges",
+							"protocol": "https",
+							"host": [
+								"magpiehunt",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"hunts",
+								"667",
+								"badges"
+							]
+						},
+						"description": "Get all the Badges that belong to the specified Hunt."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Badge",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "icon",
+									"value": "differentURL.com",
+									"type": "text"
+								},
+								{
+									"key": "date_end",
+									"value": "1902-01-10",
+									"type": "text"
+								},
+								{
+									"key": "date_start",
+									"value": "2120-12-25",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "string",
+									"type": "text"
+								},
+								{
+									"key": "summary",
+									"value": "string",
+									"type": "text"
+								},
+								{
+									"key": "lat",
+									"value": "100.30",
+									"type": "text"
+								},
+								{
+									"key": "lon",
+									"value": "90.23232",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://magpiehunt.com/api/v1/hunts/667/badges/3",
+							"protocol": "https",
+							"host": [
+								"magpiehunt",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"hunts",
+								"667",
+								"badges",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Badge",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "description",
+									"value": "string",
+									"type": "text"
+								},
+								{
+									"key": "icon",
+									"type": "file"
+								},
+								{
+									"key": "image",
+									"value": "http://www.customURL.com/image.jpg",
+									"type": "text"
+								},
+								{
+									"key": "landmark_name",
+									"value": "string",
+									"type": "text"
+								},
+								{
+									"key": "lat",
+									"value": "4.54",
+									"type": "text"
+								},
+								{
+									"key": "lon",
+									"value": "-30.43",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "string",
+									"type": "text"
+								},
+								{
+									"key": "qr_code",
+									"value": "qr_code string",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://magpiehunt.com/api/v1/hunts/678/badges",
+							"protocol": "https",
+							"host": [
+								"magpiehunt",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"hunts",
+								"678",
+								"badges"
+							]
+						}
+					},
+					"response": [
+						{
+							"id": "6e9f5189-2878-4369-bd55-203e8c4b3547",
+							"name": "Create Badge",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "description",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "icon",
+											"type": "file",
+											"src": {
+												"0": {}
+											}
+										},
+										{
+											"key": "image",
+											"value": "http://www.customURL.com/image.jpg",
+											"type": "text"
+										},
+										{
+											"key": "landmark_name",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "lat",
+											"value": "4.54",
+											"type": "text"
+										},
+										{
+											"key": "lon",
+											"value": "-30.43",
+											"type": "text"
+										},
+										{
+											"key": "name",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "qr_code",
+											"value": "qr_code string",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://magpiehunt.com/api/v1/hunts/678/badges",
+									"protocol": "https",
+									"host": [
+										"magpiehunt",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"hunts",
+										"678",
+										"badges"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "html",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "POST, PUT, PATCH, GET, OPTIONS, DELETE",
+									"name": "Access-Control-Allow-Methods",
+									"description": "Specifies the method or methods allowed when accessing the resource. This is used in response to a preflight request."
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*",
+									"name": "Access-Control-Allow-Origin",
+									"description": "Specifies a URI that may access the resource. For requests without credentials, the server may specify '*' as a wildcard, thereby allowing any origin to access the resource."
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"name": "Connection",
+									"description": "Options that are desired for the connection"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip",
+									"name": "Content-Encoding",
+									"description": "The type of encoding used on the data."
+								},
+								{
+									"key": "Content-Length",
+									"value": "238",
+									"name": "Content-Length",
+									"description": "The length of the response body in octets (8-bit bytes)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/html; charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 24 May 2018 14:33:17 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Server",
+									"value": "nginx/1.12.2",
+									"name": "Server",
+									"description": "A name for the server"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								}
+							],
+							"cookie": [],
+							"body": "{\"class\":\"badge\",\"data\":{\"badge_id\":\"7\",\"description\":\"string\",\"icon\":{\"href\":\"https:\\/\\/magpiehunt.com\\/api\\/v1\\/uploads\\/f01d5bb02739777c.jpg\"},\"image\":{\"href\":\"http:\\/\\/www.customURL.com\\/image.jpg\"},\"landmark_name\":\"string\",\"lat\":\"4.54\",\"lon\":\"-30.43\",\"name\":\"string\",\"qr_code\":\"qr_code string\",\"hunt_id\":\"678\"},\"href\":\"https:\\/\\/magpiehunt.com\\/api\\/v1\\/hunts\\/678\\/badges\\/7\"}"
+						}
+					]
+				},
+				{
+					"name": "Update Badge",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "description",
+									"value": "New Description",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "icon",
+									"value": "http://www.magpiehunt.com/api/v1/uploads/filename.png",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "image",
+									"value": "http://www.customURL.com/image.jpg",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "landmark_name",
+									"value": "string",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "lat",
+									"value": "4.54",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "lon",
+									"value": "-30.43",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "name",
+									"value": "string",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "qr_code",
+									"value": "qr_code string",
+									"type": "text",
+									"description": ""
+								}
+							]
+						},
+						"url": {
+							"raw": "https://magpiehunt.com/api/v1/hunts/678/badges/7",
+							"protocol": "https",
+							"host": [
+								"magpiehunt",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"hunts",
+								"678",
+								"badges",
+								"7"
+							]
+						}
+					},
+					"response": [
+						{
+							"id": "099b9953-d607-473a-bbe1-36b31a93e7a8",
+							"name": "Update Badge",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "description",
+											"value": "New Description",
+											"type": "text",
+											"description": ""
+										},
+										{
+											"key": "icon",
+											"value": "http://www.magpiehunt.com/api/v1/uploads/filename.png",
+											"type": "text",
+											"description": ""
+										},
+										{
+											"key": "image",
+											"value": "http://www.customURL.com/image.jpg",
+											"type": "text",
+											"description": ""
+										},
+										{
+											"key": "landmark_name",
+											"value": "string",
+											"type": "text",
+											"description": ""
+										},
+										{
+											"key": "lat",
+											"value": "4.54",
+											"type": "text",
+											"description": ""
+										},
+										{
+											"key": "lon",
+											"value": "-30.43",
+											"type": "text",
+											"description": ""
+										},
+										{
+											"key": "name",
+											"value": "string",
+											"type": "text",
+											"description": ""
+										},
+										{
+											"key": "qr_code",
+											"value": "qr_code string",
+											"type": "text",
+											"description": ""
+										}
+									]
+								},
+								"url": {
+									"raw": "https://magpiehunt.com/api/v1/hunts/678/badges/7",
+									"protocol": "https",
+									"host": [
+										"magpiehunt",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"hunts",
+										"678",
+										"badges",
+										"7"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "html",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "POST, PUT, PATCH, GET, OPTIONS, DELETE",
+									"name": "Access-Control-Allow-Methods",
+									"description": "Specifies the method or methods allowed when accessing the resource. This is used in response to a preflight request."
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*",
+									"name": "Access-Control-Allow-Origin",
+									"description": "Specifies a URI that may access the resource. For requests without credentials, the server may specify '*' as a wildcard, thereby allowing any origin to access the resource."
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"name": "Connection",
+									"description": "Options that are desired for the connection"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip",
+									"name": "Content-Encoding",
+									"description": "The type of encoding used on the data."
+								},
+								{
+									"key": "Content-Length",
+									"value": "240",
+									"name": "Content-Length",
+									"description": "The length of the response body in octets (8-bit bytes)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/html; charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 24 May 2018 14:41:37 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Server",
+									"value": "nginx/1.12.2",
+									"name": "Server",
+									"description": "A name for the server"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								}
+							],
+							"cookie": [],
+							"body": "{\"class\":\"badge\",\"data\":{\"badge_id\":\"7\",\"description\":\"New Description\",\"icon\":{\"href\":\"http:\\/\\/www.magpiehunt.com\\/api\\/v1\\/uploads\\/filename.png\"},\"image\":{\"href\":\"http:\\/\\/www.customURL.com\\/image.jpg\"},\"landmark_name\":\"string\",\"lat\":\"4.54\",\"lon\":\"-30.43\",\"name\":\"string\",\"qr_code\":\"qr_code string\",\"hunt_id\":\"678\"},\"href\":\"https:\\/\\/magpiehunt.com\\/api\\/v1\\/hunts\\/678\\/badges\\/7\"}"
+						}
+					]
+				},
+				{
+					"name": "Delete Badge",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "icon",
+									"value": "differentURL.com",
+									"type": "text"
+								},
+								{
+									"key": "date_end",
+									"value": "1902-01-10",
+									"type": "text"
+								},
+								{
+									"key": "date_start",
+									"value": "2120-12-25",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "string",
+									"type": "text"
+								},
+								{
+									"key": "summary",
+									"value": "string",
+									"type": "text"
+								},
+								{
+									"key": "lat",
+									"value": "100.30",
+									"type": "text"
+								},
+								{
+									"key": "lon",
+									"value": "90.23232",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://magpiehunt.com/api/v1/hunts/667/badges/3",
+							"protocol": "https",
+							"host": [
+								"magpiehunt",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"hunts",
+								"667",
+								"badges",
+								"3"
+							]
+						}
+					},
+					"response": [
+						{
+							"id": "7c3fee07-5fee-430d-bf01-bd4e22df426c",
+							"name": "Delete Badge",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "icon",
+											"value": "differentURL.com",
+											"type": "text"
+										},
+										{
+											"key": "date_end",
+											"value": "1902-01-10",
+											"type": "text"
+										},
+										{
+											"key": "date_start",
+											"value": "2120-12-25",
+											"type": "text"
+										},
+										{
+											"key": "name",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "summary",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "lat",
+											"value": "100.30",
+											"type": "text"
+										},
+										{
+											"key": "lon",
+											"value": "90.23232",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://magpiehunt.com/api/v1/hunts/667/badges/3",
+									"protocol": "https",
+									"host": [
+										"magpiehunt",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"hunts",
+										"667",
+										"badges",
+										"3"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "html",
+							"header": [
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"name": "Connection",
+									"description": "Options that are desired for the connection"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip",
+									"name": "Content-Encoding",
+									"description": "The type of encoding used on the data."
+								},
+								{
+									"key": "Content-Length",
+									"value": "67",
+									"name": "Content-Length",
+									"description": "The length of the response body in octets (8-bit bytes)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/html; charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 22 May 2018 09:15:18 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Server",
+									"value": "nginx/1.12.2",
+									"name": "Server",
+									"description": "A name for the server"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								}
+							],
+							"cookie": [],
+							"body": "{\"status\":true,\"message\":\"Successfully deleted.\"}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Awards",
+			"description": "Perform actions on Awards.  Note: Awards need a Hunt to exist.",
+			"item": [
+				{
+					"name": "Get All Awards",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "icon",
+									"value": "differentURL.com",
+									"type": "text"
+								},
+								{
+									"key": "date_end",
+									"value": "1902-01-10",
+									"type": "text"
+								},
+								{
+									"key": "date_start",
+									"value": "2120-12-25",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "string",
+									"type": "text"
+								},
+								{
+									"key": "summary",
+									"value": "string",
+									"type": "text"
+								},
+								{
+									"key": "lat",
+									"value": "100.30",
+									"type": "text"
+								},
+								{
+									"key": "lon",
+									"value": "90.23232",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://magpiehunt.com/api/v1/hunts/671/awards",
+							"protocol": "https",
+							"host": [
+								"magpiehunt",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"hunts",
+								"671",
+								"awards"
+							]
+						},
+						"description": "Get all the Awards in a JSON array that belong to the specified Hunt."
+					},
+					"response": [
+						{
+							"id": "f247d4ea-a1e5-4365-8651-139c7609bf52",
+							"name": "Get All Awards",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "icon",
+											"value": "differentURL.com",
+											"type": "text"
+										},
+										{
+											"key": "date_end",
+											"value": "1902-01-10",
+											"type": "text"
+										},
+										{
+											"key": "date_start",
+											"value": "2120-12-25",
+											"type": "text"
+										},
+										{
+											"key": "name",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "summary",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "lat",
+											"value": "100.30",
+											"type": "text"
+										},
+										{
+											"key": "lon",
+											"value": "90.23232",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://magpiehunt.com/api/v1/hunts/671/awards",
+									"protocol": "https",
+									"host": [
+										"magpiehunt",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"hunts",
+										"671",
+										"awards"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "html",
+							"header": [
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"name": "Connection",
+									"description": "Options that are desired for the connection"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip",
+									"name": "Content-Encoding",
+									"description": "The type of encoding used on the data."
+								},
+								{
+									"key": "Content-Length",
+									"value": "184",
+									"name": "Content-Length",
+									"description": "The length of the response body in octets (8-bit bytes)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/html; charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 22 May 2018 09:16:50 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Server",
+									"value": "nginx/1.12.2",
+									"name": "Server",
+									"description": "A name for the server"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								}
+							],
+							"cookie": [],
+							"body": "[{\"class\":\"award\",\"data\":{\"award_id\":\"1\",\"address\":\"string\",\"description\":\"string\",\"lat\":\"45.435435435\",\"lon\":\"-39.54543\",\"name\":\"string\",\"redeem_code\":\"string\",\"award_value\":\"string\",\"hunt_id\":\"671\"},\"href\":\"https:\\/\\/magpiehunt.com\\/api\\/v1\\/hunts\\/671\\/award\\/1\"}]"
+						}
+					]
+				},
+				{
+					"name": "Get Award",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "icon",
+									"value": "",
+									"type": "file"
+								},
+								{
+									"key": "image",
+									"value": "http://www.customURL.com/image.jpg",
+									"type": "text"
+								},
+								{
+									"key": "date_end",
+									"value": "1902-01-10",
+									"type": "text"
+								},
+								{
+									"key": "date_start",
+									"value": "2120-12-25",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "string",
+									"type": "text"
+								},
+								{
+									"key": "summary",
+									"value": "string",
+									"type": "text"
+								},
+								{
+									"key": "lat",
+									"value": "4.54",
+									"type": "text"
+								},
+								{
+									"key": "lon",
+									"value": "-30.43",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "George",
+									"type": "text"
+								},
+								{
+									"key": "state",
+									"value": "WA",
+									"type": "text"
+								},
+								{
+									"key": "zipcode",
+									"value": "30220",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://magpiehunt.com/api/v1/hunts/673/awards/1",
+							"protocol": "https",
+							"host": [
+								"magpiehunt",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"hunts",
+								"673",
+								"awards",
+								"1"
+							]
+						},
+						"description": "Get a single award."
+					},
+					"response": [
+						{
+							"id": "13aa581e-2379-4a61-9883-6368f97389f2",
+							"name": "Get Award",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "icon",
+											"value": null,
+											"type": "file"
+										},
+										{
+											"key": "image",
+											"value": "http://www.customURL.com/image.jpg",
+											"type": "text"
+										},
+										{
+											"key": "date_end",
+											"value": "1902-01-10",
+											"type": "text"
+										},
+										{
+											"key": "date_start",
+											"value": "2120-12-25",
+											"type": "text"
+										},
+										{
+											"key": "name",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "summary",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "lat",
+											"value": "4.54",
+											"type": "text"
+										},
+										{
+											"key": "lon",
+											"value": "-30.43",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "George",
+											"type": "text"
+										},
+										{
+											"key": "state",
+											"value": "WA",
+											"type": "text"
+										},
+										{
+											"key": "zipcode",
+											"value": "30220",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://magpiehunt.com/api/v1/hunts/673/awards/1",
+									"protocol": "https",
+									"host": [
+										"magpiehunt",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"hunts",
+										"673",
+										"awards",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "html",
+							"header": [
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"name": "Connection",
+									"description": "Options that are desired for the connection"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip",
+									"name": "Content-Encoding",
+									"description": "The type of encoding used on the data."
+								},
+								{
+									"key": "Content-Length",
+									"value": "182",
+									"name": "Content-Length",
+									"description": "The length of the response body in octets (8-bit bytes)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/html; charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 22 May 2018 09:16:33 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Server",
+									"value": "nginx/1.12.2",
+									"name": "Server",
+									"description": "A name for the server"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								}
+							],
+							"cookie": [],
+							"body": "{\"class\":\"award\",\"data\":{\"award_id\":\"1\",\"address\":\"string\",\"description\":\"string\",\"lat\":\"45.435435435\",\"lon\":\"-39.54543\",\"name\":\"string\",\"redeem_code\":\"string\",\"award_value\":\"string\",\"hunt_id\":\"671\"},\"href\":\"https:\\/\\/magpiehunt.com\\/api\\/v1\\/hunts\\/671\\/award\\/1\"}"
+						}
+					]
+				},
+				{
+					"name": "Create Award",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "address",
+									"value": "string",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "string",
+									"type": "text"
+								},
+								{
+									"key": "lat",
+									"value": "45.435435435",
+									"type": "text"
+								},
+								{
+									"key": "lon",
+									"value": "-39.54543",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "string",
+									"type": "text"
+								},
+								{
+									"key": "redeem_code",
+									"value": "string",
+									"type": "text"
+								},
+								{
+									"key": "award_value",
+									"value": "string",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://magpiehunt.com/api/v1/hunts/678/awards",
+							"protocol": "https",
+							"host": [
+								"magpiehunt",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"hunts",
+								"678",
+								"awards"
+							]
+						},
+						"description": "Create an award."
+					},
+					"response": [
+						{
+							"id": "9376d0ef-f8a4-45a4-954c-fa64e1c1f8eb",
+							"name": "Create Award",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "address",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "lat",
+											"value": "45.435435435",
+											"type": "text"
+										},
+										{
+											"key": "lon",
+											"value": "-39.54543",
+											"type": "text"
+										},
+										{
+											"key": "name",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "redeem_code",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "award_value",
+											"value": "string",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://magpiehunt.com/api/v1/hunts/673/awards",
+									"protocol": "https",
+									"host": [
+										"magpiehunt",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"hunts",
+										"673",
+										"awards"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "html",
+							"header": [
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"name": "Connection",
+									"description": "Options that are desired for the connection"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip",
+									"name": "Content-Encoding",
+									"description": "The type of encoding used on the data."
+								},
+								{
+									"key": "Content-Length",
+									"value": "183",
+									"name": "Content-Length",
+									"description": "The length of the response body in octets (8-bit bytes)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/html; charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 22 May 2018 21:32:39 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Server",
+									"value": "nginx/1.12.2",
+									"name": "Server",
+									"description": "A name for the server"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								}
+							],
+							"cookie": [],
+							"body": "{\"class\":\"award\",\"data\":{\"award_id\":\"2\",\"address\":\"string\",\"description\":\"string\",\"lat\":\"45.435435435\",\"lon\":\"-39.54543\",\"name\":\"string\",\"redeem_code\":\"string\",\"award_value\":\"string\",\"hunt_id\":\"673\"},\"href\":\"https:\\/\\/magpiehunt.com\\/api\\/v1\\/hunts\\/673\\/award\\/2\"}"
+						},
+						{
+							"id": "0d17c518-63cb-4064-8377-0a304b67b4f8",
+							"name": "Create Award",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "address",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "lat",
+											"value": "45.435435435",
+											"type": "text"
+										},
+										{
+											"key": "lon",
+											"value": "-39.54543",
+											"type": "text"
+										},
+										{
+											"key": "name",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "redeem_code",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "award_value",
+											"value": "string",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://magpiehunt.com/api/v1/hunts/671/awards",
+									"protocol": "https",
+									"host": [
+										"magpiehunt",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"hunts",
+										"671",
+										"awards"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "html",
+							"header": [
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"name": "Connection",
+									"description": "Options that are desired for the connection"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip",
+									"name": "Content-Encoding",
+									"description": "The type of encoding used on the data."
+								},
+								{
+									"key": "Content-Length",
+									"value": "182",
+									"name": "Content-Length",
+									"description": "The length of the response body in octets (8-bit bytes)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/html; charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 22 May 2018 09:16:19 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Server",
+									"value": "nginx/1.12.2",
+									"name": "Server",
+									"description": "A name for the server"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								}
+							],
+							"cookie": [],
+							"body": "{\"class\":\"award\",\"data\":{\"award_id\":\"1\",\"address\":\"string\",\"description\":\"string\",\"lat\":\"45.435435435\",\"lon\":\"-39.54543\",\"name\":\"string\",\"redeem_code\":\"string\",\"award_value\":\"string\",\"hunt_id\":\"671\"},\"href\":\"https:\\/\\/magpiehunt.com\\/api\\/v1\\/hunts\\/671\\/award\\/1\"}"
+						}
+					]
+				},
+				{
+					"name": "Update Award",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "address",
+									"value": "new address",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "description",
+									"value": "UPDATED Description",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "lat",
+									"value": "45.435435435",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "lon",
+									"value": "-39.54543",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "name",
+									"value": "New Name",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "redeem_code",
+									"value": "string",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "award_value",
+									"value": "string",
+									"type": "text",
+									"description": ""
+								}
+							]
+						},
+						"url": {
+							"raw": "https://magpiehunt.com/api/v1/hunts/678/awards/3",
+							"protocol": "https",
+							"host": [
+								"magpiehunt",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"hunts",
+								"678",
+								"awards",
+								"3"
+							]
+						},
+						"description": "Updates an award."
+					},
+					"response": [
+						{
+							"id": "90a058ac-2730-4f9c-b2c1-70c574173eb7",
+							"name": "Update Award",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "address",
+											"value": "new address",
+											"type": "text",
+											"description": ""
+										},
+										{
+											"key": "description",
+											"value": "UPDATED Description",
+											"type": "text",
+											"description": ""
+										},
+										{
+											"key": "lat",
+											"value": "45.435435435",
+											"type": "text",
+											"description": ""
+										},
+										{
+											"key": "lon",
+											"value": "-39.54543",
+											"type": "text",
+											"description": ""
+										},
+										{
+											"key": "name",
+											"value": "New Name",
+											"type": "text",
+											"description": ""
+										},
+										{
+											"key": "redeem_code",
+											"value": "string",
+											"type": "text",
+											"description": ""
+										},
+										{
+											"key": "award_value",
+											"value": "string",
+											"type": "text",
+											"description": ""
+										}
+									]
+								},
+								"url": {
+									"raw": "https://magpiehunt.com/api/v1/hunts/678/awards/3",
+									"protocol": "https",
+									"host": [
+										"magpiehunt",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"hunts",
+										"678",
+										"awards",
+										"3"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "html",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "POST, PUT, PATCH, GET, OPTIONS, DELETE",
+									"name": "Access-Control-Allow-Methods",
+									"description": "Specifies the method or methods allowed when accessing the resource. This is used in response to a preflight request."
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*",
+									"name": "Access-Control-Allow-Origin",
+									"description": "Specifies a URI that may access the resource. For requests without credentials, the server may specify '*' as a wildcard, thereby allowing any origin to access the resource."
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"name": "Connection",
+									"description": "Options that are desired for the connection"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip",
+									"name": "Content-Encoding",
+									"description": "The type of encoding used on the data."
+								},
+								{
+									"key": "Content-Length",
+									"value": "211",
+									"name": "Content-Length",
+									"description": "The length of the response body in octets (8-bit bytes)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/html; charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 24 May 2018 14:42:58 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Server",
+									"value": "nginx/1.12.2",
+									"name": "Server",
+									"description": "A name for the server"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								}
+							],
+							"cookie": [],
+							"body": "{\"class\":\"award\",\"data\":{\"award_id\":\"3\",\"address\":\"new address\",\"description\":\"UPDATED Description\",\"lat\":\"45.435435435\",\"lon\":\"-39.54543\",\"name\":\"New Name\",\"redeem_code\":\"string\",\"award_value\":\"string\",\"hunt_id\":\"678\"},\"href\":\"https:\\/\\/magpiehunt.com\\/api\\/v1\\/hunts\\/678\\/awards\\/3\"}"
+						}
+					]
+				},
+				{
+					"name": "Delete Award",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "icon",
+									"value": "",
+									"type": "file"
+								},
+								{
+									"key": "image",
+									"value": "http://www.customURL.com/image.jpg",
+									"type": "text"
+								},
+								{
+									"key": "date_end",
+									"value": "1902-01-10",
+									"type": "text"
+								},
+								{
+									"key": "date_start",
+									"value": "2120-12-25",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "string",
+									"type": "text"
+								},
+								{
+									"key": "summary",
+									"value": "string",
+									"type": "text"
+								},
+								{
+									"key": "lat",
+									"value": "4.54",
+									"type": "text"
+								},
+								{
+									"key": "lon",
+									"value": "-30.43",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "George",
+									"type": "text"
+								},
+								{
+									"key": "state",
+									"value": "WA",
+									"type": "text"
+								},
+								{
+									"key": "zipcode",
+									"value": "30220",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://magpiehunt.com/api/v1/hunts/673/awards/2",
+							"protocol": "https",
+							"host": [
+								"magpiehunt",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"hunts",
+								"673",
+								"awards",
+								"2"
+							]
+						},
+						"description": "Delete a single Award."
+					},
+					"response": [
+						{
+							"id": "16ac5ed6-b6e8-4a42-a9d8-114f3efefae9",
+							"name": "Delete Award",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "icon",
+											"value": null,
+											"type": "file"
+										},
+										{
+											"key": "image",
+											"value": "http://www.customURL.com/image.jpg",
+											"type": "text"
+										},
+										{
+											"key": "date_end",
+											"value": "1902-01-10",
+											"type": "text"
+										},
+										{
+											"key": "date_start",
+											"value": "2120-12-25",
+											"type": "text"
+										},
+										{
+											"key": "name",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "summary",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "lat",
+											"value": "4.54",
+											"type": "text"
+										},
+										{
+											"key": "lon",
+											"value": "-30.43",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "George",
+											"type": "text"
+										},
+										{
+											"key": "state",
+											"value": "WA",
+											"type": "text"
+										},
+										{
+											"key": "zipcode",
+											"value": "30220",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://magpiehunt.com/api/v1/hunts/673/awards/1",
+									"protocol": "https",
+									"host": [
+										"magpiehunt",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"hunts",
+										"673",
+										"awards",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "html",
+							"header": [
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"name": "Connection",
+									"description": "Options that are desired for the connection"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip",
+									"name": "Content-Encoding",
+									"description": "The type of encoding used on the data."
+								},
+								{
+									"key": "Content-Length",
+									"value": "67",
+									"name": "Content-Length",
+									"description": "The length of the response body in octets (8-bit bytes)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/html; charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 22 May 2018 09:18:30 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Server",
+									"value": "nginx/1.12.2",
+									"name": "Server",
+									"description": "A name for the server"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								}
+							],
+							"cookie": [],
+							"body": "{\"status\":true,\"message\":\"Successfully deleted.\"}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"description": "Perform Administrative tasks like Approving or Rejecting a Hunt.",
+			"item": [
+				{
+					"name": "Get List of Submitted Hunts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "https://magpiehunt.com/api/v1/admin",
+							"protocol": "https",
+							"host": [
+								"magpiehunt",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"admin"
+							]
+						},
+						"description": "Get a List of all Hunts with \"submitted\" status."
+					},
+					"response": [
+						{
+							"id": "c331b965-4c97-40b3-b7a5-4a585cb36ee5",
+							"name": "Get List of Submitted Hunts",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "https://magpiehunt.com/api/v1/admin",
+									"protocol": "https",
+									"host": [
+										"magpiehunt",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "html",
+							"header": [
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"name": "Connection",
+									"description": "Options that are desired for the connection"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip",
+									"name": "Content-Encoding",
+									"description": "The type of encoding used on the data."
+								},
+								{
+									"key": "Content-Length",
+									"value": "335",
+									"name": "Content-Length",
+									"description": "The length of the response body in octets (8-bit bytes)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/html; charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 22 May 2018 09:20:17 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Server",
+									"value": "nginx/1.12.2",
+									"name": "Server",
+									"description": "A name for the server"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								}
+							],
+							"cookie": [],
+							"body": "[{\"class\":\"hunt\",\"data\":{\"hunt_id\":\"671\",\"abbreviation\":\"string\",\"approval_status\":\"submitted\",\"audience\":\"string\",\"date_end\":\"1902-01-10\",\"date_start\":\"2120-12-25\",\"name\":\"UPDATED\",\"ordered\":\"0\",\"summary\":\"UPDATED\",\"sponsor\":\"string\",\"super_badge\":\"string\",\"uid\":\"jaksEPf7HjPI2uRA1gnQ0yhYJyy1\",\"city\":\"George\",\"state\":\"WA\",\"zipcode\":\"30220\"},\"href\":\"https:\\/\\/magpiehunt.com\\/api\\/v1\\/hunts\\/671\",\"subresources\":[{\"class\":\"badges\",\"href\":\"https:\\/\\/magpiehunt.com\\/api\\/v1\\/hunts\\/671\\/badges\",\"type\":\"json\"},{\"class\":\"awards\",\"href\":\"https:\\/\\/magpiehunt.com\\/api\\/v1\\/hunts\\/671\\/awards\",\"type\":\"json\"}]}]"
+						}
+					]
+				},
+				{
+					"name": "Admin Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "magpiehunt.com/api/v1/admin/check",
+							"host": [
+								"magpiehunt",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"check"
+							]
+						},
+						"description": "Checks if the current user is an admin.  This is to enhance client app flow."
+					},
+					"response": [
+						{
+							"id": "901a6e7c-af59-4fe9-82b4-aaf57103bab6",
+							"name": "Admin Check",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "magpiehunt.com/api/v1/admin/check",
+									"host": [
+										"magpiehunt",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"check"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "html",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "POST, PUT, PATCH, GET, OPTIONS, DELETE",
+									"name": "Access-Control-Allow-Methods",
+									"description": "Specifies the method or methods allowed when accessing the resource. This is used in response to a preflight request."
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*",
+									"name": "Access-Control-Allow-Origin",
+									"description": "Specifies a URI that may access the resource. For requests without credentials, the server may specify '*' as a wildcard, thereby allowing any origin to access the resource."
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"name": "Connection",
+									"description": "Options that are desired for the connection"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip",
+									"name": "Content-Encoding",
+									"description": "The type of encoding used on the data."
+								},
+								{
+									"key": "Content-Length",
+									"value": "76",
+									"name": "Content-Length",
+									"description": "The length of the response body in octets (8-bit bytes)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/html; charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 24 May 2018 14:44:36 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Server",
+									"value": "nginx/1.12.2",
+									"name": "Server",
+									"description": "A name for the server"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								}
+							],
+							"cookie": [],
+							"body": "{\"status\":true,\"message\":\"This user is an admin\",\"isAdmin\":true}"
+						}
+					]
+				},
+				{
+					"name": "Approve a Submitted Hunt",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "approval_status",
+									"value": "approved",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://magpiehunt.com/api/v1/admin/671",
+							"protocol": "https",
+							"host": [
+								"magpiehunt",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"671"
+							]
+						},
+						"description": "Approve or reject a Hunt by sending 'approved' or 'non-approved'."
+					},
+					"response": [
+						{
+							"id": "e73ef72f-36da-4b00-96a9-efd700741771",
+							"name": "Approve a Submitted Hunt",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "approval_status",
+											"value": "approved",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://magpiehunt.com/api/v1/admin/671",
+									"protocol": "https",
+									"host": [
+										"magpiehunt",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"671"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "html",
+							"header": [
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"name": "Connection",
+									"description": "Options that are desired for the connection"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip",
+									"name": "Content-Encoding",
+									"description": "The type of encoding used on the data."
+								},
+								{
+									"key": "Content-Length",
+									"value": "75",
+									"name": "Content-Length",
+									"description": "The length of the response body in octets (8-bit bytes)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/html; charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 22 May 2018 09:20:39 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Server",
+									"value": "nginx/1.12.2",
+									"name": "Server",
+									"description": "A name for the server"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								}
+							],
+							"cookie": [],
+							"body": "{\"status\":true,\"message\":\"Hunt 671 has been approved.\"}"
+						}
+					]
+				},
+				{
+					"name": "Delete a Hunt",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://magpiehunt.com/api/v1/admin/673",
+							"protocol": "https",
+							"host": [
+								"magpiehunt",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"673"
+							]
+						},
+						"description": "Delete a Hunt and all associated subresources."
+					},
+					"response": [
+						{
+							"id": "72094f5c-bdad-41be-86f1-da0a5f023ea5",
+							"name": "Delete a Hunt",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "https://magpiehunt.com/api/v1/admin/671",
+									"protocol": "https",
+									"host": [
+										"magpiehunt",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"671"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "html",
+							"header": [
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"name": "Connection",
+									"description": "Options that are desired for the connection"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip",
+									"name": "Content-Encoding",
+									"description": "The type of encoding used on the data."
+								},
+								{
+									"key": "Content-Length",
+									"value": "67",
+									"name": "Content-Length",
+									"description": "The length of the response body in octets (8-bit bytes)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/html; charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 22 May 2018 09:20:56 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Server",
+									"value": "nginx/1.12.2",
+									"name": "Server",
+									"description": "A name for the server"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								}
+							],
+							"cookie": [],
+							"body": "{\"status\":true,\"message\":\"Successfully deleted.\"}"
+						}
+					]
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "3ca3a9b4-73fa-4d56-a010-020aa2cc3822",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "17167c5f-312d-44bb-bb82-bef569e5e293",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Images",
+			"description": "Images endpoint is used to upload an image to the Magpie server.  This is somewhat depreciated now that POST updates as well as creates resources.",
+			"item": [
+				{
+					"name": "Upload Images",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"value": "",
+									"description": "",
+									"type": "file"
+								},
+								{
+									"key": "icon",
+									"value": "",
+									"description": "",
+									"type": "file"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://magpiehunt.com/api/v1/images",
+							"protocol": "https",
+							"host": [
+								"magpiehunt",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"images"
+							]
+						},
+						"description": "Upload images to Magpie server."
+					},
+					"response": [
+						{
+							"id": "d56dd7ae-78a2-4a58-84f4-3d7903f44101",
+							"name": "Upload Images",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "image",
+											"description": "",
+											"type": "file",
+											"src": {
+												"0": {}
+											}
+										},
+										{
+											"key": "icon",
+											"description": "",
+											"type": "file",
+											"src": {
+												"0": {}
+											}
+										}
+									]
+								},
+								"url": {
+									"raw": "https://magpiehunt.com/api/v1/images",
+									"protocol": "https",
+									"host": [
+										"magpiehunt",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"images"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"name": "Connection",
+									"description": "Options that are desired for the connection"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip",
+									"name": "Content-Encoding",
+									"description": "The type of encoding used on the data."
+								},
+								{
+									"key": "Content-Length",
+									"value": "124",
+									"name": "Content-Length",
+									"description": "The length of the response body in octets (8-bit bytes)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/html; charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 23 May 2018 19:09:13 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Server",
+									"value": "nginx/1.12.2",
+									"name": "Server",
+									"description": "A name for the server"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								}
+							],
+							"cookie": [],
+							"body": "{\"image\":{\"url\":\"https:\\/\\/magpiehunt.com\\/api\\/v1\\/uploads\\/a54fcd2024895d80.jpg\"},\"icon\":{\"url\":\"https:\\/\\/magpiehunt.com\\/api\\/v1\\/uploads\\/2462f151fa9a52d4.jpg\"}}"
+						}
+					]
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "c08db8cb-2033-4633-b873-705ce389e9c2",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "df5d94dc-fb5a-4c25-a0fd-46dbf1c30f87",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjEyMDUwYzMxN2ExMjJlZDhlMWZlODdkN2FhZTdlMzk3OTBmNmMwYjQifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vbWFncGllLWNtcy1hcGkiLCJuYW1lIjoiQm9iIFNtaXRoIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS8tWGRVSXFkTWtDV0EvQUFBQUFBQUFBQUkvQUFBQUFBQUFBQUEvNDI1MnJzY2J2NU0vcGhvdG8uanBnIiwiYXVkIjoibWFncGllLWNtcy1hcGkiLCJhdXRoX3RpbWUiOjE1MjcxOTQwOTMsInVzZXJfaWQiOiJqYWtzRVBmN0hqUEkydVJBMWduUTB5aFlKeXkxIiwic3ViIjoiamFrc0VQZjdIalBJMnVSQTFnblEweWhZSnl5MSIsImlhdCI6MTUyNzE5NDA5MywiZXhwIjoxNTI3MTk3NjkzLCJlbWFpbCI6ImJzMzk3OTAyQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7Imdvb2dsZS5jb20iOlsiMTEwMTk5MjkzMjQzMTczMTkyNzQxIl0sImVtYWlsIjpbImJzMzk3OTAyQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6Imdvb2dsZS5jb20ifX0.MYMSU8MQSeI-4j8vSN-I3VQwvE24J5gArxmunRTi21bSKFahTRoLEethn9_F91JRkKqWAQBzyeKiSMHHSMm7zrADiQ0FW4wlMRM-0mNr6Woq5enPYGAipysh2WFksw9I8IFk5ga9r2uHJUV3_-dTbQyyM9Q8xmWVkTnPn5xMciMvjeg3mVamY6NeVogbg-NvvTBgwj396zBlSzvRDQgm-S2uOHTritCJmfyM4_qys1QDIffgwy1s4qNxs1G9_78hv1DRZMlqwXo7m_0OfGEh6M81X9Ms7UlATudWRH5Ru5dbJle30Azndw3mKmk0iKVe7Kqa2WOfCKwQaADZh7XGzw",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "396f6050-5d4d-43f2-857b-534b3334c0ad",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "3e0b8bb2-d44b-4d0f-a35e-d94bd61d4a2c",
+				"type": "text/javascript",
+				"exec": [
+					"pm.test(responseBody, true)"
+				]
+			}
+		}
+	]
+}

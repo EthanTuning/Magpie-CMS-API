@@ -3,6 +3,8 @@
 /* This interfaces with the database.  Its a go-between for the endpoints
  * to get stuff from the database.
  * 
+ * This uses a State Pattern (https://en.wikipedia.org/wiki/State_pattern)
+ * 
  * It first checks the state of the object in the database.
  * Then it delegates the method called (get, add, whatever) to the State object.
  * 

@@ -104,21 +104,21 @@
 			}
 	
 	
-		function jstest()
+		function getAllHunts()
 		{
 				var settings = {
 			  "async": true,
 			  "crossDomain": true,
 			  "url": "https://magpiehunt.com/api/v1/hunts",
 			  "method": "GET",
-			  "headers": {}
+			  "headers": {
+				  "Authorization": "Bearer " + globalToken
+				  }
 			}
-			
-			console.log(globalToken);
-			settings['headers']['Authorization'] = "Bearer " + globalToken;
 			
 			$.ajax(settings).done(function (response) {
 			  console.log(response);
+			  $('#output').val(response);
 			});
 		}
 	
@@ -151,12 +151,14 @@
 	</div>
 	
 	<div>
-	<button id="btnTest" onclick="jstest()">TEST BUTTON</button>
+	<button id="btnTest" onclick="getAllHunts()">GET ALL MY HUNTS</button>
 	
 	
 	</div>
 	
-	
+	<textarea rows="4" cols="50" id='output'>
+	Output goes here.
+	</textarea>
 	</body>
 
 

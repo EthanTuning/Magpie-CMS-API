@@ -9,17 +9,6 @@ use MagpieAPI\Exceptions\UnsupportedOperationException;
 /*** NonApproved ***/
 class StateNonApproved extends State
 {
-	/* searching is done with ID-less objects, this shouldn't be possible
-	public function search(IMapperable $obj)
-	{
-		if ($this->isOwnedByCurrentUser($obj))
-		{
-			return $this->dbQuery($obj);
-		}
-		
-		throw new IllegalAccessException("Cannot query non-approved resource.");
-	}
-	*/
 	
 	public function get(IMapperable $obj)
 	{
