@@ -27,5 +27,6 @@ Options -Indexes
 
 # Enable CORS crap
 
+Header set Access-Control-Allow-Headers "*"
 Header set Access-Control-Allow-Origin "*"
 Header set Access-Control-Allow-Methods "POST, PUT, PATCH, GET, OPTIONS, DELETE"

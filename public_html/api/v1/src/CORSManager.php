@@ -16,7 +16,7 @@ class CORSManager
 		if($_SERVER['REQUEST_METHOD'] == 'OPTIONS')
 		{
 			//header('Access-Control-Allow-Origin: *');
-			header('Access-Control-Allow-Headers: *');
+			//header('Access-Control-Allow-Headers: *');
 			header("HTTP/1.1 200 OK");
 			die();
 		}
