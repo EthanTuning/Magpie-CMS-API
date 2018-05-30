@@ -630,7 +630,7 @@ abstract class State
 		}
 		
 		//list of fields that are links
-		$links = ['image', 'icon'];
+		$links = ['image', 'icon', 'super_badge'];
 		
 		// change urls to have a 'href' key
 		// for each field thats a link, change it to [href => url]
