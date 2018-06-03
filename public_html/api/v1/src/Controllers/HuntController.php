@@ -61,12 +61,9 @@ class HuntController
 		$hunt = new Hunt(null);
 		$hunt->setPrimaryKeyValue($huntid);
 		
-		//$factory = new HuntFactory($mapper, $this->container);
-		//$result = $factory->build($hunt);
 		$result = $mapper->get($hunt);
 		
 		$response->getBody()->write(json_encode($result));
-		//$response = $this->prepareResponse($response, $result);
 			
 		return $response;
 	}
@@ -112,8 +109,23 @@ class HuntController
 		/* Create the Mappers used */
 		$uid = $request->getAttribute('uid');
 		$mapper = new Mapper($this->container, $uid);
-		
+		$imageController = new ImageController($this->container);	// make an ImageController to add images
+
 		$parameters = $request->getParsedBody();
+		
+		$files = $request->getUploadedFiles();			// get array of uploaded files (if any)
+		
+		/* if the request contains images, process those images */
+		if ( isset($files['super_badge']) )
+		{
+			// get file, send to /images controller
+			$image = $files['super_badge'];
+			$url = $imageController->addImage($image);
+			
+			// place URL in the $badge
+			$parameters['super_badge'] = $url;
+		}
+		
 		$hunt = new Hunt($parameters);
 		$result = $mapper->add($hunt);
 		$response->getBody()->write(json_encode($result));
@@ -123,7 +135,7 @@ class HuntController
 
 
 	/************************************
-	 *				PUT (Update)
+	 *				POST (Update)
 	 ***********************************/
 
 	public function update($request, $response, $args)
@@ -131,9 +143,23 @@ class HuntController
 		/* Create the Mappers used */
 		$uid = $request->getAttribute('uid');
 		$mapper = new Mapper($this->container, $uid);
+		$imageController = new ImageController($this->container);	// make an ImageController to add images
 		
 		/* Grab hunt id from URL, shove it in assoc array w/rest of request */
 		$parameters = $request->getParsedBody();
+		
+		$files = $request->getUploadedFiles();			// get array of uploaded files (if any)
+		
+		/* if the request contains images, process those images */
+		if ( isset($files['super_badge']) )
+		{
+			// get file, send to /images controller
+			$image = $files['super_badge'];
+			$url = $imageController->addImage($image);
+			
+			// place URL in the $badge
+			$parameters['super_badge'] = $url;
+		}
 		
 		$hunt = new Hunt($parameters);
 		$hunt->setPrimaryKeyValue($args['hunt_id']);		// set the Hunt ID from the URL
