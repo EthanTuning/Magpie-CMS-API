@@ -89,8 +89,7 @@ class BadgeController
 		if ( isset($files['icon']) )
 		{
 			// get file, send to /images controller
-			$image = $files['icon'];
-			$url = $imageController->addImage($image);
+			$url = $imageController->addImage($files['icon']);
 			
 			// place URL in the $badge
 			$parameters['icon'] = $url;
@@ -98,8 +97,7 @@ class BadgeController
 		if ( isset($files['image']) )
 		{
 			// get file, send to /images controller
-			$image = $files['icon'];
-			$url = $imageController->addImage($image);			
+			$url = $imageController->addImage($files['image']);			
 			
 			// place URL in the $badge
 			$parameters['image'] = $url;
