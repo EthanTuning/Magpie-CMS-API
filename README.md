@@ -1,6 +1,6 @@
-# Magpie-PHP
+# Magpie CMS API
 
-This is a PHP fork of the Magpie CMS.
+This is a PHP version of the Magpie CMS.
 
 The folders are:
 
